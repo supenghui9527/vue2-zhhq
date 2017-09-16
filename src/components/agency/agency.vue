@@ -93,7 +93,7 @@
       height:60px
       padding-right:6px
       cursor: pointer
-  // 外卖订单规则
+  // 代办规则
   .rule_detail
     width:570px
     padding:20px
