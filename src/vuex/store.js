@@ -3,13 +3,16 @@ import Vuex from 'vuex'
 import actions from './actions'
 import login from './modules/login'
 import outSale from './modules/outSale'
+import agency from './modules/agency'
+import meetingApply from './modules/meetingApply'
 // 告诉 vue “使用” vuex
 Vue.use(Vuex)
-// const HOST = 'http://URL_PLACEHOLDER192.168.8.12:8080/logistics/'// 用于正式服务器上
+// const HOST = 'http://118.190.71.221:8010/logistics/'// 用于正式服务器上
 const HOST = '/domain' + 'logistics/'// 用于本地调试
 // 创建一个对象来保存应用启动时的初始状态
 const state = {
   ok: 1,
+  type: 0,
   isLogin: false,
   fullscreenLoading: false,
   loginModule: false,
@@ -19,7 +22,13 @@ const state = {
   commitOrderUrl: `${HOST}submitFoodApply.do?`,
   goOrderUrl: `${HOST}findFoodApplyDetail.do`,
   cancelOrderUrl: `${HOST}cancelFoodApply.do?`,
-  allOrderUrl: `${HOST}myApply.do?`
+  allOrderUrl: `${HOST}myApply.do?`,
+  getAgencyUrl: `${HOST}myTodo.do?`,
+  getMeetingRoomUrl: `${HOST}findMeetingRoomList.do?`,
+  submitMeetingUrl: `${HOST}submitMeetingApply.do?`,
+  findFoodOrder: `${HOST}findFoodOrder.do?`,
+  meetingApplyDetail: `${HOST}findMeetingApplyDetail.do?`,
+  updataPdf: `${HOST}submitPDF.do?`
 }
 // 创建一个对象存储一系列我们接下来要写的 mutation 函数
 const mutations = {
@@ -40,6 +49,8 @@ export default new Vuex.Store({
   actions,
   modules: {
     login,
-    outSale
+    outSale,
+    agency,
+    meetingApply
   }
 })

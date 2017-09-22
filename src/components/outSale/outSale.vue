@@ -1,7 +1,7 @@
 <template>
   <div class="outsale">
     <div class="logo">
-      <h1>建业智慧后勤管理中心</h1>
+      <h1>建邺智慧后勤管理中心</h1>
       <div>
         <img class="user" src="../login/already_login.png" @click="$router.push('/login')">
         <router-link to="/outSale/chooseFood" class="go_sale">预定外卖</router-link>
@@ -37,6 +37,7 @@
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
+@import '~common/css/common.styl'
   .outsale
     .address_active
       background-color:#7f9af5 !important
@@ -51,81 +52,6 @@
       margin-right:10px
     .active_item
       background-color:#ff0090 !important
-    .logo
-      position:absolute
-      width:700px
-      left:50%
-      top:100px
-      margin-left:-350px
-      div
-        height:60px
-        padding-top:10px
-        line-height:60px
-        font-size:18px
-        font-size:0
-        .go_sale
-          margin-right:10px
-          background-color:rgba(239,239,239,0.4)
-          padding:0 10px
-        span,a
-          font-size:16px
-          display:inline-block
-          cursor: pointer
-          color:#fff
-          text-decoration:none
-          height:22px
-          line-height:22px
-        .rule_tit
-          width:78px
-          padding-left:24px
-          border-radius:4px
-          margin-right:10px
-          background:url('./text.png') no-repeat 4px center rgba(239,239,239,0.4)
-          background-size:16px 16px
-          color:#868686
-      h1
-        font-size:28px
-        color:#fff
-      .user
-        width:60px
-        height:60px
-        padding-right:6px
-        cursor: pointer
-    // 外卖订单规则
-    .close_rule
-      padding:10px
-      position:absolute
-      right:0
-      top:0
-      color:#f00
-    .rule_detail
-      width:570px
-      padding:20px
-      height:240px
-      position:absolute
-      top:260px
-      left:50%
-      margin-left:-285px
-      background-color:#fff
-      border-radius:2px
-      z-index:3
-      li
-        line-height:28px
-      h5
-        font-size:0
-        padding-bottom:26px
-        span
-          height:30px
-          line-height:30px
-          font-size:16px
-          display:inline-block
-          color:#323232
-        .pos
-          width:130px
-          background-color:#4593ff
-          border-radius:6px
-          text-align:center
-          color:#fff
     // 外卖全部订单
     .all_order
       dl,dt,dd

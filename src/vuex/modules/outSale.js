@@ -46,6 +46,7 @@ const actions = {
         place
       }
     }).then((data) => {
+      Vue.shopCar.clear()
       window.localStorage.setItem('orderID', data.data)
       Vue.$message('订单提交成功')
       window.localStorage.setItem('showDetailBtn', true)
@@ -99,6 +100,20 @@ const actions = {
         applyType,
         timeType,
         state,
+        pageIndex,
+        pageNumber
+      }
+    }).then((data) => {
+      Vue.allOrder = data.data
+    })
+  },
+  // 获取全部外卖订单打印订单
+  [types.FINDFOODORDER] ({rootState}, {Vue, userID, pageIndex, pageNumber}) {
+    Vue.$store.dispatch('axios/act/HTTP', {
+      Vue,
+      url: rootState.findFoodOrder,
+      body: {
+        userID,
         pageIndex,
         pageNumber
       }

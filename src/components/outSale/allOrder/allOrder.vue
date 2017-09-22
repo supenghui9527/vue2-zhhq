@@ -12,7 +12,7 @@
           <li v-for="item in stateFilter" @click="filterByState(item)">{{item.state}}</li>
         </ul>
       </dt>
-      <dd v-for="(item,index) in allOrder.list" class="detail_item" :class="{active_item1:(index+1)%2==0}">
+      <dd @click="goDetail(item)" v-for="(item,index) in allOrder.list" class="detail_item" :class="{active_item1:(index+1)%2==0}">
         <span class="created_time">{{item.param1}}</span>
         <span :title="item.param2" class="food_name">{{item.param2}}</span>
         <span v-if="item.state==1">已完成</span>
@@ -70,7 +70,8 @@
       {
         state: '已撤销',
         id: 2
-      }]
+      }],
+      multipleSelection: []
     }),
     created () {
       this.getAllOrder(1, 2, -1, 1)
@@ -104,6 +105,10 @@
         this.filterState = item.id
         this.getAllOrder(1, this.filterTime, item.id, 1)
         this.showStateFilter ? this.showStateFilter = false : this.showStateFilter
+      },
+      goDetail (item) {
+        window.localStorage.setItem('orderID', item.id)
+        this.$router.push('orderDetail')
       }
     }
   }

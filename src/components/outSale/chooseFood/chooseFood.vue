@@ -1,13 +1,20 @@
 <template>
   <div class="food_container">
     <h5>
-      <span v-for="item in chooseAddress" @click="changeAddress(item)" class="address" :class="{active_item:item.address==activeAddress}">{{item.address}}</span>
+      <span v-for="item in chooseAddress" @click="changeAddress(item)"
+      class="address" 
+      :class="{active_item:item.address==activeAddress}">
+        {{item.address}}
+      </span>
       <router-link to="/outSale/orderDetail" v-show="showDetailBtn">订单详情</router-link>
     </h5>
     <div class="food_list clearfix">
       <dl class="noodles float-left">
         <dt class="active_tit">面食</dt>
-        <dd v-for="(item,index) in foodList.mianshi" class="item" :class="{active_item:item.active==true}" @click="choose(item)">
+        <dd v-for="(item,index) in foodList.mianshi"
+        class="item"
+        :class="{active_item:item.active==true}"
+        @click="choose(item)">
           <span>{{item.foodName}}</span>
           <div @click.stop="">
             <i class="el-icon-minus" @click="minus(item)"></i>
@@ -64,6 +71,7 @@
       changeAddress (item) {
         this.activeAddress = item.address
         this.orderPlace = item.place
+        this.shopCar.clear()
         this.$store.dispatch('food/list', {
           Vue: this,
           place: item.place
@@ -76,6 +84,7 @@
       },
       // 选择外卖面食种类
       choose (item) {
+        console.log(this.shopCar.size)
         if (this.shopCar.size < 2) {
           this.shopCar.add(item.foodID) // 添加ID进set
           item.active = !item.active
@@ -143,7 +152,7 @@
       },
       // 提交订单
       commitOrder () {
-        if (time(this, '8:00', '9:00') || time(this, '12:00', '14:00')) {
+        if (time(this, '8:00', '12:00') || time(this, '12:00', '19:00')) {
           for (let item in this.order) {
             this.outFood += `${this.order[item].id},${this.order[item].name},${this.order[item].price},${this.order[item].number},${this.order[item].foodUnit};`
           }
@@ -242,6 +251,8 @@
         margin-right:4px
         border-radius:0 20px 0 0
         text-decoration:none
+        color:#fff
+        cursor:pointer
     .food_list
       width:100%
       background-color:#1839aa

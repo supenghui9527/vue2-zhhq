@@ -40,7 +40,32 @@ export default new Router({
     {
       path: '/agency',
       name: 'agency',
-      component: resolve => require(['@/components/agency/agency'], resolve)
+      component: resolve => require(['@/components/agency/agency'], resolve),
+      children: [
+      ]
+    },
+    {
+      path: '/agency/meetingAgency',
+      name: 'meetingAgency',
+      component: resolve => require(['@/components/agency/meetingAgency/meetingAgency'], resolve)
+    },
+    {
+      path: '/meetingApply',
+      name: 'meetingApply',
+      redirect: '/meetingApply/apply',
+      component: resolve => require(['@/components/meetingApply/meetingApply'], resolve),
+      children: [
+        {
+          path: '/meetingApply/apply',
+          name: 'apply',
+          component: resolve => require(['@/components/meetingApply/apply/apply'], resolve)
+        }
+      ]
+    },
+    {
+      path: '/allOutSale',
+      name: 'allOutSale',
+      component: resolve => require(['@/components/allOutSale/allOutSale'], resolve)
     }
   ]
 })
