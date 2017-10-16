@@ -25,6 +25,9 @@ const actions = {
       localStorage.setItem('linkman', data.data.name)
       localStorage.setItem('linkmantel', data.data.mobile)
       localStorage.setItem('officetel', data.data.telphone)
+      localStorage.setItem('deptName', data.data.deptName)
+      localStorage.setItem('roleId', data.data.roleId)
+      localStorage.setItem('dept_id', data.data.dept_id)
       rootState.isLogin = true // 改变成已登录状态
       rootState.loginModule = false // 隐藏登录框
       Vue.$emit('fromLogin', true)

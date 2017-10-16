@@ -25,7 +25,8 @@ const actions = {
       Vue.allAgency = data.data
     })
   },
-  [types.MEETINGAPPLY] ({rootState, commit}, {Vue, meetingApplyID}) {
+  // 会议申请详情
+  [types.MEETING_APPLY] ({rootState, commit}, {Vue, meetingApplyID}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.meetingApplyDetail,
@@ -33,7 +34,7 @@ const actions = {
         meetingApplyID
       }
     }).then((data) => {
-      Vue.applyDeatail = data.data
+      Vue.meetingDeatail = data.data
     })
   }
 }

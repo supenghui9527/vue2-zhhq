@@ -25,12 +25,12 @@
               <p style="text-align: center">（盖章）</p>
             </td>
             <td valign="top" rowspan="2" colspan="2" style="border-width: 1px; border-style: solid;"></td>
-            <td valign="top" rowspan="1" colspan="3" style="border-width: 1px; border-style: solid;">联系人：{{applyDeatail.linkman}}</td>
+            <td valign="top" rowspan="1" colspan="3" style="border-width: 1px; border-style: solid;">联系人：{{meetingDeatail.linkman}}</td>
           </tr>
           <tr>
             <td valign="top" rowspan="1" colspan="3" style="border-width: 1px; border-style: solid;">
-              <p>办公室电话：{{applyDeatail.officeTel}}</p>
-              <p>手机：{{applyDeatail.linkmanTel}}</p>
+              <p>办公室电话：{{meetingDeatail.officeTel}}</p>
+              <p>手机：{{meetingDeatail.linkmanTel}}</p>
             </td>
           </tr>
           <tr>
@@ -39,25 +39,25 @@
             </td>
             <td width="83" valign="top" style="border-width: 1px; border-style: solid;">会议时间</td>
             <td valign="top" rowspan="1" colspan="2" style="border-width: 1px; border-style: solid;width: 100px">
-              <p>日期：{{applyDeatail.meetingDate}}</p>
-              <p>时间：{{applyDeatail.startTime}}</p>
+              <p>日期：{{meetingDeatail.meetingDate}}</p>
+              <p>时间：{{meetingDeatail.startTime}}</p>
             </td>
             <td valign="top" rowspan="1" colspan="3" style="border-width: 1px; border-style: solid;width:100px">
               <p>开门时间：</p>
-              <p>预计结束时间：{{applyDeatail.endTime}}</p>
+              <p>预计结束时间：{{meetingDeatail.endTime}}</p>
             </td>
           </tr>
           <tr>
             <td width="83" valign="top" rowspan="2" colspan="1" style="border-width: 1px; border-style: solid;">会议内容</td>
-            <td valign="top" rowspan="2" colspan="4" style="border-width: 1px; border-style: solid;">{{applyDeatail.meetingContent}}</td>
+            <td valign="top" rowspan="2" colspan="4" style="border-width: 1px; border-style: solid;">{{meetingDeatail.meetingContent}}</td>
             <td width="83" valign="top" style="border-width: 1px; border-style: solid;">是否在大日程内</td>
           </tr>
           <tr>
-            <td width="83" valign="top" style="border-width: 1px; border-style: solid;">{{applyDeatail.isSchedule}}</td>
+            <td width="83" valign="top" style="border-width: 1px; border-style: solid;">{{meetingDeatail.isSchedule==0?'是':'否'}}</td>
           </tr>
           <tr>
             <td width="83" valign="top" rowspan="2" colspan="1" style="border-width: 1px; border-style: solid;">申请会议室</td>
-            <td width="83" valign="top" style="border-width: 1px; border-style: solid;">{{applyDeatail.meetingRoomName}}</td>
+            <td width="83" valign="top" style="border-width: 1px; border-style: solid;">{{meetingDeatail.meetingRoomName}}</td>
             <td width="83" valign="top" style="border-width: 1px; border-style: solid;"></td>
             <td width="83" valign="top" style="border-width: 1px; border-style: solid;"></td>
             <td width="83" valign="top" style="border-width: 1px; border-style: solid;"></td>
@@ -72,28 +72,28 @@
           </tr>
           <tr>
           <td valign="top" colspan="1" rowspan="1" style="border-left-width: 1px; border-top-width: 1px; word-break: break-all;">预计参会人数</td>
-          <td valign="top" colspan="1" rowspan="1" style="border-left-width: 1px; border-top-width: 1px;">{{applyDeatail.peopleCount}}</td>
+          <td valign="top" colspan="1" rowspan="1" style="border-left-width: 1px; border-top-width: 1px;">{{meetingDeatail.peopleCount}}</td>
           <td valign="top" colspan="2" rowspan="1" style="border-left-width: 1px; border-top-width: 1px; word-break: break-all;">是否音乐播放</td>
-          <td valign="top" colspan="2" rowspan="1" style="border-left-width: 1px; border-top-width: 1px;">{{applyDeatail.music}}</td>
+          <td valign="top" colspan="2" rowspan="1" style="border-left-width: 1px; border-top-width: 1px;">{{meetingDeatail.music==0?'是':'否'}}</td>
           </tr>
           <tr>
             <td width="83" valign="top" style="border-width: 1px; border-style: solid;">主席台人数</td>
-            <td width="83" valign="top" style="border-width: 1px; border-style: solid;">{{applyDeatail.rostrumCount}}</td>
+            <td width="83" valign="top" style="border-width: 1px; border-style: solid;">{{meetingDeatail.rostrumCount}}</td>
             <td width="83" valign="top" style="border-width: 1px; border-style: solid;">话筒只数</td>
-            <td width="83" valign="top" style="border-width: 1px; border-style: solid;">{{applyDeatail.mikeCount}}</td>
+            <td width="83" valign="top" style="border-width: 1px; border-style: solid;">{{meetingDeatail.mikeCount}}</td>
             <td width="83" valign="top" style="border-width: 1px; border-style: solid;">立式话筒</td>
-            <td width="83" valign="top" style="border-width: 1px; border-style: solid;">{{applyDeatail.standMike}}</td>
+            <td width="83" valign="top" style="border-width: 1px; border-style: solid;">{{meetingDeatail.standMike}}</td>
           </tr>
           <tr>
             <td width="83" valign="top" style="border-width: 1px; border-style: solid;">横幅</td>
-            <td valign="top" rowspan="2" colspan="5" style="border-width: 1px; border-style: solid;">{{applyDeatail.banner,applyDeatail.screen}}</td>
+            <td valign="top" rowspan="2" colspan="5" style="border-width: 1px; border-style: solid;">{{meetingDeatail.banner,meetingDeatail.screen}}</td>
           </tr>
           <tr>
             <td width="83" valign="top" style="border-width: 1px; border-style: solid;">电子屏幕</td>
           </tr>
           <tr>
             <td valign="top" rowspan="2" colspan="2" style="border-width: 1px; border-style: solid;">其他服务要求</td>
-            <td valign="top" rowspan="2" colspan="6" style="border-width: 1px; border-style: solid;">{{applyDeatail.endTime}}</td>
+            <td valign="top" rowspan="2" colspan="6" style="border-width: 1px; border-style: solid;">{{meetingDeatail.endTime}}</td>
           </tr>
         </tbody>
       </table>
@@ -110,34 +110,16 @@
       fileList: [],
       parm: {
         tag: '3',
-        applyID: window.localStorage.getItem('agencyDetailID')
+        applyID: ''
       },
-      applyDeatail: {
-        linkman: '赵晓飞',
-        officeTel: '025-8888888',
-        linkmanTel: '13688888888',
-        applyDate: '2017-08-09',
-        meetingDate: '09:00-12:00',
-        startTime: '09:00',
-        endTime: '12:00',
-        isSchedule: '是',
-        meetingContent: '开会',
-        meetingRoomName: '201',
-        peopleCount: 20,
-        rostrumCount: 2,
-        mikeCount: 2,
-        standMike: 2,
-        music: '是',
-        banner: '打的多',
-        screen: '方芳芳',
-        otherService: '反反复复'
-      }
+      meetingDeatail: {}
     }),
     created () {
       this.$store.dispatch('meeting/agpply', {
         Vue: this,
-        meetingApplyID: window.localStorage.getItem('agencyDetailID')
+        meetingApplyID: this.$route.query.meetingApplyID * 1
       })
+      this.parm.applyID = this.$route.query.meetingApplyID * 1
     },
     methods: {
       getPdf: () => {

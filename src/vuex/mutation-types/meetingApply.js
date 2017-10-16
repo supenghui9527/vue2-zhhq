@@ -1,2 +1,5 @@
 export const GET_MEETING_ROOM = 'get/meeting/room'
 export const SUBMIT_MEETING = 'submit/meeting'
+export const MEETING_INSTRUCTIONS = 'meeting/instructions'
+export const GET_ALLOT = 'get/allot'
+export const SUBMIT_ALLOT = 'submit/allot'

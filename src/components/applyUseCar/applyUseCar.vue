@@ -1,0 +1,66 @@
+<template>
+  <div class="outsale">
+    <div class="logo">
+      <h1>建邺智慧后勤管理中心</h1>
+      <div>
+        <img class="user" title="点击回到首页" src="../login/already_login.png" @click="$router.push('/login')">
+        <router-link to="#" class="go_sale">用车申请</router-link>
+        <span class="rule_tit" @click="showRule=!showRule">用车规则</span>
+        <span class="rule_tit" @click="$router.push('/login')">返回主页</span>
+      </div>
+    </div>
+    <transition name="fade">
+      <div v-show="showRule" class="rule_detail">
+        <i class="el-icon-close close_rule" @click="showRule?showRule=false:showRule"></i>
+        <h5>
+          <span>用车申请规则：</span>
+        </h5>
+        <ul>
+          <li>1、请务据实必填写；</li>
+          <li>2、机关车队电话：87778107；</li>
+        </ul>
+      </div>  
+    </transition>
+    <div class="all_agency">
+      <div>
+        <router-link to="/applyUseCar/applyCar">申请用车</router-link>
+        <router-link to="/applyUseCar/myCarApply">我的申请</router-link>
+      </div>
+      <router-view class="food_container"></router-view>
+    </div>
+  </div>
+</template>
+<script>
+  import rule from '@/base/rule/rule'
+  export default {
+    data: () => ({
+      showRule: false
+    }),
+    components: {
+      rule: rule
+    }
+  }
+</script>
+<style lang="stylus" rel="stylesheet/stylus">
+@import '~common/css/common.styl'
+.all_agency
+  position:absolute
+  width:700px
+  left:50%
+  margin-left:-350px
+  top:240px
+  div
+    a
+      display:inline-block
+      width:80px
+      height:25px
+      line-height:25px
+      color:#fff
+      background-color:#476ade
+      text-align:center
+      border-radius:0 20px 0 0
+      font-size:14px
+      text-decoration:none
+    .router-link-active
+      background-color:#1c3da6
+</style>

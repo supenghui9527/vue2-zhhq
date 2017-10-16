@@ -29,20 +29,15 @@
     }),
     created () {
       setTimeout(() => {
-        this.address = window.localStorage.getItem('activeAddress')
         this.getDetail()
       }, 20)
-    },
-    watch: {
-      // 如果路由有变化，会再次执行该方法
-      '$route': 'getDetail'
     },
     methods: {
       // 查看订单详情
       getDetail () {
         this.$store.dispatch('go/order', {
           Vue: this,
-          outFoodID: window.localStorage.getItem('orderID')
+          outFoodID: this.$route.query.outFoodID
         })
       },
       // 撤销订单

@@ -44,7 +44,8 @@
       foodList: {}, // 外卖数据
       shopCar: new Set(),
       order: {}, // 订单显示内容
-      outFood: '', // 提交给后台的菜单的字符串
+      outFood: '', // 提交给后台的面食字符串
+      cookFood: '', // 熟食字符串
       activeAddress: '建邺区政府大楼',
       chooseAddress: [{
         address: '建邺区政府大楼',
@@ -59,7 +60,7 @@
     }),
     created () {
       setTimeout(() => {
-        this.showDetailBtn = localStorage.getItem('showDetailBtn') === 'false' ? false : true
+        this.showDetailBtn = localStorage.getItem('showDetailBtn') === 'true' ? false : false
         this.$store.dispatch('food/list', {
           Vue: this,
           place: 1
@@ -84,11 +85,9 @@
       },
       // 选择外卖面食种类
       choose (item) {
-        console.log(this.shopCar.size)
         if (this.shopCar.size < 2) {
           this.shopCar.add(item.foodID) // 添加ID进set
           item.active = !item.active
-          console.log(item.active)
           if (item.active === false) {
             this.shopCar.delete(item.foodID) // 如果选中状态取消清掉当前面食ID
           }
@@ -152,9 +151,13 @@
       },
       // 提交订单
       commitOrder () {
-        if (time(this, '8:00', '12:00') || time(this, '12:00', '19:00')) {
+        if (time(this, '8:00', '12:00') || time(this, '12:00', '14:00')) {
           for (let item in this.order) {
-            this.outFood += `${this.order[item].id},${this.order[item].name},${this.order[item].price},${this.order[item].number},${this.order[item].foodUnit};`
+            if (this.order[item].foodType === 0) {
+              this.outFood += `${this.order[item].id},${this.order[item].name},${this.order[item].price},${this.order[item].number},${this.order[item].foodUnit};`
+            } else {
+              this.cookFood += `${this.order[item].id},${this.order[item].name},${this.order[item].price},${this.order[item].number},${this.order[item].foodUnit};`
+            }
           }
           if (this.outFood) {
             this.$store.dispatch('commit/order', {
@@ -170,7 +173,7 @@
       },
       // 查看订单详情
       goOrder () {
-        this.outFoodList = false
+        // this.outFoodList = false
         this.$store.dispatch('go/order', {
           Vue: this,
           outFoodID: window.localStorage.getItem('orderID')
@@ -222,8 +225,10 @@
         right:60px
         top:50%
         margin-top:-12px
-        background-color:#143ba4
+        background-color:#ff0090
+        color:#fff
         cursor: pointer
+        border:none !important
       .time
         width:60%
         left:0

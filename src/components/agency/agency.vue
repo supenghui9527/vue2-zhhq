@@ -3,56 +3,63 @@
     <div class="logo">
       <h1>建邺智慧后勤管理中心</h1>
       <div>
-        <img class="user" src="../login/already_login.png" @click="$router.push('/login')">
+        <img class="user" title="点击回到首页面" src="../login/already_login.png" @click="$router.push('/login')">
         <router-link to="" class="go_sale">我的待办</router-link>
-        <span class="rule_tit" @click="showRule=!showRule">待办须知</span>
-        <router-link to="" class="rule_tit">全部待办</router-link>
+        <span class="rule_tit" @click="$router.push('/login')">返回主页</span>
       </div>
     </div>
-    <transition name="fade">
-      <div v-show="showRule" class="rule_detail">
-        <h5>
-          <span>待办须知：</span>
-        </h5>
-        <ul>
-          <li>1、每周五更新预定菜单；</li>
-          <li>2、预定时间：8：00-9：00、12：00-14：00；</li>
-          <li>3、预定时间内可以，可以取消预定内容，14：00之后，无法取消预定状态；</li>
-          <li>4、面点：每天最多可选择两个品类，每个最多十个预订量；</li>
-          <li>5、凉菜：每个品类只能一份预订量；</li>
-        </ul>
-      </div>
-    </transition>
     <div class="all_agency">
       <dl>
         <dt>
-          <span class="created_time">订单生成时间<img class="show_time" src="~common/images/showfilter.png" /></span>
+          <span class="created_time">
+            <el-select v-model="timeValue" @change="filter" placeholder="请选择">
+              <el-option
+                v-for="item in filter_.timeFilter"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </span>
           <span class="department">部门名称</span>
-          <span class="department">账号名称</span>
-          <span class="department">申请单属性</span>
-          <span class="department">申请单编号</span>
+          <span class="state_filter">
+            <el-select v-model="stateValue" @change="filter" placeholder="请选择">
+              <el-option
+                v-for="item in filter_.stateFilter"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </span>
         </dt>
-        <dd @click="goDetail(item)" v-for="(item,index) in list" :class="{active:(index+1)%2==0}">
+        <dd style="text-align:center" v-if="allAgency.list==''">暂无数据</dd>
+        <dd @click="goDetail(item)" v-for="(item,index) in allAgency.list" :class="{active:(index+1)%2==0}">
           <span class="created_time">{{item.param1}}</span>
           <span class="department">{{item.title}}</span>
-          <span class="department"></span>
-          <span class="department"></span>
-          <span class="department"></span>
           <span class="arrow">>></span>
           <span class="detail">详情</span>
-          <span  v-if="item.state==0" class="state">待盖章</span>
-          <span v-if="item.state==1" class="state active_state">已盖章</span>
+          <!-- 外卖 -->
+          <span v-if="item.tag==1" :title="$store.state.allState.outSaleState[item.state]" class="state active_state">{{$store.state.allState.outSaleState[item.state]}}</span>
+          <!-- 公务用车 -->
+          <span v-if="item.tag==2" :title="$store.state.allState.carState[item.state]" class="state active_state">{{$store.state.allState.carState[item.state]}}</span>
+          <!-- 会务申请 -->
+          <span v-else-if="item.tag==3" :title="$store.state.allState.meetingState[item.state]" class="state active_state">{{$store.state.allState.meetingState[item.state]}}</span>
+          <!-- 报修申请 -->
+          <span v-else-if="item.tag==4" :title="$store.state.allState.repairState[item.state]" class="state active_state">{{$store.state.allState.repairState[item.state]}}</span>
+          <!-- 用餐申请 -->
+          <span v-else-if="item.tag==5" :title="$store.state.allState.mealState[item.state]" class="state active_state">{{$store.state.allState.mealState[item.state]}}</span>
         </dd>
       </dl>
-<!--       <div class="block">
+      <div class="block">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :page-size="6"
+          :page-size="5"
           layout="prev, pager, next, jumper"
           :total="allAgency.count">
         </el-pagination>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
@@ -60,46 +67,67 @@
   export default {
     data: () => ({
       showRule: false, // 显示外卖规则
+      timeValue: '0',
+      stateValue: '0',
+      val: 1,
       allAgency: {},
-      list: [{
-        id: 54,
-        tag: 1,
-        title: '会议室申请',
-        param1: '2017-09-15',
-        param2: '2017-09-15 10:00-11:00',
-        state: 0
-      }, {
-        id: 54,
-        tag: 1,
-        title: '会议室申请',
-        param1: '2017-09-22',
-        param2: '2017-09-15 10:00-11:00',
-        state: 1
+      filter_: {
+        timeFilter: [{
+          value: '0',
+          label: '全部待办'
+        }, {
+          value: '1',
+          label: '今天'
+        }],
+        stateFilter: [{
+          value: '0',
+          label: '全部状态'
+        }, {
+          value: '1',
+          label: '已处理'
+        }, {
+          value: '2',
+          label: '未处理'
+        }]
       }
-      ]
     }),
     created () {
-      this.getMyAgency()
+      this.getMyAgency(0, 0, 1)
     },
     methods: {
       // 获取我的代办
-      getMyAgency () {
+      getMyAgency (timeType, state, pageIndex) {
         this.$store.dispatch('get/agency', {
           Vue: this,
           userID: window.localStorage.getItem('userID'),
-          timeType: 0,
-          state: 0,
-          pageIndex: 1,
-          pageNumber: 6
+          timeType: timeType,
+          state: state,
+          pageIndex: pageIndex,
+          pageNumber: 5
         })
       },
-      // 代办详情
+      handleSizeChange (val) {
+      },
+      filter () {
+        this.getMyAgency(this.timeValue, this.stateValue, this.val)
+      },
+      handleCurrentChange (val) {
+        this.val = val
+        this.getMyAgency(this.timeValue, this.stateValue, this.val)
+      },
       goDetail (item) {
-        window.localStorage.setItem('agencyDetailID', item.id)
-        this.$router.push({
-          path: 'agency/meetingAgency',
-          query: {applyID: item.id, tag: item.tag}
-        })
+        // this.$store.commit('setRepairID', item.id)
+        if (item.tag * 1 === 1) { // 外卖
+          this.$router.push({path: '/outSale/orderDetail', query: {agency: 1, outFoodID: item.id}})
+        } else if (item.tag * 1 === 2) { // 用车
+          this.$router.push({path: '/applyUseCar/useCarDetail', query: {agency: 1, carApplyID: item.id}})
+        } else if (item.tag * 1 === 3) { // 会议
+          this.$router.push({path: '/meetingApply/meetingDetail', query: {agency: 1, meetingApplyID: item.id}})
+        } else if (item.tag * 1 === 4) { // 报修
+          this.$router.push({path: '/repair/repairDetail', query: {agency: 1, repairApplyID: item.id}})
+        } else if (item.tag * 1 === 5) { // 用餐
+          this.$router.push({path: '/applyMeal/mealDetail', query: {agency: 1, diningApplyID: item.id}})
+        }
       }
     }
   }
@@ -109,16 +137,22 @@
 .all_agency
   position:absolute
   width:700px
+  height:300px !important
   left:50%
   margin-left:-350px
   top:240px
   .created_time
     width:20%
     padding-left:50px
+  .state_filter
+    padding-right:10px
+    width:20%
+    float:right !important
   .department
-    width:10%
+    width:30%
     height:100%
-    padding-left:10px
+    padding-left:50px
+    box-sizing:border-box
   .show_time
     padding-left:6px
     width:14px
@@ -135,17 +169,16 @@
     line-height:26px
     position:absolute
     top:50%
+    right:100px
     margin-top:-13px
     background-color:#476ade
     text-align:center
     border-radius:4px
-    margin-left:10px
     cursor:pointer
   dt
     background-color:#c0c3d2
     height:46px
     line-height:46px
-    color:#1a3ca7
     font-size:14px
     span
       float:left
@@ -159,7 +192,7 @@
     span
       float:left
   .active
-    background-color:#8f95af
+    background-color:#8f95af !important
   .state
     width:70px
     height:26px
@@ -169,9 +202,11 @@
     border-radius:4px
     color:#fff
     position:absolute
-    right:6px
+    right:10px
     top:50%
     margin-top:-13px
   .active_state
     background-color:#717791 !important
+  .block
+    background-color:#fff
 </style>

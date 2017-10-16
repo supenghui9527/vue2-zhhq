@@ -6,6 +6,7 @@
         <img class="user" src="../login/already_login.png" @click="$router.push('/login')">
         <span class="rule_tit">全部订单</span>
         <span @click="printOrder" class="rule_tit">打印订单</span>
+        <span class="rule_tit" @click="$router.push('/login')">返回主页</span>
       </div>
     </div>
     <div class="all_order">

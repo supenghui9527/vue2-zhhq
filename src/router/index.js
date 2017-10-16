@@ -14,6 +14,7 @@ export default new Router({
       name: 'login',
       component: resolve => require(['@/components/login/login'], resolve)
     },
+    // 预定外卖
     {
       path: '/outSale',
       name: 'outSale',
@@ -37,6 +38,7 @@ export default new Router({
         }
       ]
     },
+    // 我的代办
     {
       path: '/agency',
       name: 'agency',
@@ -44,11 +46,25 @@ export default new Router({
       children: [
       ]
     },
+    // 会议室申请盖章
     {
       path: '/agency/meetingAgency',
       name: 'meetingAgency',
       component: resolve => require(['@/components/agency/meetingAgency/meetingAgency'], resolve)
     },
+    // 用餐申请盖章
+    {
+      path: '/agency/mealAgency',
+      name: 'mealAgency',
+      component: resolve => require(['@/components/agency/mealAgency/mealAgency'], resolve)
+    },
+    // 用车申请盖章
+    {
+      path: '/agency/carAgency',
+      name: 'carAgency',
+      component: resolve => require(['@/components/agency/carAgency/carAgency'], resolve)
+    },
+    // 会议室申请
     {
       path: '/meetingApply',
       name: 'meetingApply',
@@ -59,13 +75,126 @@ export default new Router({
           path: '/meetingApply/apply',
           name: 'apply',
           component: resolve => require(['@/components/meetingApply/apply/apply'], resolve)
+        },
+        {
+          path: '/meetingApply/myApply',
+          name: 'myMeetingApply',
+          component: resolve => require(['@/components/meetingApply/myApply/myApply'], resolve)
+        },
+        {
+          path: '/meetingApply/meetingDetail',
+          name: 'meetingDetail',
+          component: resolve => require(['@/components/meetingApply/meetingDetail/meetingDetail'], resolve)
         }
       ]
     },
+    // 订单打印
     {
       path: '/allOutSale',
       name: 'allOutSale',
       component: resolve => require(['@/components/allOutSale/allOutSale'], resolve)
+    },
+    // 申请用车
+    {
+      path: '/applyUseCar',
+      name: 'applyUseCar',
+      redirect: '/applyUseCar/applyCar',
+      component: resolve => require(['@/components/applyUseCar/applyUseCar'], resolve),
+      children: [
+        {
+          path: '/applyUseCar/myCarApply',
+          name: 'myCarApply',
+          component: resolve => require(['@/components/applyUseCar/myApply/myApply'], resolve)
+        },
+        {
+          path: '/applyUseCar/applyCar',
+          name: 'applyCar',
+          component: resolve => require(['@/components/applyUseCar/applyCar/applyCar'], resolve)
+        },
+        {
+          path: '/applyUseCar/useCarDetail',
+          name: 'useCarDetail',
+          component: resolve => require(['@/components/applyUseCar/useCarDetail/useCarDetail'], resolve)
+        }
+      ]
+    },
+    // 我的维修
+    {
+      path: '/repair',
+      name: 'repair',
+      redirect: '/repair/applyRepair',
+      component: resolve => require(['@/components/repair/repair'], resolve),
+      children: [
+        {
+          path: '/repair/myApply',
+          name: 'myApply',
+          component: resolve => require(['@/components/repair/myApply/myApply'], resolve)
+        },
+        {
+          path: '/repair/myCard',
+          name: 'myCard',
+          component: resolve => require(['@/components/repair/myCard/myCard'], resolve)
+        },
+        {
+          path: '/repair/applyRepair',
+          name: 'applyRepair',
+          component: resolve => require(['@/components/repair/applyRepair/applyRepair'], resolve)
+        },
+        {
+          path: '/repair/repairDetail',
+          name: 'repairDetail',
+          component: resolve => require(['@/components/repair/repairDetail/repairDetail'], resolve)
+        }
+      ]
+    },
+    // 我的全部申请
+    {
+      path: '/myApply',
+      name: 'allMyApply',
+      component: resolve => require(['@/components/myApply/myApply'], resolve)
+    },
+    // 我的用餐申请
+    {
+      path: '/applyMeal',
+      name: 'applyMeal',
+      redirect: '/applyMeal/submitMealApply',
+      component: resolve => require(['@/components/applyMeal/applyMeal'], resolve),
+      children: [
+        {
+          path: '/applyMeal/myMealApply',
+          name: 'myMealApply',
+          component: resolve => require(['@/components/applyMeal/myApply/myApply'], resolve)
+        },
+        {
+          path: '/applyMeal/submitMealApply',
+          name: 'submitMealApply',
+          component: resolve => require(['@/components/applyMeal/submitMealApply/submitMealApply'], resolve)
+        },
+        {
+          path: '/applyMeal/mealDetail',
+          name: 'mealDetail',
+          component: resolve => require(['@/components/applyMeal/mealDetail/mealDetail'], resolve)
+        }
+      ]
+    },
+    // 菜单编辑
+    {
+      path: '/editMenu',
+      name: 'editMenu',
+      component: resolve => require(['@/components/editMenu/editMenu'], resolve),
+      redirect: '/editMenu/editHotFood',
+      children: [
+        {
+          path: '/editMenu/editFood',
+          name: 'editFood',
+          component: resolve => require(['@/components/editMenu/editFood/editFood'], resolve)
+        },
+        {
+          path: '/editMenu/editHotFood',
+          name: 'editHotFood',
+          component: resolve => require(['@/components/editMenu/editHotFood/editHotFood'], resolve)
+        }
+      ]
     }
   ]
 })

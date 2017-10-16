@@ -72,4 +72,5 @@
     background-color:#00a3ff
     font-size:20px
     color:#fff
+    border:none !important
 </style>

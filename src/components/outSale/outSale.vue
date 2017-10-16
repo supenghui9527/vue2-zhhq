@@ -6,7 +6,7 @@
         <img class="user" src="../login/already_login.png" @click="$router.push('/login')">
         <router-link to="/outSale/chooseFood" class="go_sale">预定外卖</router-link>
         <span class="rule_tit" @click="showRule=!showRule">订单规则</span>
-        <router-link to="/outSale/allOrder" class="rule_tit">全部订单</router-link>
+        <span class="rule_tit" @click="$router.push('/login')">返回主页</span>
       </div>
     </div>
     <transition name="fade">
@@ -24,9 +24,7 @@
         </ul>
       </div>
     </transition>
-    <keep-alive>
-      <router-view class="food_container"></router-view>
-    </keep-alive>
+    <router-view class="food_container"></router-view>
   </div>
 </template>
 <script>

@@ -1,8 +1,5 @@
 import * as types from './mutation-types/common'
 import Qs from 'qs'
-/**
- * Created by yi on 2017-01-06.
- */
 import axios from 'axios'
 // 修改默认 Payload 数据为 FormData
 axios.defaults.transformRequest = [

@@ -1,43 +1,56 @@
 <template>
-  <form>
-<!--     <input type="hidden" :value="userID" name="userID">
-    <input type="hidden" :value="linkman" name="linkman">
-    <input type="hidden" :value="officeTel" name="officeTel">
-    <input type="hidden" :value="linkmanTel" name="linkmanTel">
-    <input type="hidden" :value="meetingDate" name="meetingDate">
-    <input type="hidden" :value="music" name="music">
-    <input type="hidden" :value="meetingRoomID" name="meetingRoomID">
-    <input type="hidden" :value="isSchedule" name="isSchedule"> -->
+  <form class="meeting_apply">
     <div class="meeting_left">
       <h5>会议申请</h5>
       <ul>
         <li class="clearfix">
           <div class="time">
-            <label>是否大日程</label>
+            <label><span>*</span>是否电梯控制</label>
+            <span class="btn" @click="getLift(item)" :class="{active:isLift==item.id}" v-for="item in time">{{item.text}}</span>
+          </div>
+        </li>
+        <li class="clearfix">
+          <div class="time">
+            <label><span>*</span>是否大日程</label>
             <span class="btn" @click="getTime(item)" :class="{active:isSchedule==item.id}" v-for="item in time">{{item.text}}</span>
           </div>
-<!--           <div class="time">
-            <label>电梯控制</label>
-            <span class="btn" @click="getControl(item)" :class="{active:isActive1==item.id}" v-for="item in time">{{item.text}}</span>
-          </div> -->
         </li>
         <li>
-          <label>会议时间</label>
-          <input class="meeting_time" type="time" name="startTime" placeholder="开始时间">
-          <input class="meeting_time" type="time" name="endTime" placeholder="结束时间">
+          <label><span>*</span>会议日期</label>
+          <el-date-picker
+            v-model="meetingDate"
+            class="meeting_date"
+            type="date"
+            placeholder="选择日期"
+            :picker-options="pickerOptions0">
+          </el-date-picker>
         </li>
-<!--         <li>
-          <label>开门时间</label>
-          <input class="meeting_time" type="time" name="start" placeholder="开始时间">
-          <input class="meeting_time" type="time" name="end" placeholder="结束时间">
-        </li> -->
         <li>
-          <label>预计参会人数：</label>
+          <label><span>*</span>会议时间</label>
+          <el-time-picker
+            v-model="startTime"
+            class="meeting_time"
+            :picker-options="{
+              selectableRange: '01:00:00 - 24:00:00'
+            }"
+            placeholder="起始时间">
+          </el-time-picker>
+          <el-time-picker
+            v-model="endTime"
+            class="meeting_time"
+            :picker-options="{
+              selectableRange: '01:00:00 - 24:00:00'
+            }"
+            placeholder="结束时间">
+          </el-time-picker>
+        </li>
+        <li>
+          <label><span>*</span>预计参会人数：</label>
           <input class="join_number" v-model="peopleCount" name="peopleCount">
         </li>
         <li class="meeting_content">
           <div>
-            <label>会议内容：</label>
+            <label><span>*</span>会议内容：</label>
           </div>
           <textarea name="meetingContent"></textarea>
         </li>
@@ -46,7 +59,7 @@
     <div class="meeting_right">
       <ul>
         <li class="clearfix" style="padding-top:10px">
-          <label class="float-left" style="width:18%">申请会议室</label>
+          <label class="float-left" style="width:18%"><span>*</span>申请会议室</label>
           <div class="float-left meeting_address" style="width:82%">
             <span v-for="item in meetingRooms" @click="getRoomId(item)" :class="{active:meetingRoomID==item.meetingRoomID}">{{item.meetingName}}</span>
           </div>
@@ -55,19 +68,19 @@
           <label class="float-left" style="width:18%;padding-top:4px">资源配备</label>
           <ul class="resources clearfix">
             <li>
-              <label>主席台人数:</label>
+              <label><span>*</span>主席台人数:</label>
               <input class="host" v-model="rostrumCount" name="rostrumCount">
             </li>
             <li>
-              <label>音乐播放:</label>
+              <label><span>*</span>音乐播放:</label>
               <span class="btn" @click="onMusic(item)" :class="{active:music==item.id}" v-for="item in time">{{item.text}}</span>
             </li>
             <li>
-              <label>话筒只数:</label>
+              <label><span>*</span>话筒只数:</label>
               <input class="host" v-model="mikeCount" name="mikeCount">
             </li>
             <li>
-              <label style="margin-right: 4px">立式话筒:</label>
+              <label style="margin-right: 4px"><span>*</span>立式话筒:</label>
               <input class="host" v-model="standMike" name="standMike">
             </li>
           </ul>
@@ -88,6 +101,7 @@
   </form>
 </template>
 <script>
+  import dateFormat from '@/common/js/dateFormat'
   export default {
     data: () => ({
       time: [{
@@ -98,7 +112,11 @@
         text: '否',
         id: 0
       }],
+      meetingDate: '',
+      startTime: '',
+      endTime: '',
       isSchedule: 0,
+      isLift: 0,
       music: 0,
       meetingRoomID: '',
       banner: '',
@@ -107,7 +125,12 @@
       rostrumCount: '',
       mikeCount: '',
       otherService: '',
-      meetingRooms: {}
+      meetingRooms: {},
+      pickerOptions0: {
+        disabledDate (time) {
+          return time.getTime() < Date.now() - 8.64e7
+        }
+      }
     }),
     created () {
       this.userID = window.localStorage.getItem('userID')
@@ -119,12 +142,15 @@
       })
     },
     methods: {
+      // 是否电梯控制
+      getLift (item) {
+        this.isLift = item.id
+      },
+      // 是否大日程
       getTime (item) {
         this.isSchedule = item.id
       },
-      // getControl (item) {
-      //   this.isActive1 = item.id
-      // },
+      // 是否音乐播放
       onMusic (item) {
         this.music = item.id
       },
@@ -132,31 +158,47 @@
         this.meetingRoomID = item.meetingRoomID
       },
       submit () {
-        this.$store.dispatch('submit/meeting', {
-          Vue: this,
-          userID: window.localStorage.getItem('userID'),
-          linkman: window.localStorage.getItem('linkman'),
-          officeTel: window.localStorage.getItem('officetel'),
-          linkmanTel: window.localStorage.getItem('linkmantel'),
-          meetingDate: '2017-9-18',
-          startTime: this.startTime,
-          endTime: this.endTime,
-          meetingContent: this.meetingContent,
-          meetingRoomID: this.meetingRoomID,
-          isSchedule: this.isSchedule,
-          peopleCount: this.peopleCount,
-          rostrumCount: this.rostrumCount,
-          mikeCount: this.mikeCount,
-          standMike: this.standMike,
-          music: this.music,
-          banner: this.banner,
-          otherService: this.otherService
-        })
+        dateFormat(this.meetingDate, 'yyyy-MM-dd')
+        if (this.meetingDate.getDate() - new Date().getDate() >= 2) {
+          console.log(this.startTime, this.endTime)
+          this.$store.dispatch('submit/meeting', {
+            Vue: this,
+            userID: window.localStorage.getItem('userID'),
+            linkman: window.localStorage.getItem('linkman'),
+            officeTel: window.localStorage.getItem('officetel'),
+            linkmanTel: window.localStorage.getItem('linkmantel'),
+            isLift: this.isLift,
+            meetingDate: dateFormat(this.meetingDate, 'yyyy-MM-dd'),
+            startTime: dateFormat(this.startTime, 'hh-mm'),
+            endTime: dateFormat(this.endTime, 'hh-mm'),
+            meetingContent: this.meetingContent,
+            meetingRoomID: this.meetingRoomID,
+            isSchedule: this.isSchedule,
+            peopleCount: this.peopleCount,
+            rostrumCount: this.rostrumCount,
+            mikeCount: this.mikeCount,
+            standMike: this.standMike,
+            music: this.music,
+            banner: this.banner,
+            otherService: this.otherService
+          })
+        } else {
+          this.$message('请选择会议有效时间')
+        }
       }
     }
   }
 </script>
-<style lang="stylus" rel="stylesheet/stylus" scoped>
+<style lang="stylus" rel="stylesheet/stylus">
+.meeting_apply
+  height:240px
+  label
+    height:20px
+    line-height:20px
+    span
+      display:inline-block
+      width:6px
+      color:#ff0000
 .btn
   display:inline-block
   width:25px
@@ -173,16 +215,22 @@
 .meeting_left
   width:275px
   font-size:12px
-  padding-left:25px
+  padding-left:20px
   height:100%
   input[type="number"]
     appearance: textfield
+  .meeting_date
+    height:22px
+    width:77%
+    .el-input__inner
+      width:100%
+      height:22px !important
   .meeting_time
-    border:1px solid #476cde
-    width:100px
-    height:20px
-    box-sizing:border-box
-    padding-left:10px
+    width:38%
+    height:22px
+    .el-input__inner
+      width:100%
+      height:22px !important
   h5
     padding-top:10px
     font-size:14px
@@ -191,7 +239,7 @@
   li
     padding-bottom:6px
   .join_number
-    width:166px
+    width:173px
     height:20px
     border:1px solid #476cde
   .meeting_content
@@ -210,7 +258,7 @@
       background-color:#fff
       color:#476cde
     textarea
-      width:253px
+      width:266px
       height:40px
       border:1px solid #476cde
       resize:none
@@ -243,7 +291,7 @@
       margin-bottom:4px
       label
         display:inline-block
-        width:40%
+        width:46%
   .text
     width:75%
     height:40px

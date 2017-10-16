@@ -69,6 +69,7 @@ const actions = {
     }).then((data) => {
       let datas = data.data
       Vue.orderDetail = datas
+      datas.place * 1 === 1 ? Vue.address = '建邺大厦' : Vue.address = '双和园'
       Vue.orderDetail.allPrice = 0
       for (let i in data.data.detailList) {
         Vue.orderDetail.allPrice += datas.detailList[i].foodCount * datas.detailList[i].foodPrice
@@ -94,7 +95,7 @@ const actions = {
   [types.ALL_ORDER] ({rootState}, {Vue, userID, applyType, timeType, state, pageIndex, pageNumber}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
-      url: rootState.allOrderUrl,
+      url: rootState.myApplyUrl,
       body: {
         userID,
         applyType,
