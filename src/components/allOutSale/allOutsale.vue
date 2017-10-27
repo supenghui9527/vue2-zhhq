@@ -6,7 +6,7 @@
         <img class="user" src="../login/already_login.png" @click="$router.push('/login')">
         <span class="rule_tit">全部订单</span>
         <span @click="printOrder" class="rule_tit">打印订单</span>
-        <span class="rule_tit" @click="$router.push('/login')">返回主页</span>
+        <span @click="$router.push('/login')">返回主页</span>
       </div>
     </div>
     <div class="all_order">
@@ -39,7 +39,7 @@
           label="订单人姓名">
         </el-table-column>
       </el-table>
-      <div class="block">
+<!--       <div class="block">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -47,7 +47,7 @@
           layout="prev, pager, next, jumper"
           :total="allOrder.count">
         </el-pagination>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -58,15 +58,13 @@
       multipleSelection: []
     }),
     created () {
-      this.getAllOrder(1)
+      this.getAllOrder()
     },
     methods: {
-      getAllOrder (pageIndex) {
+      getAllOrder () {
         this.$store.dispatch('find/food/order', {
           Vue: this,
-          userID: window.localStorage.getItem('userID'),
-          pageIndex: pageIndex,
-          pageNumber: 6
+          userID: window.localStorage.getItem('userID')
         })
       },
       toggleSelection (rows) {
@@ -81,14 +79,9 @@
       handleSelectionChange (val) {
         this.multipleSelection = val
       },
-      handleSizeChange (val) {
-      },
-      handleCurrentChange (val) {
-        this.getAllOrder(val)
-      },
       // 打印订单http://127.0.0.1/tsc/print.php
       printOrder () {
-        this.axios.post('http://192.168.8.9/tsc/print.php', {list: this.multipleSelection}).then(response => {
+        this.axios.post('http://127.0.0.1/tsc/print.php', {list: this.multipleSelection}).then(response => {
           if (response.data.status === 1) {
           }
         }).catch(error => {
@@ -106,6 +99,8 @@
   left:50%
   margin-left:-350px
   top:240px
+  height:240px
+  overflow-y:scroll
   .block
     background-color:#fff
 </style>

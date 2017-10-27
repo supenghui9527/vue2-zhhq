@@ -1,5 +1,5 @@
 import * as types from '../mutation-types/applyMeal'
-
+import filterAuth from '@/common/js/filterAuth'
 const state = {
 }
 
@@ -27,9 +27,10 @@ const actions = {
         diningTime
       }
     }).then((data) => {
-      Vue.allAgency = data.data
+      Vue.$message(data.message)
     })
   },
+  // 用餐详情
   [types.GO_MEAL_DETAIL] ({rootState, commit}, {Vue, diningApplyID}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
@@ -39,6 +40,8 @@ const actions = {
       }
     }).then((data) => {
       Vue.mealDetail = data.data
+      filterAuth({Vue: Vue, roleArr: localStorage.getItem('roleId').split(','), storeArr: [rootState.auth.STAMP_SIGN, rootState.auth.CHECK_MEAL, rootState.auth.PORITION], authArr: ['authStamp', 'authInstructions', 'authAllot']})
+      console.log(Vue.authStamp, Vue.authInstructions, Vue.authAllot)
     })
   },
   // 用餐审核
@@ -53,9 +56,11 @@ const actions = {
         state
       }
     }).then((data) => {
-      Vue.mealDetail = data.data
+      Vue.$message(data.message)
+      Vue.getDetail()
     })
   },
+  // 确认
   [types.MEAL_SURE] ({rootState, commit}, {Vue, userID, diningApplyID, comment, state}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
@@ -67,7 +72,8 @@ const actions = {
         state
       }
     }).then((data) => {
-      Vue.mealDetail = data.data
+      Vue.$message(data.message)
+      Vue.getDetail()
     })
   }
 }

@@ -5,7 +5,7 @@
       <div>
         <img class="user" src="../login/already_login.png" @click="$router.push('/login')">
         <router-link to="#" class="go_sale">我的申请</router-link>
-        <span class="rule_tit" @click="$router.push('/login')">返回主页</span>
+        <span @click="$router.push('/login')">返回主页</span>
       </div>
     </div>
     <transition name="fade">
@@ -22,35 +22,35 @@
   export default {
     data: () => ({
       showRule: false,
-      typeValue: '1',
+      typeValue: 1,
       filter_: {
         typeFilter: [{
-          value: '1',
+          value: 1,
           label: '外卖点餐'
         }, {
-          value: '2',
+          value: 2,
           label: '公务用车'
         }, {
-          value: '3',
+          value: 3,
           label: '会议申请'
         }, {
-          value: '4',
+          value: 4,
           label: '报修申请'
         }, {
-          value: '5',
+          value: 5,
           label: '用餐申请'
         }],
         timeFilter: [{
-          value: '0',
+          value: 0,
           label: '全部时间'
         }, {
-          value: '1',
+          value: 1,
           label: '今天'
         }, {
-          value: '2',
+          value: 2,
           label: '本周'
         }, {
-          value: '3',
+          value: 3,
           label: '本月'
         }]
       }
@@ -65,13 +65,19 @@
       }
     },
     created () {
-      this.getMyApply(1, 0, -1, 1)
-    },
-    beforeRouteUpdate (to, from, next) {
-      next()
+      let filter = window.localStorage.getItem('filter')
+      if (filter) {
+        let newFilter = JSON.parse(filter)
+        this.typeValue = newFilter.applyType
+        this.getMyApply(newFilter.applyType, 0, -1, 1)
+      } else {
+        this.getMyApply(1, 0, -1, 1)
+      }
     },
     methods: {
       getMyApply (applyType, timeType, state, pageIndex) {
+        let filter = JSON.stringify({applyType, timeType, state, pageIndex})
+        window.localStorage.setItem('filter', filter)
         this.$store.dispatch('get/all/myapply', {
           Vue: this,
           userID: window.localStorage.getItem('userID'),

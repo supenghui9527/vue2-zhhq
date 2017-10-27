@@ -36,17 +36,21 @@ const actions = {
     })
   },
   // 提交订单
-  [types.COMMIT_ORDER] ({state, rootState}, {Vue, outFood, userID, place}) {
+  [types.COMMIT_ORDER] ({state, rootState}, {Vue, outFood, cookFood, userID, place}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.commitOrderUrl,
       body: {
         outFood,
+        cookFood,
         userID,
         place
       }
     }).then((data) => {
       Vue.shopCar.clear()
+      Vue.order = {}
+      Vue.outFood = ''
+      Vue.cookFood = ''
       window.localStorage.setItem('orderID', data.data)
       Vue.$message('订单提交成功')
       window.localStorage.setItem('showDetailBtn', true)
@@ -109,14 +113,12 @@ const actions = {
     })
   },
   // 获取全部外卖订单打印订单
-  [types.FINDFOODORDER] ({rootState}, {Vue, userID, pageIndex, pageNumber}) {
+  [types.FIND_FOOD_ORDER] ({rootState}, {Vue, userID}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.findFoodOrder,
       body: {
-        userID,
-        pageIndex,
-        pageNumber
+        userID
       }
     }).then((data) => {
       Vue.allOrder = data.data

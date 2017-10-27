@@ -4,9 +4,7 @@
       <div v-show="show" class="user" :class="{show:$store.state.isLogin==true}">
         <img @click="showLogin" v-if="$store.state.isLogin==false" src="./no_login.png">
         <img @click="signOut" v-if="$store.state.isLogin==true" src="./already_login.png">
-        <p class="role" v-if="$store.state.type==0&&$store.state.isLogin==true">基础账号</p>
-        <p class="role" v-else-if="$store.state.type==1&&$store.state.isLogin==true">科长</p>
-        <p class="role" v-else-if="$store.state.type==2&&$store.state.isLogin==true">餐科长</p>
+        <p class="role" v-if="$store.state.isLogin==true">{{userName}}</p>
       </div>
     </transition>
     <transition name="fade">
@@ -23,13 +21,15 @@
   import auth from '@/base/auth/auth'
   export default {
     data: () => ({
-      show: true
+      show: true,
+      userName: null
     }),
     components: {
       vLogin: login,
       vAuth: auth
     },
     created () {
+      this.userName = window.localStorage.getItem('linkman')
       this.login()
     },
     methods: {
@@ -48,10 +48,13 @@
       },
       // 改变已登录状态
       showIsLogin (data) {
-        this.show = data
+        this.show = data.show
+        this.userName = data.userName
       },
+      // 退出登录
       signOut () {
-        localStorage.removeItem('accessToken')
+        localStorage.clear()
+        this.userName = null
         this.$store.state.isLogin = false
       }
     }

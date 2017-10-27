@@ -1,5 +1,5 @@
 import * as types from '../mutation-types/repair'
-
+import filterAuth from '@/common/js/filterAuth'
 const state = {
   options: []
 }
@@ -24,13 +24,13 @@ const actions = {
     })
   },
   // 提交报修申请
-  [types.SUBMIT_QUESTIONS] ({rootState, state, commit}, {Vue, fileList, userID, questionIDs, bespeakStartTime, bespeakEndTime, faultPlace, faultDetail, remark}) {
+  [types.SUBMIT_QUESTIONS] ({rootState, state, commit}, {Vue, picList, userID, questionIDs, bespeakStartTime, bespeakEndTime, faultPlace, faultDetail, remark}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.submitQuestionsUrl,
       body: {
         userID,
-        fileList,
+        picList,
         questionIDs,
         bespeakStartTime,
         bespeakEndTime,
@@ -52,6 +52,22 @@ const actions = {
       }
     }).then(({data}) => {
       Vue.repairDetail = data
+      filterAuth({Vue: Vue, roleArr: localStorage.getItem('roleId').split(','), storeArr: [rootState.auth.ORDER_REPAIR, rootState.auth.PORITION], authArr: ['orderAuth', 'authAllot']})
+      console.log(Vue.orderAuth, Vue.authAllot)
+    })
+  },
+  // 报修接单
+  [types.ORDER_REPAIR] ({rootState, state, commit}, {Vue, userID, repairApplyID}) {
+    Vue.$store.dispatch('axios/act/HTTP', {
+      Vue,
+      url: rootState.orderRepairUrl,
+      body: {
+        userID,
+        repairApplyID
+      }
+    }).then(({data}) => {
+      Vue.$message(data.message)
+      Vue.getDetail()
     })
   },
   // 获取维修分配
@@ -80,7 +96,24 @@ const actions = {
         state
       }
     }).then((data) => {
+      Vue.allot = null
       Vue.$message(data.message)
+      Vue.getDetail()
+    })
+  },
+  // 维修评价
+  [types.ASSESS_REPAIR] ({rootState, commit}, {Vue, assess, repairApplyID, levels}) {
+    Vue.$store.dispatch('axios/act/HTTP', {
+      Vue,
+      url: rootState.assessRepairUrl,
+      body: {
+        assess,
+        repairApplyID,
+        levels
+      }
+    }).then((data) => {
+      Vue.$message(data.message)
+      Vue.assessShow = false
       Vue.getDetail()
     })
   }

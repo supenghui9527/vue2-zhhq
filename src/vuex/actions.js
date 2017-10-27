@@ -1,6 +1,7 @@
 import * as types from './mutation-types/common'
 import Qs from 'qs'
 import axios from 'axios'
+// axios.defaults.baseURL = 'http://118.190.71.221:8010/logistics/'
 // 修改默认 Payload 数据为 FormData
 axios.defaults.transformRequest = [
   data => {

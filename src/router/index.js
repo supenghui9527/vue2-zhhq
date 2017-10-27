@@ -42,9 +42,7 @@ export default new Router({
     {
       path: '/agency',
       name: 'agency',
-      component: resolve => require(['@/components/agency/agency'], resolve),
-      children: [
-      ]
+      component: resolve => require(['@/components/agency/agency'], resolve)
     },
     // 会议室申请盖章
     {
@@ -80,11 +78,6 @@ export default new Router({
           path: '/meetingApply/myApply',
           name: 'myMeetingApply',
           component: resolve => require(['@/components/meetingApply/myApply/myApply'], resolve)
-        },
-        {
-          path: '/meetingApply/meetingDetail',
-          name: 'meetingDetail',
-          component: resolve => require(['@/components/meetingApply/meetingDetail/meetingDetail'], resolve)
         }
       ]
     },
@@ -110,11 +103,6 @@ export default new Router({
           path: '/applyUseCar/applyCar',
           name: 'applyCar',
           component: resolve => require(['@/components/applyUseCar/applyCar/applyCar'], resolve)
-        },
-        {
-          path: '/applyUseCar/useCarDetail',
-          name: 'useCarDetail',
-          component: resolve => require(['@/components/applyUseCar/useCarDetail/useCarDetail'], resolve)
         }
       ]
     },
@@ -139,11 +127,6 @@ export default new Router({
           path: '/repair/applyRepair',
           name: 'applyRepair',
           component: resolve => require(['@/components/repair/applyRepair/applyRepair'], resolve)
-        },
-        {
-          path: '/repair/repairDetail',
-          name: 'repairDetail',
-          component: resolve => require(['@/components/repair/repairDetail/repairDetail'], resolve)
         }
       ]
     },
@@ -152,6 +135,33 @@ export default new Router({
       path: '/myApply',
       name: 'allMyApply',
       component: resolve => require(['@/components/myApply/myApply'], resolve)
+    },
+    {
+      path: '/detail',
+      name: 'detail',
+      component: resolve => require(['@/components/myApply/detail/detail'], resolve),
+      children: [
+        {
+          path: '/myApply/repairDetail',
+          name: 'repairDetail',
+          component: resolve => require(['@/components/myApply/repairDetail/repairDetail'], resolve)
+        },
+        {
+          path: '/myApply/mealDetail',
+          name: 'mealDetail',
+          component: resolve => require(['@/components/myApply/mealDetail/mealDetail'], resolve)
+        },
+        {
+          path: '/myApply/useCarDetail',
+          name: 'useCarDetail',
+          component: resolve => require(['@/components/myApply/useCarDetail/useCarDetail'], resolve)
+        },
+        {
+          path: '/myApply/meetingDetail',
+          name: 'meetingDetail',
+          component: resolve => require(['@/components/myApply/meetingDetail/meetingDetail'], resolve)
+        }
+      ]
     },
     // 我的用餐申请
     {
@@ -169,11 +179,6 @@ export default new Router({
           path: '/applyMeal/submitMealApply',
           name: 'submitMealApply',
           component: resolve => require(['@/components/applyMeal/submitMealApply/submitMealApply'], resolve)
-        },
-        {
-          path: '/applyMeal/mealDetail',
-          name: 'mealDetail',
-          component: resolve => require(['@/components/applyMeal/mealDetail/mealDetail'], resolve)
         }
       ]
     },

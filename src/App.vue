@@ -21,7 +21,7 @@ html,body,#app
   font-family: 'Avenir', Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
-  background:url('./common/images/bg.png') no-repeat
+  background:url('./common/images/bg.jpg') no-repeat
   background-size:100% 100%
   position:relative
   overflow:hidden

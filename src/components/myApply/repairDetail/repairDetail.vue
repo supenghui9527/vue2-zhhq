@@ -18,6 +18,29 @@
         <el-button class="submit_allot" type="primary" @click="submitAllot">确认分配</el-button>
       </div>
     </div>
+    <div v-if="assessShow" class="fixed">
+      <div class="allot">
+        <h5>
+          <span>评价反馈</span>
+          <i @click="closeAssess"></i>
+        </h5>
+        <div style="padding-left: 10px">
+          <div style="padding-top:10px;padding-bottom: 10px" class="clearfix">
+            <label class="float-left" style="padding-right:10px">文字描述</label>
+            <textarea class="float-left" v-model="assess" placeholder="多行输入"></textarea>
+          </div>
+          <div class="block clearfix">
+            <span style="padding-right:10px" class="demonstration float-left">星级指数</span>
+            <el-rate
+              class="float-left"
+              v-model="levels"
+              :colors="['#99A9BF', '#F7BA2A', '#FF9900']">
+            </el-rate>
+          </div>
+        </div>
+        <el-button class="submit_allot" type="primary" @click="sureAssess">确认评价</el-button>
+      </div>
+    </div>
     <ul class="detail_left">
       <li>申请表单：基础名片（请确认）</li>
       <li>申请时间：{{repairDetail.repairApplyReturn.createTime}}</li>
@@ -40,7 +63,7 @@
         <li>
           <span>实地拍摄：</span>
           <span v-if="repairDetail.picList==''">无</span>
-          <img v-for="item in repairDetail.picList" :src="item">
+          <img v-if="repairDetail.picList!=''" width="50" height="50" v-for="item in repairDetail.picList" :src="repairDetail.homePicPath+item">
         </li>
         <li>
           <span>故障位置：</span>
@@ -58,14 +81,29 @@
           <span>维修人员：</span>
           <span>{{repairDetail.repairApplyReturn.fixWorkerName}}{{repairDetail.repairApplyReturn.fixWorkerTel}}</span>
         </li>
+        <li v-if="repairDetail.repairApplyReturn.state==3">
+          <div>
+            <span>评价反馈：</span>
+            <span>{{repairDetail.repairApplyReturn.assess}}</span>
+          </div>
+          <div style="width:100%">
+            <span>星级指数：</span>
+            <el-rate
+              v-model="repairDetail.repairApplyReturn.levels"
+              style="display:inline-block"
+              :disabled="true"
+              :colors="['#99A9BF', '#F7BA2A', '#FF9900']">
+            </el-rate>
+          </div>
+        </li>
       </ul>
       <el-button v-if="repairDetail.repairApplyReturn.state==0&&$route.query.agency==1&&authAllot" type="primary" @click="getAllot">分配</el-button>
       <el-button v-if="repairDetail.repairApplyReturn.state==0&&$route.query.agency==1&&orderAuth" type="primary" @click="getOrders">接单</el-button>
+      <el-button v-if="repairDetail.repairApplyReturn.state==2&&$route.query.agency!=1" type="primary" @click="showAssess">点击评价</el-button>
     </div>
   </div>
 </template>
 <script>
-  import filterAuth from '@/common/js/filterAuth'
   export default {
     data: () => ({
       repairDetail: {
@@ -74,16 +112,18 @@
       fixWorkerList: null,
       authAllot: false,
       orderAuth: false,
-      fixWorkerId: null
+      fixWorkerId: null,
+      assess: null,
+      levels: null,
+      assessShow: false
     }),
     created () {
       setTimeout(() => {
         this.getDetail()
-        filterAuth({Vue: this, roleArr: this.$store.state.roleId.split(','), storeArr: [this.$store.state.auth.ORDER_REPAIR, this.$store.state.auth.PORITION], authArr: ['orderAuth', 'authAllot']})
-        console.log(this.authAllot, this.orderAuth)
       }, 20)
     },
     beforeRouteUpdate (to, from, next) {
+      console.log(to)
       next()
     },
     methods: {
@@ -122,6 +162,31 @@
           comment: '',
           state: this.repairDetail.repairApplyReturn.state
         })
+      },
+      // 维修接单
+      getOrders () {
+        this.$store.dispatch('order/repair', {
+          Vue: this,
+          userID: localStorage.getItem('userID'),
+          repairApplyID: this.$route.query.repairApplyID * 1
+        })
+      },
+      // 显示评价模块
+      showAssess () {
+        this.assessShow = true
+      },
+      // 关闭评价模块
+      closeAssess () {
+        this.assessShow = false
+      },
+      // 确认评价
+      sureAssess () {
+        this.$store.dispatch('assess/repair', {
+          Vue: this,
+          assess: this.assess,
+          repairApplyID: this.$route.query.repairApplyID * 1,
+          levels: this.levels
+        })
       }
     }
   }
@@ -144,6 +209,15 @@
     margin-left:-225px
     z-index:9999
     background-color:#fff
+    textarea
+      width:320px
+      height:90px
+      padding-top:5px
+      padding-left:10px
+      box-sizing:border-box
+      resize:none
+      border:none
+      background-color:#f0f0f0
     .submit_allot
        position:absolute
        bottom:20px
@@ -210,7 +284,5 @@
   padding-top:10px
   background-color:#fff
   font-size:14px
-  li
-    height:20px
-    line-height:20px
+  overflow-y:scroll !important
 </style>

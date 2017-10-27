@@ -6,7 +6,7 @@
         <img class="user" src="../login/already_login.png" @click="$router.push('/login')">
         <router-link to="/outSale/chooseFood" class="go_sale">维护保修</router-link>
         <span class="rule_tit" @click="showRule=!showRule">维修规则</span>
-        <span class="rule_tit" @click="$router.push('/login')">返回主页</span>
+        <span @click="$router.push('/login')">返回主页</span>
       </div>
     </div>
     <transition name="fade">
@@ -25,9 +25,8 @@
       </div>
     </transition>
     <div class="all_agency">
-      <div>
+      <div class="nav">
         <router-link to="/repair/applyRepair">维护报修</router-link>
-        <!-- <router-link to="/repair/myCard">申请名片</router-link> -->
         <router-link to="/repair/myApply">我的申请</router-link>
       </div>
       <router-view class="food_container"></router-view>
@@ -54,6 +53,12 @@
   left:50%
   margin-left:-350px
   top:240px
+  .nav
+    position:absolute
+    top:0
+    left:0
+    height:25px
+    z-index:66666
   div
     a
       display:inline-block

@@ -41,6 +41,10 @@
           </div>
         </li>
         <li>
+          <span>是否大日程：</span>
+          <span>{{meetingDeatail.isSchedule==0?'否':'是'}}</span>
+        </li>
+        <li>
           <span>会议内容：</span>
           <span>{{meetingDeatail.meetingContent==null?'空':meetingDeatail.meetingContent}}</span>
         </li>
@@ -86,8 +90,7 @@
         </li>
         <li v-if="meetingDeatail.check2==1" class="sign">
           <span>申请部门盖章：</span>
-          <img width="40" height="40" :src="meetingDeatail.check1Sign" @click="downLoadPdf(meetingDeatail)">
-          <!-- <span>{{meetingDeatail.check2Sign}}</span> -->
+          <img width="40" height="48" src="~common/images/pdf@2x.png" @click="downLoadPdf(meetingDeatail)">
         </li>
         <li v-if="meetingDeatail.check3==1">
           <span>已批示：</span>
@@ -106,15 +109,15 @@
           <span>{{meetingDeatail.check4Comments}}</span>
         </li>
       </ul>
-      <el-button v-if="meetingDeatail.state==1&&$route.query.agency==1&&authStamp" type="primary" @click="goStamp">待盖章</el-button>
-      <el-button v-if="meetingDeatail.state==2&&$route.query.agency==1&&authInstructions" type="primary" @click="instructions">待批示</el-button>
-      <el-button v-if="meetingDeatail.state==3&&$route.query.agency==1&&authAllot" type="primary" @click="getAllot">待分配</el-button>
-      <el-button v-if="meetingDeatail.state==3&&$route.query.agency==1&&authAllot" type="primary" @click="reject">驳回</el-button>
+      <el-button v-show="meetingDeatail.state==0&&$route.query.agency==1" type="primary" @click="getSign">签字</el-button>
+      <el-button v-show="meetingDeatail.state==1&&$route.query.agency==1&&authStamp" type="primary" @click="goStamp">盖章</el-button>
+      <el-button v-show="meetingDeatail.state==2&&$route.query.agency==1&&authInstructions" type="primary" @click="instructions">批示</el-button>
+      <el-button v-show="meetingDeatail.state==3&&$route.query.agency==1&&authAllot" type="primary" @click="getAllot">分配</el-button>
+      <el-button v-show="meetingDeatail.state==3&&$route.query.agency==1&&authAllot" type="primary" @click="reject">驳回</el-button>
     </div>
   </div>
 </template>
 <script>
-  import filterAuth from '@/common/js/filterAuth'
   export default {
     data: () => ({
       meetingDeatail: {},
@@ -128,8 +131,6 @@
     created () {
       setTimeout(() => {
         this.getDetail()
-        filterAuth({Vue: this, roleArr: this.$store.state.roleId.split(','), storeArr: [this.$store.state.auth.STAMP_SIGN, this.$store.state.auth.CHECK_HW, this.$store.state.auth.PORITION], authArr: ['authStamp', 'authInstructions', 'authAllot']})
-        console.log(this.authStamp, this.authInstructions, this.authAllot)
       }, 20)
     },
     beforeRouteUpdate (to, from, next) {
@@ -141,6 +142,13 @@
         this.$store.dispatch('meeting/agpply', {
           Vue: this,
           meetingApplyID: this.$route.query.meetingApplyID * 1
+        })
+      },
+      // 签字
+      getSign () {
+        this.$store.dispatch('get/sign', {
+          Vue: this,
+          userID: localStorage.getItem('userID')
         })
       },
       // 盖章
@@ -320,8 +328,10 @@
   font-size:14px
   overflow-y:scroll !important
   .sign
-    height:40px !important
-    line-height:40px !important
+    height:48px !important
+    line-height:48px !important
+    img
+      vertical-align:middle
   li
     height:20px
     line-height:20px

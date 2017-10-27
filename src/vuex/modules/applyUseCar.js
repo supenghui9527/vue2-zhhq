@@ -1,5 +1,5 @@
 import * as types from '../mutation-types/applyUseCar'
-
+import filterAuth from '@/common/js/filterAuth'
 const state = {
 }
 
@@ -44,6 +44,8 @@ const actions = {
       }
     }).then((data) => {
       Vue.carDetail = data.data
+      filterAuth({Vue: Vue, roleArr: localStorage.getItem('roleId').split(','), storeArr: [rootState.auth.STAMP_SIGN, rootState.auth.CHECK_CAR, rootState.auth.PORITION], authArr: ['authStamp', 'authInstructions', 'authAllot']})
+      console.log(Vue.authStamp, Vue.authInstructions, Vue.authAllot)
     })
   },
   // 提交驳回
@@ -92,6 +94,23 @@ const actions = {
       }
     }).then((data) => {
       Vue.aboutCar = null
+      Vue.$message(data.message)
+      Vue.getDetail()
+    })
+  },
+  // 用车评价
+  [types.ASSESS_USE_CAR] ({rootState, commit}, {Vue, assess, carApplyID, levels}) {
+    Vue.$store.dispatch('axios/act/HTTP', {
+      Vue,
+      url: rootState.assessUseCarUrl,
+      body: {
+        assess,
+        carApplyID,
+        levels
+      }
+    }).then((data) => {
+      Vue.$message(data.message)
+      Vue.assessShow = false
       Vue.getDetail()
     })
   }

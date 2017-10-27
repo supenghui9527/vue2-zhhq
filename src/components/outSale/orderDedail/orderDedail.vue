@@ -22,6 +22,7 @@
   </div>
 </template>
 <script>
+  import time from '@/common/js/time'
   export default {
     data: () => ({
       orderDetail: {},
@@ -42,10 +43,12 @@
       },
       // 撤销订单
       cancelOrder () {
-        this.$store.dispatch('cancel/order', {
-          Vue: this,
-          outFoodID: window.localStorage.getItem('orderID')
-        })
+        if (time(this, '8:00', '14:00')) {
+          this.$store.dispatch('cancel/order', {
+            Vue: this,
+            outFoodID: window.localStorage.getItem('orderID')
+          })
+        }
       }
     }
   }

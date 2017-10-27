@@ -9,9 +9,10 @@ import meetingApply from './modules/meetingApply'
 import repair from './modules/repair'
 import applyUseCar from './modules/applyUseCar'
 import applyMeal from './modules/applyMeal'
+import editMenu from './modules/editMenu'
 // 告诉 vue “使用” vuex
 Vue.use(Vuex)
-// const HOST = 'http://192.168.200.80:8010/logistics/'// 用于正式服务器内网 172.16.5.181:8010 测试118.190.71.221:8010 外网192.168.200.80:8010
+// const HOST = 'http://58.213.150.99:8010/logistics/'// 用于正式服务器内网 172.16.5.181:8010 测试118.190.71.221:8010 外网192.168.200.80:8010
 const HOST = '/domain' + 'logistics/'// 用于本地调试
 // 创建一个对象来保存应用启动时的初始状态
 const state = {
@@ -41,35 +42,43 @@ const state = {
   fullscreenLoading: false,
   loginModule: false,
   accessToken: '',
-  loginUrl: `${HOST}checkLogin.do?`,
-  outSaleUrl: `${HOST}findOutFoodList.do?`,
-  commitOrderUrl: `${HOST}submitFoodApply.do?`,
+  loginUrl: `${HOST}checkLogin.do`,
+  outSaleUrl: `${HOST}findOutFoodList.do`,
+  commitOrderUrl: `${HOST}submitFoodApply.do`,
   goOrderUrl: `${HOST}findFoodApplyDetail.do`,
-  cancelOrderUrl: `${HOST}cancelFoodApply.do?`,
-  myApplyUrl: `${HOST}myApply.do?`,
-  getAgencyUrl: `${HOST}myTodo.do?`,
-  getMeetingRoomUrl: `${HOST}findMeetingRoomList.do?`,
-  submitMeetingUrl: `${HOST}submitMeetingApply.do?`,
-  findFoodOrder: `${HOST}findFoodOrder.do?`,
-  meetingApplyDetail: `${HOST}findMeetingApplyDetail.do?`,
-  updataPdf: `${HOST}submitPDF.do?`,
-  getQuestions: `${HOST}findQuestions.do?`,
-  submitQuestionsUrl: `${HOST}submitRepairApply.do?`,
-  RepairDetailUrl: `${HOST}findRepairDetail.do?`,
-  submitApplyCarUrl: `${HOST}submitCarApply.do?`,
-  useCarDetailUrl: `${HOST}findCarApplyDetail.do?`,
-  applyMealUrl: `${HOST}submitDiningApply.do?`,
-  mealDetailUrl: `${HOST}findDiningApplyDetail.do?`,
-  mealAuditingUrl: `${HOST}diningApplyReview.do?`,
-  instructionsUrl: `${HOST}meetingApplyComment.do?`,
-  getAllotUrl: `${HOST}findAllServer.do?`,
-  submitAllotUrl: `${HOST}meetingApplyAllot.do?`,
-  submitAuditingUrl: `${HOST}carApplyComment.do?`,
-  getCarAllotUrl: `${HOST}findCarAndDriver.do?`,
-  submitCarUrl: `${HOST}carApplyAllot.do?`,
-  mealSureUrl: `${HOST}diningApplyFinish.do?`,
-  getRepairAllotUrl: `${HOST}findFixWorker.do?`,
-  submitRepairAllotUrl: `${HOST}repairAllot.do?`
+  cancelOrderUrl: `${HOST}cancelFoodApply.do`,
+  myApplyUrl: `${HOST}myApply.do`,
+  getAgencyUrl: `${HOST}myTodo.do`,
+  getMeetingRoomUrl: `${HOST}findMeetingRoomList.do`,
+  submitMeetingUrl: `${HOST}submitMeetingApply.do`,
+  findFoodOrder: `${HOST}findFoodOrder.do`,
+  meetingApplyDetail: `${HOST}findMeetingApplyDetail.do`,
+  updataPdf: `${HOST}submitPDF.do`,
+  getQuestions: `${HOST}findQuestions.do`,
+  submitQuestionsUrl: `${HOST}submitRepairApply.do`,
+  RepairDetailUrl: `${HOST}findRepairDetail.do`,
+  submitApplyCarUrl: `${HOST}submitCarApply.do`,
+  useCarDetailUrl: `${HOST}findCarApplyDetail.do`,
+  applyMealUrl: `${HOST}submitDiningApply.do`,
+  mealDetailUrl: `${HOST}findDiningApplyDetail.do`,
+  mealAuditingUrl: `${HOST}diningApplyReview.do`,
+  instructionsUrl: `${HOST}meetingApplyComment.do`,
+  getAllotUrl: `${HOST}findAllServer.do`,
+  submitAllotUrl: `${HOST}meetingApplyAllot.do`,
+  submitAuditingUrl: `${HOST}carApplyComment.do`,
+  getCarAllotUrl: `${HOST}findCarAndDriver.do`,
+  submitCarUrl: `${HOST}carApplyAllot.do`,
+  mealSureUrl: `${HOST}diningApplyFinish.do`,
+  getRepairAllotUrl: `${HOST}findFixWorker.do`,
+  submitRepairAllotUrl: `${HOST}repairAllot.do`,
+  getHotFoodUrl: `${HOST}findCookFood.do`,
+  submitHotFoodUrl: `${HOST}modifyMenu.do`,
+  getFoodUrl: `${HOST}findNoodleFood.do`,
+  submitFoodUrl: `${HOST}modifyNoodleMenu.do`,
+  assessRepairUrl: `${HOST}assessRepair.do`,
+  assessUseCarUrl: `${HOST}carApplyAssess.do`,
+  orderRepairUrl: `${HOST}orderRepair.do`,
+  getSignUrl: `${HOST}saveSignPath.do?`
 }
 // 创建一个对象存储一系列我们接下来要写的 mutation 函数
 const mutations = {
@@ -96,6 +105,7 @@ export default new Vuex.Store({
     meetingApply,
     repair,
     applyUseCar,
-    applyMeal
+    applyMeal,
+    editMenu
   }
 })

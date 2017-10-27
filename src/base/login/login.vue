@@ -1,8 +1,8 @@
 <template>
   <div class="login">
     <img src="./logo.png">
-    <input class="user" type="text" placeholder="帐号/手机号" v-model="userName" autocomplete="off" />
-    <input type="password" placeholder="密码" v-model="password" autocomplete="off" />
+    <input class="user" type="text" placeholder="帐号/手机号" v-model="userName" autocomplete="true" />
+    <input type="password" placeholder="密码" v-model="password" autocomplete="true" />
     <div v-show="err!==null" class="err">{{err}}</div>
     <div class="btn" @click="login">登录</div>
   </div>

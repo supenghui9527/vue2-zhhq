@@ -30,7 +30,7 @@ const actions = {
       localStorage.setItem('dept_id', data.data.dept_id)
       rootState.isLogin = true // 改变成已登录状态
       rootState.loginModule = false // 隐藏登录框
-      Vue.$emit('fromLogin', true)
+      Vue.$emit('fromLogin', {show: true, userName: data.data.name})
       rootState.type = data.data.type
     })
   },
@@ -46,6 +46,7 @@ const actions = {
       rootState.isLogin = true
       rootState.loginModule = false
       rootState.type = data.data.type
+      Vue.userName = data.data.name
     })
   }
 }

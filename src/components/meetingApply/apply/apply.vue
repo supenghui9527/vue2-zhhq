@@ -1,9 +1,8 @@
 <template>
   <form class="meeting_apply">
     <div class="meeting_left">
-      <h5>会议申请</h5>
       <ul>
-        <li class="clearfix">
+        <li class="clearfix" style="padding-top:10px">
           <div class="time">
             <label><span>*</span>是否电梯控制</label>
             <span class="btn" @click="getLift(item)" :class="{active:isLift==item.id}" v-for="item in time">{{item.text}}</span>
@@ -14,6 +13,17 @@
             <label><span>*</span>是否大日程</label>
             <span class="btn" @click="getTime(item)" :class="{active:isSchedule==item.id}" v-for="item in time">{{item.text}}</span>
           </div>
+        </li>
+        <li>
+          <label><span>*</span>开门时间</label>
+          <el-time-picker
+            v-model="openTime"
+            class="meeting_date"
+            :picker-options="{
+              selectableRange: '01:00:00 - 24:00:00'
+            }"
+            placeholder="起始时间">
+          </el-time-picker>
         </li>
         <li>
           <label><span>*</span>会议日期</label>
@@ -52,7 +62,7 @@
           <div>
             <label><span>*</span>会议内容：</label>
           </div>
-          <textarea name="meetingContent"></textarea>
+          <textarea v-model="meetingContent"></textarea>
         </li>
       </ul>
     </div>
@@ -121,10 +131,13 @@
       meetingRoomID: '',
       banner: '',
       standMike: '',
+      openTime: '',
       peopleCount: '',
       rostrumCount: '',
       mikeCount: '',
+      meetingContent: '',
       otherService: '',
+      meetingPeople: '',
       meetingRooms: {},
       pickerOptions0: {
         disabledDate (time) {
@@ -154,36 +167,45 @@
       onMusic (item) {
         this.music = item.id
       },
+      // 会议室
       getRoomId (item) {
         this.meetingRoomID = item.meetingRoomID
+        this.meetingPeople = item.meetingContent
       },
       submit () {
-        dateFormat(this.meetingDate, 'yyyy-MM-dd')
-        if (this.meetingDate.getDate() - new Date().getDate() >= 2) {
-          console.log(this.startTime, this.endTime)
-          this.$store.dispatch('submit/meeting', {
-            Vue: this,
-            userID: window.localStorage.getItem('userID'),
-            linkman: window.localStorage.getItem('linkman'),
-            officeTel: window.localStorage.getItem('officetel'),
-            linkmanTel: window.localStorage.getItem('linkmantel'),
-            isLift: this.isLift,
-            meetingDate: dateFormat(this.meetingDate, 'yyyy-MM-dd'),
-            startTime: dateFormat(this.startTime, 'hh-mm'),
-            endTime: dateFormat(this.endTime, 'hh-mm'),
-            meetingContent: this.meetingContent,
-            meetingRoomID: this.meetingRoomID,
-            isSchedule: this.isSchedule,
-            peopleCount: this.peopleCount,
-            rostrumCount: this.rostrumCount,
-            mikeCount: this.mikeCount,
-            standMike: this.standMike,
-            music: this.music,
-            banner: this.banner,
-            otherService: this.otherService
-          })
+        if (this.meetingDate !== '' && this.startTime !== '' && this.endTime !== '' && this.peopleCount !== '' && this.meetingContent !== '' && this.meetingRoomID !== '' && this.rostrumCount !== '' && this.mikeCount !== '' && this.standMike !== '') {
+          if (this.meetingDate.getDate() - new Date().getDate() >= 2) {
+            if (this.meetingContent <= this.meetingPeople) {
+              this.$store.dispatch('submit/meeting', {
+                Vue: this,
+                userID: window.localStorage.getItem('userID'),
+                linkman: window.localStorage.getItem('linkman'),
+                officeTel: window.localStorage.getItem('officetel'),
+                linkmanTel: window.localStorage.getItem('linkmantel'),
+                isLift: this.isLift,
+                meetingDate: dateFormat(this.meetingDate, 'yyyy-MM-dd'),
+                openTime: dateFormat(this.openTime, 'hh-mm').replace('-', ':'),
+                startTime: dateFormat(this.startTime, 'hh-mm').replace('-', ':'),
+                endTime: dateFormat(this.endTime, 'hh-mm').replace('-', ':'),
+                meetingContent: this.meetingContent,
+                meetingRoomID: this.meetingRoomID,
+                isSchedule: this.isSchedule,
+                peopleCount: this.peopleCount,
+                rostrumCount: this.rostrumCount,
+                mikeCount: this.mikeCount,
+                standMike: this.standMike,
+                music: this.music,
+                banner: this.banner,
+                otherService: this.otherService
+              })
+            } else {
+              this.$message({message: '请确认会议室人数是否达到上线', type: 'warning'})
+            }
+          } else {
+            this.$message({message: '请选择会议有效时间', type: 'warning'})
+          }
         } else {
-          this.$message('请选择会议有效时间')
+          this.$message({message: '请确认信息是否填写完整', type: 'warning'})
         }
       }
     }
@@ -191,7 +213,7 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 .meeting_apply
-  height:240px
+  height:280px
   label
     height:20px
     line-height:20px

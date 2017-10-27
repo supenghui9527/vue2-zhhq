@@ -5,7 +5,7 @@
       <div>
         <img class="user" title="点击回到首页面" src="../login/already_login.png" @click="$router.push('/login')">
         <router-link to="" class="go_sale">我的待办</router-link>
-        <span class="rule_tit" @click="$router.push('/login')">返回主页</span>
+        <span @click="$router.push('/login')">返回主页</span>
       </div>
     </div>
     <div class="all_agency">
@@ -21,7 +21,16 @@
               </el-option>
             </el-select>
           </span>
-          <span class="department">部门名称</span>
+          <span class="department">
+            <el-select v-model="applyType" @change="filter" placeholder="请选择">
+              <el-option
+                v-for="item in filter_.typeFilter"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </span>
           <span class="state_filter">
             <el-select v-model="stateValue" @change="filter" placeholder="请选择">
               <el-option
@@ -33,7 +42,7 @@
             </el-select>
           </span>
         </dt>
-        <dd style="text-align:center" v-if="allAgency.list==''">暂无数据</dd>
+        <dd style="text-align:center" v-if="allAgency.list==''||JSON.stringify(allAgency)=='{}'">暂无数据</dd>
         <dd @click="goDetail(item)" v-for="(item,index) in allAgency.list" :class="{active:(index+1)%2==0}">
           <span class="created_time">{{item.param1}}</span>
           <span class="department">{{item.title}}</span>
@@ -67,39 +76,69 @@
   export default {
     data: () => ({
       showRule: false, // 显示外卖规则
-      timeValue: '0',
-      stateValue: '0',
+      applyType: 1,
+      timeValue: 0,
+      stateValue: 1,
       val: 1,
       allAgency: {},
       filter_: {
+        typeFilter: [{
+          value: 1,
+          label: '全部代办'
+        }, {
+          value: 2,
+          label: '公务用车'
+        }, {
+          value: 3,
+          label: '会议申请'
+        }, {
+          value: 4,
+          label: '报修申请'
+        }, {
+          value: 5,
+          label: '用餐申请'
+        }],
         timeFilter: [{
-          value: '0',
+          value: 0,
           label: '全部待办'
         }, {
-          value: '1',
+          value: 1,
           label: '今天'
         }],
         stateFilter: [{
-          value: '0',
+          value: 0,
           label: '全部状态'
         }, {
-          value: '1',
-          label: '已处理'
-        }, {
-          value: '2',
+          value: 1,
           label: '未处理'
+        }, {
+          value: 2,
+          label: '已处理'
         }]
       }
     }),
     created () {
-      this.getMyAgency(0, 0, 1)
+      let filter = window.localStorage.getItem('agencyFilter')
+      if (filter) {
+        let newFilter = JSON.parse(filter)
+        this.applyType = newFilter.applyType * 1
+        this.getMyAgency(newFilter.applyType, 0, 1, 1)
+      } else {
+        this.getMyAgency(1, 0, 1, 1)
+      }
+    },
+    beforeRouteUpdate (to, from, next) {
+      next()
     },
     methods: {
       // 获取我的代办
-      getMyAgency (timeType, state, pageIndex) {
+      getMyAgency (applyType, timeType, state, pageIndex) {
+        let filter = JSON.stringify({applyType, timeType, state, pageIndex})
+        window.localStorage.setItem('agencyFilter', filter)
         this.$store.dispatch('get/agency', {
           Vue: this,
           userID: window.localStorage.getItem('userID'),
+          applyType: applyType,
           timeType: timeType,
           state: state,
           pageIndex: pageIndex,
@@ -109,24 +148,24 @@
       handleSizeChange (val) {
       },
       filter () {
-        this.getMyAgency(this.timeValue, this.stateValue, this.val)
+        this.getMyAgency(this.applyType, this.timeValue, this.stateValue, this.val)
       },
       handleCurrentChange (val) {
         this.val = val
-        this.getMyAgency(this.timeValue, this.stateValue, this.val)
+        this.getMyAgency(this.applyType, this.timeValue, this.stateValue, this.val)
       },
       goDetail (item) {
         // this.$store.commit('setRepairID', item.id)
         if (item.tag * 1 === 1) { // 外卖
           this.$router.push({path: '/outSale/orderDetail', query: {agency: 1, outFoodID: item.id}})
         } else if (item.tag * 1 === 2) { // 用车
-          this.$router.push({path: '/applyUseCar/useCarDetail', query: {agency: 1, carApplyID: item.id}})
+          this.$router.push({path: '/myApply/useCarDetail', query: {agency: 1, carApplyID: item.id}})
         } else if (item.tag * 1 === 3) { // 会议
-          this.$router.push({path: '/meetingApply/meetingDetail', query: {agency: 1, meetingApplyID: item.id}})
+          this.$router.push({path: '/myApply/meetingDetail', query: {agency: 1, meetingApplyID: item.id}})
         } else if (item.tag * 1 === 4) { // 报修
-          this.$router.push({path: '/repair/repairDetail', query: {agency: 1, repairApplyID: item.id}})
+          this.$router.push({path: '/myApply/repairDetail', query: {agency: 1, repairApplyID: item.id}})
         } else if (item.tag * 1 === 5) { // 用餐
-          this.$router.push({path: '/applyMeal/mealDetail', query: {agency: 1, diningApplyID: item.id}})
+          this.$router.push({path: '/myApply/mealDetail', query: {agency: 1, diningApplyID: item.id}})
         }
       }
     }
@@ -137,10 +176,11 @@
 .all_agency
   position:absolute
   width:700px
-  height:300px !important
+  max-height:300px !important
   left:50%
   margin-left:-350px
   top:240px
+  overflow-y:scroll
   .created_time
     width:20%
     padding-left:50px

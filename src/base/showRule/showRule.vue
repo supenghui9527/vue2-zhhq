@@ -14,9 +14,9 @@
   export default {
     data: () => ({
       imgUrl: [{
-        url: '/static/rule.jpg'
+        url: './static/rule.jpg'
       }, {
-        url: '/static/rule1.jpg'
+        url: './static/rule1.jpg'
       }]
     }),
     methods: {
@@ -45,5 +45,5 @@
     .el-carousel,.el-carousel__container,el-carousel__item
       height:100% !important
     img
-      width:400px
+      width:420px
 </style>

@@ -1,14 +1,14 @@
 <template>
   <div class="meal_container clearfix">
     <ul class="repair_left">
-      <li>
+<!--       <li>
         <label><span class="must_write">*</span>用餐地点</label>
         <el-radio class="radio" v-model="diningPlace" :label="1">建邺区政府大楼</el-radio>
         <el-radio class="radio" v-model="diningPlace" :label="0">双和园</el-radio>
-      </li>
+      </li> -->
       <li>
         <label><span class="must_write">*</span>用餐类型</label>
-        <el-radio class="radio" v-model="diningType" :label="0">餐桌</el-radio>
+        <el-radio class="radio" v-model="diningType" :label="0">桌餐</el-radio>
         <el-radio class="radio" v-model="diningType" :label="1">自助餐</el-radio>
       </li>
       <li>
@@ -52,7 +52,7 @@
     data: () => ({
       diningPlace: 1,
       diningType: 0,
-      diningBenchmark: '1',
+      diningBenchmark: '0',
       options: [{
         value: '0',
         label: '标准不高于50元/人'
@@ -76,19 +76,24 @@
     },
     methods: {
       submitApplyCar () {
-        this.$store.dispatch('submit/apply/meal', {
-          Vue: this,
-          userID: window.localStorage.getItem('userID'),
-          applyDeptID: window.localStorage.getItem('dept_id'),
-          linkman: window.localStorage.getItem('linkman'),
-          linkmantel: window.localStorage.getItem('linkmantel'),
-          officeTel: window.localStorage.getItem('officetel'),
-          diningType: this.diningType,
-          diningBenchmark: this.diningBenchmark,
-          diningReason: this.diningReason,
-          peopleCount: this.peopleCount,
-          diningTime: dateFormat(this.diningTime, 'yyyy-MM-dd-hh-mm')
-        })
+        let nowDate = dateFormat(this.diningTime, 'yyyy-MM-dd-hh-mm').split('-')
+        if (this.diningReason !== '' && this.peopleCount !== '' && this.diningTime !== '') {
+          this.$store.dispatch('submit/apply/meal', {
+            Vue: this,
+            userID: window.localStorage.getItem('userID'),
+            applyDeptID: window.localStorage.getItem('dept_id'),
+            linkman: window.localStorage.getItem('linkman'),
+            linkmantel: window.localStorage.getItem('linkmantel'),
+            officeTel: window.localStorage.getItem('officetel'),
+            diningType: this.diningType,
+            diningBenchmark: this.diningBenchmark,
+            diningReason: this.diningReason,
+            peopleCount: this.peopleCount,
+            diningTime: `${nowDate[0]}-${nowDate[1]}-${nowDate[2]} ${nowDate[3]}:${nowDate[4]}`
+          })
+        } else {
+          this.$message({message: '请确认信息是否填写完整', type: 'warning'})
+        }
       }
     }
   }

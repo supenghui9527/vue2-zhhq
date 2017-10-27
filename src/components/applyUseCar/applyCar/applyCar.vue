@@ -58,7 +58,7 @@
     data: () => ({
       isShow: null,
       isAfterApply: 0,
-      applyReason: 0,
+      applyReason: 1,
       peopleCount: '',
       linkman: '',
       linkmanTel: '',
@@ -95,23 +95,28 @@
     },
     methods: {
       submitApplyCar () {
-        this.$store.dispatch('submit/apply/car', {
-          Vue: this,
-          userID: window.localStorage.getItem('userID'),
-          userName: window.localStorage.getItem('linkman'),
-          userTel: window.localStorage.getItem('linkmantel'),
-          applyDeptID: window.localStorage.getItem('dept_id'),
-          applyDept: window.localStorage.getItem('deptName'),
-          officeTel: window.localStorage.getItem('officetel'),
-          applyReason: this.applyReason,
-          goalPlace: this.goalPlace,
-          detailReason: this.detailReason,
-          peopleCount: this.peopleCount,
-          usingTime: dateFormat(this.usingTime, 'yyyy-MM-dd-hh-mm'),
-          linkman: this.linkman,
-          linkmanTel: this.linkmanTel,
-          isAfterApply: this.isAfterApply
-        })
+        let nowDate = dateFormat(this.usingTime, 'yyyy-MM-dd-hh-mm').split('-')
+        if (this.goalPlace !== '' && this.detailReason !== '' && this.usingTime !== '' && this.peopleCount !== '' && this.linkman !== '' && this.linkmanTel !== '') {
+          this.$store.dispatch('submit/apply/car', {
+            Vue: this,
+            userID: window.localStorage.getItem('userID'),
+            userName: window.localStorage.getItem('linkman'),
+            userTel: window.localStorage.getItem('linkmantel'),
+            applyDeptID: window.localStorage.getItem('dept_id'),
+            applyDept: window.localStorage.getItem('deptName'),
+            officeTel: window.localStorage.getItem('officetel'),
+            applyReason: this.applyReason,
+            goalPlace: this.goalPlace,
+            detailReason: this.detailReason,
+            peopleCount: this.peopleCount,
+            usingTime: `${nowDate[0]}-${nowDate[1]}-${nowDate[2]} ${nowDate[3]}:${nowDate[4]}}`,
+            linkman: this.linkman,
+            linkmanTel: this.linkmanTel,
+            isAfterApply: this.isAfterApply
+          })
+        } else {
+          this.$message({message: '请确认信息是否填写完整', type: 'warning'})
+        }
       },
       hideRule () {
         this.isShow = false

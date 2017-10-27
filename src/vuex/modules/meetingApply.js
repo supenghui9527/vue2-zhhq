@@ -21,7 +21,7 @@ const actions = {
     })
   },
   // 提交会议申请
-  [types.SUBMIT_MEETING] ({rootState}, {Vue, userID, linkman, officeTel, linkmanTel, isLift, meetingDate, startTime, endTime, meetingContent, meetingRoomID, isSchedule, peopleCount, rostrumCount, mikeCount, standMike, music, banner, otherService}) {
+  [types.SUBMIT_MEETING] ({rootState}, {Vue, userID, linkman, officeTel, linkmanTel, isLift, meetingDate, openTime, startTime, endTime, meetingContent, meetingRoomID, isSchedule, peopleCount, rostrumCount, mikeCount, standMike, music, banner, otherService}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.submitMeetingUrl,
@@ -32,6 +32,7 @@ const actions = {
         linkmanTel,
         isLift,
         meetingDate,
+        openTime,
         startTime,
         endTime,
         meetingContent,
@@ -46,9 +47,7 @@ const actions = {
         otherService
       }
     }).then((data) => {
-      if (data.state === 1) {
-        Vue.$message('提交成功')
-      }
+      Vue.$message(data.message)
     })
   },
   // 会议批示
@@ -63,6 +62,7 @@ const actions = {
       }
     }).then((data) => {
       Vue.$message(data.message)
+      Vue.getDetail()
     })
   },
   // 获取分配列表

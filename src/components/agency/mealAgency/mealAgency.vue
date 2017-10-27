@@ -1,17 +1,18 @@
 <template>
   <div>
-    <div class="down_load" @click="getPdf">点击下载</div>
+    <el-button type="primary" class="down_load" @click="getPdf">生成pdf</el-button>
     <el-upload
       class="upload-demo"
       style="position: absolute;top:30px;"
       :action="$store.state.updataPdf"
       name="file"
+      ref="upload"
       :on-change="getfile"
       :data="parm"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
       :file-list="fileList">
-      <el-button size="small" type="primary">点击上传</el-button>
+      <el-button class="up_load" type="primary">盖章</el-button>
     </el-upload>
     <div id="home" class="box">
       <div class="head">
@@ -39,30 +40,30 @@
           </tr>
           <tr >
             <td rowspan="8">用餐类型及标准（请在所选项目上打√）</td>
-            <td rowspan="4">桌餐</td>
-            <td colspan="4">加班误餐：标准不高于50元/人</td>
+            <td rowspan="4"><span v-if="mealDetail.diningType==0">√</span>桌餐</td>
+            <td colspan="4"><span v-if="mealDetail.diningType==0&&mealDetail.diningBenchmark==0">√</span>加班误餐：标准不高于50元/人</td>
           </tr>
           <tr>
-            <td colspan="4">同城工作误餐：标准不高于80元/人</td>
+            <td colspan="4"><span v-if="mealDetail.diningType==0&&mealDetail.diningBenchmark==1">√</span>同城工作误餐：标准不高于80元/人</td>
           </tr>
           <tr>
-            <td colspan="4">公务接待：标准不高于120元/人</td>
+            <td colspan="4"><span v-if="mealDetail.diningType==0&&mealDetail.diningBenchmark==2">√</span>公务接待：标准不高于120元/人</td>
           </tr>
           <tr>
-            <td colspan="4">商务接待：参照公务接待标准</td>
+            <td colspan="4"><span v-if="mealDetail.diningType==0&&mealDetail.diningBenchmark==3">√</span>商务接待：参照公务接待标准</td>
           </tr>
           <tr>
-            <td rowspan="4">自助餐</td>
-            <td colspan="4">加班误餐：标准不高于50元/人</td>
+            <td rowspan="4"><span v-if="mealDetail.diningType==1">√</span>自助餐</td>
+            <td colspan="4"><span v-if="mealDetail.diningType==1&&mealDetail.diningBenchmark==0">√</span>加班误餐：标准不高于50元/人</td>
           </tr>
           <tr>
-            <td colspan="4">同城工作误餐：标准不高于80元/人</td>
+            <td colspan="4"><span v-if="mealDetail.diningType==1&&mealDetail.diningBenchmark==1">√</span>同城工作误餐：标准不高于80元/人</td>
           </tr>
           <tr>
-            <td colspan="4">公务接待：标准不高于120元/人</td>
+            <td colspan="4"><span v-if="mealDetail.diningType==1&&mealDetail.diningBenchmark==2">√</span>公务接待：标准不高于120元/人</td>
           </tr>
           <tr>
-            <td colspan="4">商务接待：参照公务接待标准</td>
+            <td colspan="4"><span v-if="mealDetail.diningType==1&&mealDetail.diningBenchmark==3">√</span>商务接待：参照公务接待标准</td>
           </tr>
           <tr>
             <td>用餐人数</td>
@@ -78,7 +79,7 @@
           </tr>
           <tr>
             <td colspan="2">区分管领导签字</td>
-            <td colspan="4"></td>
+            <td colspan="4"><img width="80" height="80" :src="mealDetail.check1Sign"></td>
           </tr>
           <tr>
             <td colspan="2">管理中心分管领导意见</td>
@@ -102,12 +103,14 @@
 </template>
 <script>
   import html2canvas from 'html2canvas'
+  import dateFormat from '@/common/js/dateFormat'
   import JSPDF from 'jspdf'
   import seal from '@/common/js/seal'
   export default {
     data: () => ({
       mealDetail: {},
       fileList: [],
+      nowDate: dateFormat(new Date(), 'yyyy-MM-dd'),
       parm: {
         tag: '5',
         applyID: ''
@@ -149,7 +152,7 @@
                 }
               }
             }
-            PDF.save('会议室使用申请表.pdf')
+            PDF.save('用餐申请表.pdf')
           }
         })
         html2canvas()
@@ -161,52 +164,49 @@
         console.log(file)
       },
       getfile (file, fileList) {
-        // seal(file)
+        seal(`${file.url}.pdf`)
       }
     }
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-  .router
-    overflow-y: scroll !important
-  *
-    margin: 0
-    padding: 0
-  ul
-    li
-      float: left
-  td
-    width: 100px
-    height: 40px
-    text-align: center
-    border: 1px solid #000
-  .box
-    width: 650px
-    margin: 0 auto
-    background-color:#fff
-  .head_title 
-    width: 100%
-    height: 50px
-    line-height: 50px
-    text-align: center
-    font-size: 34px
-    font-weight: 500
-  .head_msg
-    width: 100%
-    height: 50px
-    line-height: 50px
-  .head_office,.head_time 
-    width: 50%
+.down_load,.up_load
+  position:absolute
+  font-size:14px
+  left:50px
+.down_load
+  top:200px
+.up_load
+  top:220px
+.router
+  overflow-y: scroll !important
+ul
+  li
     float: left
-  .head,table,.foot
-    width:500px
-    margin:0 auto
-  .down_load
-    position:absolute
-    left:0
-    top:0
-    color:#fff
-    font-size:14px
-    background-color:#4db3ff
-    padding:6px 10px
+td
+  width: 100px
+  height: 40px
+  text-align: center
+  border: 1px solid #000
+.box
+  width: 650px
+  margin: 0 auto
+  background-color:#fff
+.head_title 
+  width: 100%
+  height: 50px
+  line-height: 50px
+  text-align: center
+  font-size: 34px
+  font-weight: 500
+.head_msg
+  width: 100%
+  height: 50px
+  line-height: 50px
+.head_office,.head_time 
+  width: 50%
+  float: left
+.head,table,.foot
+  width:500px
+  margin:0 auto
 </style>

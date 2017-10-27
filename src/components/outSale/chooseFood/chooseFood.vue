@@ -30,7 +30,6 @@
     </div>
     <div class="order">
       <span class="time">预定时间:上午8：00-9：00和下午12：00-14：00</span>
-
       <span class="go_order">>></span>
       <span @click="commitOrder" class="btn">提交订单</span>
     </div>
@@ -140,7 +139,8 @@
           name: item.foodName,
           price: item.foodPrice,
           number: item.value,
-          foodUnit: item.foodUnit
+          foodUnit: item.foodUnit,
+          foodType: item.foodType
         }
       },
       // 限制输入食物数量
@@ -151,7 +151,11 @@
       },
       // 提交订单
       commitOrder () {
-        if (time(this, '8:00', '12:00') || time(this, '12:00', '14:00')) {
+        if (time(this, '8:00', '9:00') || time(this, '12:00', '14:00')) {
+          if (JSON.stringify(this.order) === '{}') {
+            this.$message({message: '请选择外卖', type: 'warning'})
+            return false
+          }
           for (let item in this.order) {
             if (this.order[item].foodType === 0) {
               this.outFood += `${this.order[item].id},${this.order[item].name},${this.order[item].price},${this.order[item].number},${this.order[item].foodUnit};`
@@ -159,16 +163,15 @@
               this.cookFood += `${this.order[item].id},${this.order[item].name},${this.order[item].price},${this.order[item].number},${this.order[item].foodUnit};`
             }
           }
-          if (this.outFood) {
-            this.$store.dispatch('commit/order', {
-              Vue: this,
-              outFood: this.outFood.substring(0, this.outFood.length - 1),
-              userID: window.localStorage.getItem('userID'),
-              place: 0
-            })
-          }
+          this.$store.dispatch('commit/order', {
+            Vue: this,
+            outFood: this.outFood.substring(0, this.outFood.length - 1),
+            cookFood: this.cookFood.substring(0, this.cookFood.length - 1),
+            userID: window.localStorage.getItem('userID'),
+            place: 0
+          })
         } else {
-          this.$message('订餐时间不在有效时间段内')
+          this.$message({message: '订餐时间不在有效时间段内', type: 'warning'})
         }
       },
       // 查看订单详情

@@ -27,6 +27,29 @@
         <el-button class="submit_allot" type="primary" @click="submitCarAllot">确认分配</el-button>
       </div>
     </div>
+    <div v-if="assessShow" class="fixed">
+      <div class="allot">
+        <h5>
+          <span>评价反馈</span>
+          <i @click="closeAssess"></i>
+        </h5>
+        <div style="padding-left: 10px">
+          <div style="padding-top:10px;padding-bottom: 10px" class="clearfix">
+            <label class="float-left" style="padding-right:10px">文字描述</label>
+            <textarea class="float-left" v-model="assess" placeholder="多行输入"></textarea>
+          </div>
+          <div class="block clearfix">
+            <span style="padding-right:10px" class="demonstration float-left">星级指数</span>
+            <el-rate
+              class="float-left"
+              v-model="levels"
+              :colors="['#99A9BF', '#F7BA2A', '#FF9900']">
+            </el-rate>
+          </div>
+        </div>
+        <el-button class="submit_allot" type="primary" @click="sureAssess">确认评价</el-button>
+      </div>
+    </div>
     <ul class="detail_left">
       <li>申请表单：基础名片（请确认）</li>
       <li>申请时间：{{carDetail.createTime}}</li>
@@ -77,8 +100,7 @@
         </li>
         <li v-if="carDetail.check2==1" class="sign">
           <span>申请部门盖章：</span>
-          <img width="40" height="40" :src="carDetail.check1Sign">
-          <span>{{carDetail.check2Sign}}</span>
+          <img width="40" height="48" src="~common/images/pdf@2x.png" @click="downLoadPdf(carDetail)">
         </li>
         <li v-if="carDetail.check3==1">
           <span>管理中心领导：已审核</span>
@@ -110,17 +132,33 @@
           <span>分配驳回：</span>
           <span>{{carDetail.check4Comments}}</span>
         </li>
+        <li v-if="carDetail.state==7">
+          <div>
+            <span>评价反馈：</span>
+            <span>{{carDetail.assess}}</span>
+          </div>
+          <div style="width:100%">
+            <span>星级指数：</span>
+            <el-rate
+              v-model="carDetail.levels"
+              style="display:inline-block"
+              :disabled="true"
+              :colors="['#99A9BF', '#F7BA2A', '#FF9900']">
+            </el-rate>
+          </div>
+        </li>
       </ul>
-      <el-button v-if="carDetail.state==1&&$route.query.agency==1&&authStamp" type="primary" @click="goStamp">待盖章</el-button>
+      <el-button v-if="carDetail.state==0&&$route.query.agency==1" type="primary" @click="getSign">签字</el-button>
+      <el-button v-if="carDetail.state==1&&$route.query.agency==1&&authStamp" type="primary" @click="goStamp">盖章</el-button>
       <el-button v-if="carDetail.state==2&&$route.query.agency==1&&authInstructions" type="primary" @click="instructions">审核</el-button>
       <el-button v-if="carDetail.state==2&&$route.query.agency==1&&authInstructions" type="primary" @click="reject">驳回</el-button>
       <el-button v-if="carDetail.state==3&&$route.query.agency==1&&authAllot" type="primary" @click="getAllot">分配</el-button>
       <el-button v-if="carDetail.state==3&&$route.query.agency==1&&authAllot" type="primary" @click="allotReject">驳回</el-button>
+      <el-button v-if="carDetail.state==6&&$route.query.agency!=1" type="primary" @click="showAssess">点击评价</el-button>
     </div>
   </div>
 </template>
 <script>
-  import filterAuth from '@/common/js/filterAuth'
   export default {
     data: () => ({
       carDetail: {},
@@ -133,13 +171,14 @@
       carModel: null,
       driverName: null,
       driverTel: null,
-      driverID: null
+      driverID: null,
+      assess: null,
+      levels: null,
+      assessShow: false
     }),
     created () {
       setTimeout(() => {
         this.getDetail()
-        filterAuth({Vue: this, roleArr: this.$store.state.roleId.split(','), storeArr: [this.$store.state.auth.STAMP_SIGN, this.$store.state.auth.CHECK_CAR, this.$store.state.auth.PORITION], authArr: ['authStamp', 'authInstructions', 'authAllot']})
-        console.log(this.authStamp, this.authInstructions, this.authAllot)
       }, 20)
     },
     beforeRouteUpdate (to, from, next) {
@@ -153,9 +192,20 @@
           carApplyID: this.$route.query.carApplyID * 1
         })
       },
+      // 签字
+      getSign () {
+        this.$store.dispatch('get/sign', {
+          Vue: this,
+          userID: localStorage.getItem('userID')
+        })
+      },
       // 盖章
       goStamp () {
         this.$router.push({path: '/agency/carAgency', query: {carApplyID: this.$route.query.carApplyID * 1}})
+      },
+      // 下载PDF
+      downLoadPdf (item) {
+        location.href = item.check2Sign
       },
       // 审核
       instructions () {
@@ -250,6 +300,23 @@
             message: '取消输入'
           })
         })
+      },
+      // 显示评价模块
+      showAssess () {
+        this.assessShow = true
+      },
+      // 关闭评价模块
+      closeAssess () {
+        this.assessShow = false
+      },
+      // 确认评价
+      sureAssess () {
+        this.$store.dispatch('assess/use/car', {
+          Vue: this,
+          assess: this.assess,
+          carApplyID: this.$route.query.carApplyID * 1,
+          levels: this.levels
+        })
       }
     }
   }
@@ -272,6 +339,15 @@
     margin-left:-225px
     z-index:9999
     background-color:#fff
+    textarea
+      width:320px
+      height:90px
+      padding-top:5px
+      padding-left:10px
+      box-sizing:border-box
+      resize:none
+      border:none
+      background-color:#f0f0f0
     .submit_allot
        position:absolute
        bottom:20px
@@ -355,8 +431,10 @@
   font-size:14px
   overflow-y:scroll !important
   .sign
-    height:40px !important
-    line-height:40px !important
+    height:48px !important
+    line-height:48px !important
+    img
+      vertical-align:middle
   li
     height:20px
     line-height:20px

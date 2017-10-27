@@ -29,6 +29,21 @@ const actions = {
     }).then(({data}) => {
       commit('get/all/myapply', data)
     })
+  },
+  [types.GETSIGN] ({rootState, commit}, {Vue, userID}) {
+    Vue.$store.dispatch('axios/act/HTTP', {
+      Vue,
+      url: rootState.getSignUrl,
+      body: {
+        userID
+      }
+    }).then((data) => {
+      console.log(data.data.sign)
+      if (data.data.sign === undefined) {
+        Vue.$message({message: '请到手机端完成签字操作', type: 'warning'})
+        Vue.getDetail()
+      }
+    })
   }
 }
 const mutations = {

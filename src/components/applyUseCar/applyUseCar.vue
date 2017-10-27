@@ -6,7 +6,7 @@
         <img class="user" title="点击回到首页" src="../login/already_login.png" @click="$router.push('/login')">
         <router-link to="#" class="go_sale">用车申请</router-link>
         <span class="rule_tit" @click="showRule=!showRule">用车规则</span>
-        <span class="rule_tit" @click="$router.push('/login')">返回主页</span>
+        <span @click="$router.push('/login')">返回主页</span>
       </div>
     </div>
     <transition name="fade">

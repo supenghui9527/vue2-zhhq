@@ -1,67 +1,72 @@
 <template>
-  <div class="repair_container clearfix">
-    <div class="repair_left">
-      <div class="clearfix common_margin">
-        <span class="float-left" style="padding-right: 3px"><span class="must_write">*</span>报修事项</span>
-        <div class="repair_choose">
-          <span class="show_option" @click="showOption=!showOption">{{activeNameArr.length === 0 ? '请选择维修地点' : activeNameArr.toString()}}</span>
-          <transition name="fade">
-            <div v-show="showOption" class="options">
-              <span v-for="item in options" :class="{active:activeNameArr.toString().indexOf(item.questionName)!==-1}" @click="chooseRepair(item.questionName,item.questionID)" :key="item.questionName">{{item.questionName}}</span>
-            </div>
-          </transition>
+  <div  @click="closeOption" class="container_">
+    <div class="repair_container clearfix">
+      <div class="repair_left">
+        <div class="clearfix common_margin">
+          <span class="float-left" style="padding-right: 3px"><span class="must_write">*</span>报修事项</span>
+          <div class="repair_choose">
+            <span class="show_option" @click.stop="showOption=!showOption">{{activeNameArr.length === 0 ? '请选择维修地点' : activeNameArr.toString()}}</span>
+            <transition name="fade">
+              <div v-show="showOption" class="options">
+                <span v-for="item in options" :class="{active:questionIDs.toString().indexOf(item.questionID)!==-1}" @click="chooseRepair(item.questionName,item.questionID)" :key="item.questionName">{{item.questionName}}</span>
+              </div>
+            </transition>
+          </div>
+        </div>
+        <div class="common_margin">
+          <span class="float-left" style="padding-right: 3px"><span class="must_write"></span>预约时间</span>
+          <div class="time">
+            <span v-for="item in timePicker" :class="{active_time:item==activeTime}" @click="chooseTime(item)">{{item}}</span>
+          </div>
+          <el-date-picker
+            v-model="bespeakStartTime"
+            type="datetime"
+            :disabled="noUse"
+            placeholder="选择日期时间">
+          </el-date-picker>
+          <el-date-picker
+            v-model="bespeakEndTime"
+            type="datetime"
+            :disabled="noUse"
+            placeholder="选择日期时间">
+          </el-date-picker>
+        </div>
+        <div class="pictures">
+          <span class="float-left" style="padding-right: 2px"><span class="must_write"></span>实地照片</span>
+          <el-upload
+            :action="$store.state.submitQuestionsUrl"
+            ref="upload"
+            name="picList"
+            :data="param"
+            list-type="picture-card"
+            class="float-left"
+            style="width: 180px"
+            :multiple="true"
+            :auto-upload="false"
+            :on-change="handlePictureCardPreview"
+            :on-remove="handleRemove">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-dialog v-model="dialogVisible" size="tiny">
+            <img width="100%" :src="dialogImageUrl" alt="">
+          </el-dialog>
         </div>
       </div>
-      <div class="common_margin">
-        <span class="float-left" style="padding-right: 3px"><span class="must_write"></span>预约时间</span>
-        <div class="time">
-          <span v-for="item in timePicker" :class="{active_time:item==activeTime}" @click="chooseTime(item)">{{item}}</span>
+      <div class="repair_right">
+        <div class="fault_place clearfix">
+          <span class="float-left"><span class="must_write">*</span>故障位置</span>
+          <input class="float-left" type="text" v-model="faultPlace">
         </div>
-        <el-date-picker
-          v-model="bespeakStartTime"
-          type="datetime"
-          :disabled="noUse"
-          placeholder="选择日期时间">
-        </el-date-picker>
-        <el-date-picker
-          v-model="bespeakEndTime"
-          type="datetime"
-          :disabled="noUse"
-          placeholder="选择日期时间">
-        </el-date-picker>
+        <div class="fault_detail clearfix">
+          <span class="float-left"><span class="must_write">*</span>故障现象</span>
+          <input class="float-left" type="text" v-model="faultDetail">
+        </div>
+        <div class="remark clearfix">
+          <span class="float-left"><span class="must_write"></span>备注说明</span>
+          <textarea class="float-left" v-model="remark"></textarea>
+        </div>
+        <div class="btn" @click="submitQuestions">提交申请</div>
       </div>
-      <div class="pictures">
-        <span class="float-left" style="padding-right: 2px"><span class="must_write"></span>实地照片</span>
-        <el-upload
-          action="https://jsonplaceholder.typicode.com/posts/"
-          list-type="picture-card"
-          class="float-left"
-          style="width: 180px"
-          :multiple="true"
-          :auto-upload="false"
-          :on-change="handlePictureCardPreview"
-          :on-remove="handleRemove">
-          <i class="el-icon-plus"></i>
-        </el-upload>
-        <el-dialog v-model="dialogVisible" size="tiny">
-          <img width="100%" :src="dialogImageUrl" alt="">
-        </el-dialog>
-      </div>
-    </div>
-    <div class="repair_right">
-      <div class="fault_place clearfix">
-        <span class="float-left"><span class="must_write">*</span>故障位置</span>
-        <input class="float-left" type="text" v-model="faultPlace">
-      </div>
-      <div class="fault_detail clearfix">
-        <span class="float-left"><span class="must_write">*</span>故障现象</span>
-        <input class="float-left" type="text" v-model="faultDetail">
-      </div>
-      <div class="remark clearfix">
-        <span class="float-left"><span class="must_write"></span>备注说明</span>
-        <textarea class="float-left" v-model="remark"></textarea>
-      </div>
-      <div class="btn" @click="submitQuestions">提交申请</div>
     </div>
   </div>
 </template>
@@ -72,6 +77,15 @@
       showOption: false,
       activeNameArr: [],
       questionIDs: [],
+      param: {
+        userID: '',
+        questionIDs: '',
+        bespeakStartTime: '',
+        bespeakEndTime: '',
+        faultPlace: '',
+        faultDetail: '',
+        remark: ''
+      },
       bespeakStartTime: '',
       bespeakEndTime: '',
       timePicker: ['点击（无）', '点击（有）'],
@@ -106,6 +120,7 @@
             return flag
           }
         }
+        console.log(this.activeNameArr)
         if (flag) {
           this.activeNameArr.push(questionName)
           this.questionIDs.push(questionID)
@@ -124,34 +139,62 @@
         this.dialogImageUrl = file.url
         this.fileList = fileList
       },
+      closeOption () {
+        if (this.showOption) {
+          this.showOption = false
+        }
+      },
       // 提交报修申请
       submitQuestions () {
         if (this.userID === '' || this.questionIDs === '' || this.faultPlace === '' || this.faultDetail === '') {
-          this.$message('请确认信息是否填写完整')
+          this.$message({message: '请确认信息是否填写完整', type: 'warning'})
           return false
         }
-        this.$store.dispatch('submit/questions', {
-          Vue: this,
-          fileList: this.fileList,
-          userID: window.localStorage.getItem('userID'),
-          questionIDs: this.questionIDs.toString(),
-          bespeakStartTime: this.bespeakStartTime ? dateFormat(this.bespeakStartTime, 'yyyy-MM-dd-hh-mm') : '',
-          bespeakEndTime: this.bespeakEndTime ? dateFormat(this.bespeakEndTime, 'yyyy-MM-dd-hh-mm') : '',
-          faultPlace: this.faultPlace,
-          faultDetail: this.faultDetail,
-          remark: this.remark
-        })
+        if (this.bespeakStartTime !== '' && this.bespeakEndTime !== '') {
+          var bespeakStartTime = dateFormat(this.bespeakStartTime, 'yyyy-MM-dd-hh-mm').split('-')
+          var bespeakEndTime = dateFormat(this.bespeakEndTime, 'yyyy-MM-dd-hh-mm').split('-')
+        }
+        this.param.userID = window.localStorage.getItem('userID')
+        this.param.questionIDs = this.questionIDs.toString()
+        this.param.bespeakStartTime = this.bespeakStartTime !== '' ? `${bespeakStartTime[0]}-${bespeakStartTime[1]}-${bespeakStartTime[2]} ${bespeakStartTime[3]}:${bespeakStartTime[4]}` : ''
+        this.param.bespeakEndTime = this.bespeakEndTime !== '' ? `${bespeakEndTime[0]}-${bespeakEndTime[1]}-${bespeakEndTime[2]} ${bespeakEndTime[3]}:${bespeakEndTime[4]}` : ''
+        this.param.faultPlace = this.faultPlace
+        this.param.faultDetail = this.faultDetail
+        this.param.remark = this.remark
+        this.$refs.upload.submit()
+        // this.$store.dispatch('submit/questions', {
+        //   Vue: this,
+        //   picList: this.fileList,
+        //   userID: window.localStorage.getItem('userID'),
+        //   questionIDs: this.questionIDs.toString(),
+        //   bespeakStartTime: this.bespeakStartTime ? `${bespeakStartTime[0]}-${bespeakStartTime[1]}-${bespeakStartTime[2]} ${bespeakStartTime[3]}:${bespeakStartTime[4]}` : '',
+        //   bespeakEndTime: this.bespeakEndTime ? `${bespeakEndTime[0]}-${bespeakEndTime[1]}-${bespeakEndTime[2]} ${bespeakEndTime[3]}:${bespeakEndTime[4]}` : '',
+        //   faultPlace: this.faultPlace,
+        //   faultDetail: this.faultDetail,
+        //   remark: this.remark
+        // })
       }
     }
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
+.container_
+  position:fixed
+  width:100%
+  height:100%
+  left:0
+  top:0
 .must_write
   display:inline-block
   width:10px
   color:#ff0000
   padding-right:0 !important
 .repair_container
+  position:absolute
+  width:700px
+  left:50%
+  margin-left:-350px
+  top:265px
   background-color:rgba(188,194,218,0.8)
   height:220px
   font-size:14px
@@ -252,6 +295,7 @@
         line-height:16px
         border:1px solid #9ba7d3
         margin-right:5px
+        margin-bottom:5px
   .repair_right
     position:relative
     width:420px

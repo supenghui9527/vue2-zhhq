@@ -70,7 +70,7 @@
           </el-select>
         </span>
       </dt>
-      <dd style="text-align:center" v-if="myApply.list==''">暂无数据</dd>
+      <dd style="text-align:center" v-if="myApply.list==''||JSON.stringify(myApply)=='{}'">暂无数据</dd>
       <dd v-for="(item,index) in myApply.list" :class="{active:(index+1)%2==0}">
         <span class="created_time">{{item.param1}}</span>
         <span class="department">{{item.title}}</span>
@@ -104,76 +104,76 @@
   export default {
     data: () => ({
       oneIndex: 1,
-      timeValue: '0',
-      typeValue: '1',
-      stateValue: '-1',
+      timeValue: 0,
+      typeValue: 1,
+      stateValue: -1,
       stateFilter: {
         outSale: [{
-          value: '-1',
+          value: -1,
           label: '全部状态'
         }, {
-          value: '0',
+          value: 0,
           label: '未完成'
         }, {
-          value: '1',
+          value: 1,
           label: '已完成'
         }, {
-          value: '2',
+          value: 2,
           label: '已撤销'
         }],
         repair: [{
-          value: '-1',
+          value: -1,
           label: '全部状态'
         }, {
-          value: '0',
+          value: 0,
           label: '待接单'
         }, {
-          value: '1',
+          value: 1,
           label: '待完成'
         }, {
-          value: '2',
+          value: 2,
           label: '待评价'
         }, {
-          value: '3',
+          value: 3,
           label: '已评价'
         }],
         meeting: [{
-          value: '-1',
+          value: -1,
           label: '全部状态'
         }, {
-          value: '0',
+          value: 0,
           label: '待处理'
         }, {
-          value: '1',
+          value: 1,
           label: '已完成'
         }, {
-          value: '2',
+          value: 2,
           label: '已驳回'
         }],
         useCar: [{
-          value: '-1',
+          value: -1,
           label: '全部状态'
         }, {
-          value: '0',
+          value: 0,
           label: '待处理'
         }, {
-          value: '1',
+          value: 1,
           label: '已完成'
         }, {
-          value: '2',
+          value: 2,
           label: '已驳回'
         }],
         applyMeal: [{
-          value: '-1',
+          value: -1,
           label: '全部状态'
         }, {
-          value: '0',
+          value: 0,
           label: '待处理'
         }, {
-          value: '1',
+          value: 1,
           label: '已完成'
         }, {
-          value: '2',
+          value: 2,
           label: '已驳回'
         }]
       },
@@ -189,9 +189,8 @@
     },
     watch: {
       typeValue () {
-        this.stateValue = '-1'
-        this.timeValue = '0'
-        this.filter()
+        this.stateValue = -1
+        this.timeValue = 0
       }
     },
     methods: {
@@ -210,13 +209,13 @@
         if (item.tag * 1 === 1) { // 外卖
           this.$router.push({path: '/outSale/orderDetail', query: {outFoodID: item.id}})
         } else if (item.tag * 1 === 2) { // 用车
-          this.$router.push({path: '/applyUseCar/useCarDetail', query: {carApplyID: item.id}})
+          this.$router.push({path: '/myApply/useCarDetail', query: {carApplyID: item.id}})
         } else if (item.tag * 1 === 3) { // 会议
-          this.$router.push({path: '/meetingApply/meetingDetail', query: {meetingApplyID: item.id}})
+          this.$router.push({path: '/myApply/meetingDetail', query: {meetingApplyID: item.id}})
         } else if (item.tag * 1 === 4) { // 报修
-          this.$router.push({path: '/repair/repairDetail', query: {repairApplyID: item.id}})
+          this.$router.push({path: '/myApply/repairDetail', query: {repairApplyID: item.id}})
         } else if (item.tag * 1 === 5) { // 用餐
-          this.$router.push({path: '/applyMeal/mealDetail', query: {diningApplyID: item.id}})
+          this.$router.push({path: '/myApply/mealDetail', query: {diningApplyID: item.id}})
         }
       }
     }

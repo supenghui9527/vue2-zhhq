@@ -6,7 +6,7 @@
         <img class="user" src="../login/already_login.png" @click="$router.push('/login')">
         <router-link to="/outSale/chooseFood" class="go_sale">预定外卖</router-link>
         <span class="rule_tit" @click="showRule=!showRule">订单规则</span>
-        <span class="rule_tit" @click="$router.push('/login')">返回主页</span>
+        <span @click="$router.push('/login')">返回主页</span>
       </div>
     </div>
     <transition name="fade">

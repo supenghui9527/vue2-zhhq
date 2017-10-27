@@ -1,21 +1,22 @@
 <template>
   <div>
-    <div class="down_load" @click="getPdf">点击下载</div>
+    <el-button type="primary" class="down_load" @click="getPdf">生成pdf</el-button >
     <el-upload
       class="upload-demo"
       style="position: absolute;top:30px;"
       :action="$store.state.updataPdf"
       name="file"
+      ref="upload"
       :on-change="getfile"
       :data="parm"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
       :file-list="fileList">
-      <el-button size="small" type="primary">点击上传</el-button>
+      <el-button class="up_load" type="primary">盖章</el-button>
     </el-upload>
     <div id="home" style="width: 600px;margin: 0 auto;background-color: #fff;height: 100%">
       <h1 style="text-align:center;width:100%">会议室使用申请表</h1>
-      <p style="width:100%;padding-left: 50px">申请日期：2017-08-19</p>
+      <p style="width:100%;padding-left: 50px">申请日期：{{meetingDeatail.applyDate}}</p>
       <table border="1" style="border-collapse: collapse;width: 500px;margin: 0 auto;height: 90%">
         <tbody>
           <tr class="firstRow">
@@ -53,7 +54,7 @@
             <td width="83" valign="top" style="border-width: 1px; border-style: solid;">是否在大日程内</td>
           </tr>
           <tr>
-            <td width="83" valign="top" style="border-width: 1px; border-style: solid;">{{meetingDeatail.isSchedule==0?'是':'否'}}</td>
+            <td width="83" valign="top" style="border-width: 1px; border-style: solid;">{{meetingDeatail.isSchedule==0?'否':'是'}}</td>
           </tr>
           <tr>
             <td width="83" valign="top" rowspan="2" colspan="1" style="border-width: 1px; border-style: solid;">申请会议室</td>
@@ -159,18 +160,18 @@
         console.log(file)
       },
       getfile (file, fileList) {
-        seal(file)
+        seal(`${file.url}.pdf`)
       }
     }
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-.down_load
+.down_load,.up_load
   position:absolute
-  left:0
-  top:0
-  color:#fff
   font-size:14px
-  background-color:#4db3ff
-  padding:6px 10px
+  left:50px
+.down_load
+  top:200px
+.up_load
+  top:220px
 </style>

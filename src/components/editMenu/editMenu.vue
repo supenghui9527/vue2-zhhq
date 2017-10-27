@@ -5,7 +5,7 @@
       <div>
         <img class="user" src="../login/already_login.png" @click="$router.push('/login')">
         <router-link to="#" class="go_sale">菜单编辑</router-link>
-        <span class="rule_tit" @click="$router.push('/login')">返回主页</span>
+        <span @click="$router.push('/login')">返回主页</span>
       </div>
     </div>
     <transition name="fade">
@@ -35,9 +35,9 @@
 @import '~common/css/common.styl'
 .all_agency
   position:absolute
-  width:700px
+  width:80%
   left:50%
-  margin-left:-350px
+  margin-left:-40%
   top:240px
   div
     a

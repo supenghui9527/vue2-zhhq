@@ -7,23 +7,23 @@
   import common from '@/base/common/common'
   export default {
     data: () => ({
-      typeValue: '3',
+      typeValue: 3,
       filter_: {
         typeFilter: [{
-          value: '3',
+          value: 3,
           label: '会议申请'
         }],
         timeFilter: [{
-          value: '0',
+          value: 0,
           label: '全部时间'
         }, {
-          value: '1',
+          value: 1,
           label: '今天'
         }, {
-          value: '2',
+          value: 2,
           label: '本周'
         }, {
-          value: '3',
+          value: 3,
           label: '本月'
         }]
       }
