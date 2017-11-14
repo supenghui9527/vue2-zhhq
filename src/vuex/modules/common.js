@@ -30,17 +30,20 @@ const actions = {
       commit('get/all/myapply', data)
     })
   },
-  [types.GETSIGN] ({rootState, commit}, {Vue, userID}) {
+  [types.GETSIGN] ({rootState, commit}, {Vue, userID, signPath, applyID, tag}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.getSignUrl,
       body: {
-        userID
+        userID,
+        signPath,
+        applyID,
+        tag
       }
     }).then((data) => {
-      console.log(data.data.sign)
-      if (data.data.sign === undefined) {
-        Vue.$message({message: '请到手机端完成签字操作', type: 'warning'})
+      console.log(data)
+      if (data.state === 1) {
+        Vue.$message(data.message)
         Vue.getDetail()
       }
     })

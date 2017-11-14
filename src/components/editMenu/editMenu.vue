@@ -5,7 +5,7 @@
       <div>
         <img class="user" src="../login/already_login.png" @click="$router.push('/login')">
         <router-link to="#" class="go_sale">菜单编辑</router-link>
-        <span @click="$router.push('/login')">返回主页</span>
+        <span class="back_home" @click="$router.push('/login')">返回主页</span>
       </div>
     </div>
     <transition name="fade">
@@ -18,13 +18,19 @@
       </div>
       <router-view class="food_container"></router-view>
     </div>
+    <div v-show="showInstruction" class="fixed_" @click="showInstruction=false"></div>
+    <div class="explain" @click="showInstruction=!showInstruction">操作说明</div>
+    <div v-show="showInstruction" class="instruction">
+      <img src="~common/images/10_caidanbianji.png">
+    </div>
   </div>
 </template>
 <script>
   import rule from '@/base/rule/rule'
   export default {
     data: () => ({
-      showRule: false
+      showRule: false,
+      showInstruction: false
     }),
     components: {
       rule: rule
@@ -33,12 +39,15 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
 @import '~common/css/common.styl'
+.logo
+  width:80% !important
+  margin-left:-40% !important
 .all_agency
   position:absolute
   width:80%
   left:50%
   margin-left:-40%
-  top:240px
+  top:180px
   div
     a
       display:inline-block

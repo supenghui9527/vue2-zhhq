@@ -44,7 +44,7 @@ const actions = {
       }
     }).then((data) => {
       Vue.carDetail = data.data
-      filterAuth({Vue: Vue, roleArr: localStorage.getItem('roleId').split(','), storeArr: [rootState.auth.STAMP_SIGN, rootState.auth.CHECK_CAR, rootState.auth.PORITION], authArr: ['authStamp', 'authInstructions', 'authAllot']})
+      filterAuth({Vue: Vue, roleArr: localStorage.getItem('roleId').split(','), storeArr: [rootState.auth.STAMP_SIGN, rootState.auth.CHECK_CAR, rootState.auth.PORITION_CAR], authArr: ['authStamp', 'authInstructions', 'authAllot']})
       console.log(Vue.authStamp, Vue.authInstructions, Vue.authAllot)
     })
   },
@@ -94,6 +94,20 @@ const actions = {
       }
     }).then((data) => {
       Vue.aboutCar = null
+      Vue.$message(data.message)
+      Vue.getDetail()
+    })
+  },
+  // 完成用车
+  [types.CAR_COMPLETE] ({rootState, commit}, {Vue, userID, carApplyID}) {
+    Vue.$store.dispatch('axios/act/HTTP', {
+      Vue,
+      url: rootState.carCompleteUrl,
+      body: {
+        userID,
+        carApplyID
+      }
+    }).then((data) => {
       Vue.$message(data.message)
       Vue.getDetail()
     })

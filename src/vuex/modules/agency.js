@@ -36,9 +36,8 @@ const actions = {
       }
     }).then((data) => {
       Vue.meetingDeatail = data.data
-      console.log()
-      filterAuth({Vue: Vue, roleArr: localStorage.getItem('roleId').split(','), storeArr: [rootState.auth.STAMP_SIGN, rootState.auth.CHECK_HW, rootState.auth.PORITION], authArr: ['authStamp', 'authInstructions', 'authAllot']})
-      console.log(Vue.authStamp, Vue.authInstructions, Vue.authAllot)
+      filterAuth({Vue: Vue, roleArr: localStorage.getItem('roleId').split(','), storeArr: [rootState.auth.STAMP_SIGN, rootState.auth.CHECK_HW, rootState.auth.PORITION_HW, rootState.auth.CHECK_HW1], authArr: ['authStamp', 'authInstructions', 'authAllot', 'authInstructions1']})
+      console.log(Vue.authStamp, Vue.authInstructions, Vue.authAllot, Vue.authInstructions1)
     })
   }
 }

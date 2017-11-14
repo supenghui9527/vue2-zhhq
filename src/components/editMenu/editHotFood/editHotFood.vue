@@ -71,7 +71,7 @@
         food20: '',
         food21: ''
       },
-      allFoodsId: []
+      allFoodsId: {}
     }),
     created () {
       this.getMenu()
@@ -120,9 +120,9 @@
         height:30px
         line-height:30px
       input
-        height:25px
+        height:30px
         width:85%
-        font-size:14px
+        font-size:16px
         border:1px solid #6b6bf9
         margin-bottom:8px
         box-sizing:border-box

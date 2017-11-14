@@ -24,10 +24,11 @@
 @import '~common/css/common.styl'
 .all_agency
   position:absolute
-  width:700px
+  width:70%
   left:50%
-  margin-left:-350px
-  top:240px
+  margin-left:-35%
+  top:180px
+  min-width:700px
   div
     a
       display:inline-block

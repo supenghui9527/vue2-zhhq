@@ -13,15 +13,23 @@
     <transition name="fade">
       <v-auth v-if="$store.state.isLogin==true"></v-auth>
     </transition>
+    <div v-show="showInstruction" class="fixed_" @click="showInstruction=false"></div>
+    <div class="explain" @click="showInstruction=!showInstruction">操作说明</div>
+    <div v-show="showInstruction" class="instruction">
+      <img v-if="$store.state.isLogin==false" src="~common/images/1_dengluqian.png">
+      <img v-if="$store.state.isLogin==true&&$store.state.type==0" src="~common/images/4_shaoaj_zhuye.png">
+      <img v-if="$store.state.isLogin==true&&$store.state.type==1" src="~common/images/2_fengqj_zhuye.png">
+      <img v-if="$store.state.isLogin==true&&$store.state.type==2" src="~common/images/3_shenglz_zhuye.png">
+    </div>
   </div>
 </template>
-
 <script>
   import login from '@/base/login/login'
   import auth from '@/base/auth/auth'
   export default {
     data: () => ({
       show: true,
+      showInstruction: false,
       userName: null
     }),
     components: {
@@ -30,7 +38,18 @@
     },
     created () {
       this.userName = window.localStorage.getItem('linkman')
-      this.login()
+      if (this.$route.query.username) {
+        let str = ''
+        for (var i = 0; i < this.$route.query.username.length; i++) {
+          str += String.fromCharCode(this.$route.query.username.charCodeAt(i) + 11)
+        }
+        this.$store.dispatch('login/active', {
+          Vue: this,
+          uid: str
+        })
+      } else {
+        this.login()
+      }
     },
     methods: {
       // 点击头像显示登录窗口
@@ -43,7 +62,8 @@
       login () {
         this.$store.dispatch('common/set/USERTOKEN', {
           Vue: this,
-          accessToken: window.localStorage.getItem('accessToken')
+          uid: window.localStorage.getItem('uname'),
+          password: window.localStorage.getItem('password')
         })
       },
       // 改变已登录状态
@@ -60,8 +80,24 @@
     }
   }
 </script>
-
 <style lang="stylus" rel="stylesheet/stylus" scoped>
+.fixed_
+  width:100%
+  height:100%
+  position:fixed
+  left:0
+  top:0
+  z-index:99999
+.instruction
+  width:80%
+  position:fixed
+  left:50%
+  margin-left:-40%
+  top:15%
+  z-index:9999
+  img
+    width:100%
+    height:100%
 .user
   width:145px
   height:145px
@@ -77,4 +113,15 @@
   text-align:center
   color:#fff
   font-size:20px
+.explain
+  width:120px
+  height:50px
+  text-align:center
+  position:fixed
+  bottom:20px
+  left:50%
+  margin-left:-60px
+  color:#fff
+  font-size:12px
+  text-decoration:underline
 </style>

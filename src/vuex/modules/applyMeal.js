@@ -40,7 +40,7 @@ const actions = {
       }
     }).then((data) => {
       Vue.mealDetail = data.data
-      filterAuth({Vue: Vue, roleArr: localStorage.getItem('roleId').split(','), storeArr: [rootState.auth.STAMP_SIGN, rootState.auth.CHECK_MEAL, rootState.auth.PORITION], authArr: ['authStamp', 'authInstructions', 'authAllot']})
+      filterAuth({Vue: Vue, roleArr: localStorage.getItem('roleId').split(','), storeArr: [rootState.auth.STAMP_SIGN, rootState.auth.CHECK_MEAL, rootState.auth.PORITION_MEAL], authArr: ['authStamp', 'authInstructions', 'authAllot']})
       console.log(Vue.authStamp, Vue.authInstructions, Vue.authAllot)
     })
   },

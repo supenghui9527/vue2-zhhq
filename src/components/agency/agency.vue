@@ -5,7 +5,7 @@
       <div>
         <img class="user" title="点击回到首页面" src="../login/already_login.png" @click="$router.push('/login')">
         <router-link to="" class="go_sale">我的待办</router-link>
-        <span @click="$router.push('/login')">返回主页</span>
+        <span class="back_home" @click="$router.push('/login')">返回主页</span>
       </div>
     </div>
     <div class="all_agency">
@@ -70,6 +70,11 @@
         </el-pagination>
       </div>
     </div>
+    <div v-show="showInstruction" class="fixed_" @click="showInstruction=false"></div>
+    <div class="explain" @click="showInstruction=!showInstruction">操作说明</div>
+    <div v-show="showInstruction" class="instruction">
+      <img src="~common/images/13_wodedaiban.png">
+    </div>
   </div>
 </template>
 <script>
@@ -79,12 +84,13 @@
       applyType: 1,
       timeValue: 0,
       stateValue: 1,
+      showInstruction: false,
       val: 1,
       allAgency: {},
       filter_: {
         typeFilter: [{
           value: 1,
-          label: '全部代办'
+          label: '全部待办'
         }, {
           value: 2,
           label: '公务用车'
@@ -157,15 +163,15 @@
       goDetail (item) {
         // this.$store.commit('setRepairID', item.id)
         if (item.tag * 1 === 1) { // 外卖
-          this.$router.push({path: '/outSale/orderDetail', query: {agency: 1, outFoodID: item.id}})
+          this.$router.push({path: '/outSale/orderDetail', query: {agency: 1, outFoodID: item.id, tag: item.tag}})
         } else if (item.tag * 1 === 2) { // 用车
-          this.$router.push({path: '/myApply/useCarDetail', query: {agency: 1, carApplyID: item.id}})
+          this.$router.push({path: '/myApply/useCarDetail', query: {agency: 1, carApplyID: item.id, tag: item.tag}})
         } else if (item.tag * 1 === 3) { // 会议
-          this.$router.push({path: '/myApply/meetingDetail', query: {agency: 1, meetingApplyID: item.id}})
+          this.$router.push({path: '/myApply/meetingDetail', query: {agency: 1, meetingApplyID: item.id, tag: item.tag}})
         } else if (item.tag * 1 === 4) { // 报修
-          this.$router.push({path: '/myApply/repairDetail', query: {agency: 1, repairApplyID: item.id}})
+          this.$router.push({path: '/myApply/repairDetail', query: {agency: 1, repairApplyID: item.id, tag: item.tag}})
         } else if (item.tag * 1 === 5) { // 用餐
-          this.$router.push({path: '/myApply/mealDetail', query: {agency: 1, diningApplyID: item.id}})
+          this.$router.push({path: '/myApply/mealDetail', query: {agency: 1, diningApplyID: item.id, tag: item.tag}})
         }
       }
     }
@@ -175,11 +181,13 @@
 @import '~common/css/common.styl'
 .all_agency
   position:absolute
-  width:700px
+  width:70%
   max-height:300px !important
   left:50%
-  margin-left:-350px
-  top:240px
+  margin-left:-35%
+  top:180px
+  min-width:700px
+  overflow-x:hidden
   overflow-y:scroll
   .created_time
     width:20%

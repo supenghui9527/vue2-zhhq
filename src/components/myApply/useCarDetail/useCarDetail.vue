@@ -50,16 +50,16 @@
         <el-button class="submit_allot" type="primary" @click="sureAssess">确认评价</el-button>
       </div>
     </div>
-    <ul class="detail_left">
+    <ul class="detail_top clearfix">
       <li>申请表单：基础名片（请确认）</li>
       <li>申请时间：{{carDetail.createTime}}</li>
-      <li>申办单位：{{$store.state.deptName}}</li>
-      <li>申办单位联系人：{{$store.state.linkman}}</li>
-      <li>申办单位办公电话：{{$store.state.officetel}}</li>
-      <li>申办单位联系人手机：{{$store.state.linkmantel}}</li>
+      <li>申办单位：{{carDetail.applyDept}}</li>
+      <li>申办单位联系人：{{carDetail.userName}}</li>
+      <li>申办单位办公电话：{{carDetail.officeTel}}</li>
+      <li>申办单位联系人手机：{{carDetail.userTel}}</li>
     </ul>
-    <div class="detail_right">
-      <ul>
+    <div class="detail_bottom">
+      <ul class="clearfix">
         <li>
           <span>申报事由：</span>
           <span v-if="carDetail.applyReason==0">应急</span>
@@ -91,70 +91,72 @@
           <span>{{carDetail.linkmanTel}}</span>
         </li>
         <li v-if="carDetail.check1==1" class="sign">
-          <span>申请单位领导：</span>
+          <span>申请单位领导</span>
           <img width="40" height="40" :src="carDetail.check1Sign">
         </li>
         <li v-if="carDetail.check1==2">
-          <span>签字驳回：</span>
+          <span>签字驳回</span>
           <span>{{carDetail.check1Comments}}</span>
         </li>
         <li v-if="carDetail.check2==1" class="sign">
-          <span>申请部门盖章：</span>
+          <span>申请部门盖章</span>
           <img width="40" height="48" src="~common/images/pdf@2x.png" @click="downLoadPdf(carDetail)">
         </li>
         <li v-if="carDetail.check3==1">
-          <span>管理中心领导：已审核</span>
+          <span>管理中心领导</span>
+          <span>已审核</span>
         </li>
         <li v-if="carDetail.check3==2">
-          <span>审核驳回：</span>
+          <span>审核驳回</span>
           <span>{{carDetail.check3Comments}}</span>
         </li>
-        <li v-if="carDetail.check4==1">
-          <span>管理中心分管领导：{{carDetail.leaderName}}</span>
-          <span>{{carDetail.leaderTel}}</span>
+      </ul>
+      <div class="apply_flow">
+        <div v-if="carDetail.check4==1">
           <div>
-            <span>车辆车牌：</span>
-            <div>
-              <span>{{carDetail.carModel}}</span>
-              <span>{{carDetail.carNum}}</span>
-            </div>
+            <span>分管领导</span>
+            <span>{{carDetail.leaderName}}</span>
+            <span>{{carDetail.leaderTel}}</span>
           </div>
           <div>
-            <span>司机信息：</span>
-            <div>
-              <span>{{carDetail.driver}}</span>
-              <span>{{carDetail.driverTel}}</span>
-            </div>
-  
+            <span>车辆车牌</span>
+            <span>{{carDetail.carModel}}</span>
+            <span>{{carDetail.carNum}}</span>
           </div>
-        </li>
-        <li v-if="carDetail.check4==2">
-          <span>分配驳回：</span>
+          <div>
+            <span>司机信息</span>
+            <span>{{carDetail.driver}}</span>
+            <span>{{carDetail.driverTel}}</span>
+          </div>
+        </div>
+        <div v-if="carDetail.check4==2">
+          <span>分配驳回</span>
           <span>{{carDetail.check4Comments}}</span>
-        </li>
-        <li v-if="carDetail.state==7">
+        </div>
+        <div v-if="carDetail.state==6">
           <div>
-            <span>评价反馈：</span>
+            <span>评价反馈</span>
             <span>{{carDetail.assess}}</span>
           </div>
-          <div style="width:100%">
-            <span>星级指数：</span>
+          <div class="clearfix">
+            <span class="float-left">星级指数</span>
             <el-rate
               v-model="carDetail.levels"
-              style="display:inline-block"
+              class="float-left"
               :disabled="true"
               :colors="['#99A9BF', '#F7BA2A', '#FF9900']">
             </el-rate>
           </div>
-        </li>
-      </ul>
-      <el-button v-if="carDetail.state==0&&$route.query.agency==1" type="primary" @click="getSign">签字</el-button>
-      <el-button v-if="carDetail.state==1&&$route.query.agency==1&&authStamp" type="primary" @click="goStamp">盖章</el-button>
-      <el-button v-if="carDetail.state==2&&$route.query.agency==1&&authInstructions" type="primary" @click="instructions">审核</el-button>
-      <el-button v-if="carDetail.state==2&&$route.query.agency==1&&authInstructions" type="primary" @click="reject">驳回</el-button>
-      <el-button v-if="carDetail.state==3&&$route.query.agency==1&&authAllot" type="primary" @click="getAllot">分配</el-button>
-      <el-button v-if="carDetail.state==3&&$route.query.agency==1&&authAllot" type="primary" @click="allotReject">驳回</el-button>
-      <el-button v-if="carDetail.state==6&&$route.query.agency!=1" type="primary" @click="showAssess">点击评价</el-button>
+        </div>
+      </div>
+      <div class="btn_" v-if="carDetail.state==0&&$route.query.agency==1" type="primary" @click="getSign">签字</div>
+      <div class="btn_" v-if="carDetail.state==1&&$route.query.agency==1&&authStamp" type="primary" @click="goStamp">盖章</div>
+      <div class="btn_" v-if="carDetail.state==2&&$route.query.agency==1&&authInstructions" type="primary" @click="instructions">审核</div>
+      <div class="btn_no" v-if="carDetail.state==2&&$route.query.agency==1&&authInstructions" type="primary" @click="reject">驳回</div>
+      <div class="btn_" v-if="carDetail.state==3&&$route.query.agency==1&&authAllot" type="primary" @click="getAllot">分配</div>
+      <div class="btn_no" v-if="carDetail.state==3&&$route.query.agency==1&&authAllot" type="primary" @click="allotReject">驳回</div>
+      <div class="btn_" v-if="carDetail.state==4&&$route.query.agency==1&&authAllot" type="primary" @click="complete">完成</div>
+      <div class="btn_" v-if="carDetail.state==5&&$route.query.agency!=1" type="primary" @click="showAssess">点击评价</div>
     </div>
   </div>
 </template>
@@ -174,10 +176,12 @@
       driverID: null,
       assess: null,
       levels: null,
-      assessShow: false
+      assessShow: false,
+      userInfo: null
     }),
     created () {
       setTimeout(() => {
+        this.userInfo = JSON.parse(localStorage.getItem('userinfo'))
         this.getDetail()
       }, 20)
     },
@@ -194,10 +198,17 @@
       },
       // 签字
       getSign () {
-        this.$store.dispatch('get/sign', {
-          Vue: this,
-          userID: localStorage.getItem('userID')
-        })
+        if (this.userInfo.signPath !== null && this.userInfo.signPath !== '') {
+          this.$store.dispatch('get/sign', {
+            Vue: this,
+            userID: localStorage.getItem('userID'),
+            signPath: this.userInfo.signPath,
+            applyID: this.$route.query.carApplyID * 1,
+            tag: this.$route.query.tag * 1
+          })
+        } else {
+          this.$message({message: '请先前往移动端完成签字操作', type: 'warning'})
+        }
       },
       // 盖章
       goStamp () {
@@ -301,6 +312,14 @@
           })
         })
       },
+      // 完成申请单子
+      complete () {
+        this.$store.dispatch('car/complete', {
+          Vue: this,
+          userID: localStorage.getItem('userID'),
+          carApplyID: this.$route.query.carApplyID * 1
+        })
+      },
       // 显示评价模块
       showAssess () {
         this.assessShow = true
@@ -392,52 +411,21 @@
     line-height:30px
     background-color:#fff
     margin-bottom:6px
-.detail
-  height:210px
-.detail_left,.detail_right
-  padding-left:20px
-  box-sizing:border-box
-  height:100%
-  float:left
-.detail_left
-  width:300px
-  padding-top:15px
-  background-color:#848ba5
-  li
-    height:28px
-    line-height:28px
-    font-size:12px
-    color:#fff
+.apply_flow
+  >div
     padding-left:30px
-    background-size:20px 20px !important
-    border-bottom:1px solid #6775a6
-  li:nth-child(1)
-    background:url('~common/images/user.png') no-repeat center left
-  li:nth-child(2)
-    background:url('~common/images/rq.png') no-repeat center left
-  li:nth-child(3)
-    background:url('~common/images/zsdw.png') no-repeat center left
-  li:nth-child(4)
-    background:url('~common/images/lxr.png') no-repeat center left
-  li:nth-child(5)
-    background:url('~common/images/lxrqz.png') no-repeat center left
-  li:nth-child(6)
-    background:url('~common/images/tel.png') no-repeat center left
-.detail_right
-  width:400px
-  padding-top:10px
-  padding-bottom:10px
-  background-color:#fff
-  font-size:14px
-  overflow-y:scroll !important
-  .sign
-    height:48px !important
-    line-height:48px !important
-    img
-      vertical-align:middle
-  li
-    height:20px
-    line-height:20px
-    div
-      width:50%
+    >div
+      margin-bottom:4px
+      span:nth-child(1)
+        display:inline-block
+        width:100px
+        height:30px
+        line-height:30px
+        background-color:#d9d9d9
+        border-radius:6px
+        color:#646464 !important
+        text-align:center
+        margin-right:30px
+      span
+        color:#426df7
 </style>

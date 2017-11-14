@@ -14,9 +14,9 @@
   export default {
     data: () => ({
       imgUrl: [{
-        url: './static/rule.jpg'
+        url: './static/img/rule.jpg'
       }, {
-        url: './static/rule1.jpg'
+        url: './static/img/rule1.jpg'
       }]
     }),
     methods: {
@@ -35,7 +35,7 @@
   left:0
   background-color:rgba(0,0,0,0.6)
   text-align:center
-  z-index:999
+  z-index:99999
   >div
     width:500px
     height:90%

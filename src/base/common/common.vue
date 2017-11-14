@@ -1,19 +1,10 @@
 <template>
-  <div>
-    <dl>
-      <dt>
-        <span class="created_time">
-          <el-select v-model="timeValue" @change="filter" placeholder="请选择">
-            <el-option
-              v-for="item in filter_.timeFilter"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </span>
-        <span class="department">
-          <el-select v-model="typeValue" @change="filter" placeholder="请选择">
+  <div class="apply_list">
+    <div>
+      <div class="clearfix apply_nav">
+        <div class="float-right">
+          <span>申请内容</span>
+          <el-select class="apply_content" v-model="typeValue" @change="filter" placeholder="请选择">
             <el-option
               v-for="item in filter_.typeFilter"
               :key="item.value"
@@ -21,74 +12,95 @@
               :value="item.value">
             </el-option>
           </el-select>
-        </span>
-        <span class="state_filter">
-          <!-- 外卖 -->
-          <el-select v-if="typeValue==1" v-model="stateValue" @change="filter" placeholder="请选择">
+        </div>
+        <div class="float-right">
+          <span>申请日期</span>
+          <el-select class="apply_date" v-model="timeValue" @change="filter" placeholder="请选择">
             <el-option
-              v-for="item in stateFilter.outSale"
+              v-for="item in filter_.timeFilter"
               :key="item.value"
               :label="item.label"
               :value="item.value">
             </el-option>
           </el-select>
-          <!-- 用车 -->
-          <el-select v-else-if="typeValue==2" v-model="stateValue" @change="filter" placeholder="请选择">
-            <el-option
-              v-for="item in stateFilter.useCar"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-          <!-- 会议 -->
-          <el-select v-else-if="typeValue==3" v-model="stateValue" @change="filter" placeholder="请选择">
-            <el-option
-              v-for="item in stateFilter.meeting"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-          <!-- 维修 -->
-          <el-select v-else-if="typeValue==4" v-model="stateValue" @change="filter" placeholder="请选择">
-            <el-option
-              v-for="item in stateFilter.repair"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-          <!-- 用餐 -->
-          <el-select v-else-if="typeValue==5" v-model="stateValue" @change="filter" placeholder="请选择">
-            <el-option
-              v-for="item in stateFilter.applyMeal"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </span>
-      </dt>
-      <dd style="text-align:center" v-if="myApply.list==''||JSON.stringify(myApply)=='{}'">暂无数据</dd>
-      <dd v-for="(item,index) in myApply.list" :class="{active:(index+1)%2==0}">
-        <span class="created_time">{{item.param1}}</span>
-        <span class="department">{{item.title}}</span>
-        <span class="arrow">>></span>
-        <span class="detail" @click="goDetail(item)">详情</span>
-        <!-- 外卖 -->
-        <span v-if="item.tag==1" :title="$store.state.allState.outSaleState[item.state]" class="state active_state">{{$store.state.allState.outSaleState[item.state]}}</span>
-        <!-- 公务用车 -->
-        <span v-if="item.tag==2" :title="$store.state.allState.carState[item.state]" class="state active_state">{{$store.state.allState.carState[item.state]}}</span>
-        <!-- 会务申请 -->
-        <span v-else-if="item.tag==3" :title="$store.state.allState.meetingState[item.state]" class="state active_state">{{$store.state.allState.meetingState[item.state]}}</span>
-        <!-- 报修申请 -->
-        <span v-else-if="item.tag==4" :title="$store.state.allState.repairState[item.state]" class="state active_state">{{$store.state.allState.repairState[item.state]}}</span>
-        <!-- 用餐申请 -->
-        <span v-else-if="item.tag==5" :title="$store.state.allState.mealState[item.state]" class="state active_state">{{$store.state.allState.mealState[item.state]}}</span>
-      </dd>
-    </dl>
-    <div class="block">
+        </div>
+      </div>
+      <table>
+        <tr class="header_">
+          <th width="25%">申请时间</th>
+          <th width="25%">申请内容</th>
+          <th width="22%">
+            <el-select class="active_el-select" v-if="typeValue==1" v-model="stateValue" @change="filter" placeholder="请选择">
+              <el-option
+                v-for="item in stateFilter.outSale"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <!-- 用车 -->
+            <el-select class="active_el-select" v-else-if="typeValue==2" v-model="stateValue" @change="filter" placeholder="请选择">
+              <el-option
+                v-for="item in stateFilter.useCar"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <!-- 会议 -->
+            <el-select class="active_el-select" v-else-if="typeValue==3" v-model="stateValue" @change="filter" placeholder="请选择">
+              <el-option
+                v-for="item in stateFilter.meeting"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <!-- 维修 -->
+            <el-select class="active_el-select" v-else-if="typeValue==4" v-model="stateValue" @change="filter" placeholder="请选择">
+              <el-option
+                v-for="item in stateFilter.repair"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <!-- 用餐 -->
+            <el-select class="active_el-select" v-else-if="typeValue==5" v-model="stateValue" @change="filter" placeholder="请选择">
+              <el-option
+                v-for="item in stateFilter.applyMeal"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </th>
+          <th width="28%">操作</th>
+        </tr>
+        <tr v-for="(item,index) in myApply.list" class="list_item">
+          <td>{{item.param1}}</td>
+          <td>{{item.title}}</td>
+          <td>
+            <!-- 外卖 -->
+            <span v-if="item.tag==1" :title="$store.state.allState.outSaleState[item.state]">{{$store.state.allState.outSaleState[item.state]}}</span>
+            <!-- 公务用车 -->
+            <span v-if="item.tag==2" :title="$store.state.allState.carState[item.state]">{{$store.state.allState.carState[item.state]}}</span>
+            <!-- 会务申请 -->
+            <span v-else-if="item.tag==3" :title="$store.state.allState.meetingState[item.state]">{{$store.state.allState.meetingState[item.state]}}</span>
+            <!-- 报修申请 -->
+            <span v-else-if="item.tag==4" :title="$store.state.allState.repairState[item.state]">{{$store.state.allState.repairState[item.state]}}</span>
+            <!-- 用餐申请 -->
+            <span v-else-if="item.tag==5" :title="$store.state.allState.mealState[item.state]">{{$store.state.allState.mealState[item.state]}}</span>
+          </td>
+          <td>
+            <span class="go_detail" @click="goDetail(item)">查看详情</span>
+            <!-- <span v-if="item.tag==3" :title="$store.state.allState.meetingState[item.state]" class="play">打印</span> -->
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="no_data" v-if="myApply.list==''||JSON.stringify(myApply)=='{}'">暂无数据</div>
+    <div class="apply_block">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -205,7 +217,7 @@
         this.$emit('changePage', this.typeValue, this.timeValue, this.stateValue, val)
       },
       goDetail (item) {
-        this.$store.commit('setRepairID', item.id)
+        console.log(1)
         if (item.tag * 1 === 1) { // 外卖
           this.$router.push({path: '/outSale/orderDetail', query: {outFoodID: item.id}})
         } else if (item.tag * 1 === 2) { // 用车
@@ -222,75 +234,43 @@
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-.all_agency
-  .created_time
-    width:20%
-    padding-left:50px
-  .state_filter
-    padding-right:10px
-    width:20%
-    float:right !important
-  .department
-    width:30%
-    height:100%
-    padding-left:50px
-    box-sizing:border-box
-  .show_time
-    padding-left:6px
-    width:14px
-    height:14px
-    vertical-align:middle
-  .arrow
-    width:40px
-    height:100%
-    background-color:#8c92ac
-    text-align:center
-  .detail
-    width:50px
-    height:26px
-    line-height:26px
-    position:absolute
-    top:50%
-    right:140px
-    margin-top:-13px
-    background-color:#476ade
-    text-align:center
-    border-radius:4px
-    cursor:pointer
-  dt
-    background-color:#c0c3d2
-    height:46px
-    line-height:46px
-    color:#1a3ca7
-    font-size:14px
-    span
-      float:left
-  dd
-    background-color:#848ba5
-    height:35px
-    line-height:35px
-    color:#d7dbe4
-    font-size:14px
-    position:relative
-    span
-      float:left
-  .active
-    background-color:#8f95af !important
-  .state
-    min-width:70px
-    height:26px
-    padding:0 10px
-    line-height:26px
-    text-align:center
-    background-color:#a60024
-    border-radius:4px
-    color:#fff
-    position:absolute
-    right:10px
-    top:50%
-    margin-top:-13px
-  .active_state
-    background-color:#717791 !important
-  .block
-    background-color:#fff
+.my_apply
+  .apply_list
+    width:94%
+    margin:0 auto
+    .no_data
+      width:100%
+      height:36px
+      line-height:36px
+      text-align:center
+      box-sizing:border-box
+      border-right:1px solid #808080
+      border-left:1px solid #808080
+      border-bottom:1px solid #808080
+      background-color:#f5f5f5
+    table
+      width:100%
+      text-align:center
+      border-right:1px solid #808080
+      border-bottom:1px solid #808080
+      .header_
+        width:100% !important
+        height:36px
+        line-height:36px
+        background-color:#488fd7
+        color:#fff
+        font-size:16px
+      tr
+        width:100% !important
+        height:36px
+        line-height:36px
+        background-color:#f5f5f5
+        th,td
+          border-top:1px solid #808080
+          border-left:1px solid #808080
+      .list_item
+        background-color:#f5f5f5
+    .apply_block
+      background-color:#fff
+      margin-top:20px
 </style>

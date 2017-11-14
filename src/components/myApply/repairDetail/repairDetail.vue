@@ -41,16 +41,16 @@
         <el-button class="submit_allot" type="primary" @click="sureAssess">确认评价</el-button>
       </div>
     </div>
-    <ul class="detail_left">
+    <ul class="detail_top clearfix">
       <li>申请表单：基础名片（请确认）</li>
       <li>申请时间：{{repairDetail.repairApplyReturn.createTime}}</li>
-      <li>申办单位：{{$store.state.deptName}}</li>
-      <li>申办单位联系人：{{$store.state.linkman}}</li>
-      <li>申办单位办公电话：{{$store.state.officetel}}</li>
-      <li>申办单位联系人手机：{{$store.state.linkmantel}}</li>
+      <li>申办单位：{{userInfo.deptName}}</li>
+      <li>申办单位联系人：{{userInfo.name}}</li>
+      <li>申办单位办公电话：{{userInfo.telphone}}</li>
+      <li>申办单位联系人手机：{{userInfo.mobile}}</li>
     </ul>
-    <div class="detail_right">
-      <ul>
+    <div class="detail_bottom">
+      <ul class="clearfix">
         <li>
           <span>报修事项：</span>
           <span v-for="item in repairDetail.repairApplyReturn.questionList">{{item}}</span>
@@ -63,7 +63,7 @@
         <li>
           <span>实地拍摄：</span>
           <span v-if="repairDetail.picList==''">无</span>
-          <img v-if="repairDetail.picList!=''" width="50" height="50" v-for="item in repairDetail.picList" :src="repairDetail.homePicPath+item">
+          <img v-if="repairDetail.picList!=''" width="30" height="30" v-for="item in repairDetail.picList" :src="repairDetail.homePicPath+item">
         </li>
         <li>
           <span>故障位置：</span>
@@ -81,25 +81,26 @@
           <span>维修人员：</span>
           <span>{{repairDetail.repairApplyReturn.fixWorkerName}}{{repairDetail.repairApplyReturn.fixWorkerTel}}</span>
         </li>
-        <li v-if="repairDetail.repairApplyReturn.state==3">
-          <div>
-            <span>评价反馈：</span>
-            <span>{{repairDetail.repairApplyReturn.assess}}</span>
-          </div>
-          <div style="width:100%">
-            <span>星级指数：</span>
-            <el-rate
-              v-model="repairDetail.repairApplyReturn.levels"
-              style="display:inline-block"
-              :disabled="true"
-              :colors="['#99A9BF', '#F7BA2A', '#FF9900']">
-            </el-rate>
-          </div>
-        </li>
       </ul>
-      <el-button v-if="repairDetail.repairApplyReturn.state==0&&$route.query.agency==1&&authAllot" type="primary" @click="getAllot">分配</el-button>
-      <el-button v-if="repairDetail.repairApplyReturn.state==0&&$route.query.agency==1&&orderAuth" type="primary" @click="getOrders">接单</el-button>
-      <el-button v-if="repairDetail.repairApplyReturn.state==2&&$route.query.agency!=1" type="primary" @click="showAssess">点击评价</el-button>
+      <div class="stars" v-if="repairDetail.repairApplyReturn.state==3">
+        <div>
+          <span>评价反馈：</span>
+          <span>{{repairDetail.repairApplyReturn.assess}}</span>
+        </div>
+        <div style="width:100%">
+          <span>星级指数：</span>
+          <el-rate
+            v-model="repairDetail.repairApplyReturn.levels"
+            style="display:inline-block"
+            :disabled="true"
+            :colors="['#99A9BF', '#F7BA2A', '#FF9900']">
+          </el-rate>
+        </div>
+      </div>
+      <div class="btn_" v-if="repairDetail.repairApplyReturn.state==0&&$route.query.agency==1&&authAllot" type="primary" @click="getAllot">分配</div>
+      <div class="btn_" v-if="repairDetail.repairApplyReturn.state==0&&$route.query.agency==1&&!authAllot&&userInfo.id!='f63ec75d5e992332015e99a8e978000c'" type="primary" @click="getOrders">接单</div>
+<!--       <div v-if="repairDetail.repairApplyReturn.state==0&&$route.query.agency==1&&!authAllot&&userInfo.id!='f63ec75d5e992332015e99a8e978000c'" type="primary" @click="getOrders">完成</div> -->
+      <div class="btn_" v-if="repairDetail.repairApplyReturn.state==2&&$route.query.agency!=1" type="primary" @click="showAssess">点击评价</div>
     </div>
   </div>
 </template>
@@ -115,15 +116,16 @@
       fixWorkerId: null,
       assess: null,
       levels: null,
-      assessShow: false
+      assessShow: false,
+      userInfo: null
     }),
     created () {
       setTimeout(() => {
         this.getDetail()
+        this.userInfo = JSON.parse(localStorage.getItem('userinfo'))
       }, 20)
     },
     beforeRouteUpdate (to, from, next) {
-      console.log(to)
       next()
     },
     methods: {
@@ -142,7 +144,7 @@
       },
       // 关闭分配
       closeChoose () {
-        this.allot = null
+        this.fixWorkerList = null
       },
       // 分配维修人员
       chooseallot (item) {
@@ -248,41 +250,20 @@
       margin-bottom:6px
       img
         vertical-align:middle
-.detail
-  height:210px
-.detail_left,.detail_right
-  padding-left:20px
-  box-sizing:border-box
-  height:100%
-  float:left
-.detail_left
-  width:300px
-  padding-top:15px
-  background-color:#848ba5
-  li
-    height:28px
-    line-height:28px
-    font-size:12px
-    color:#fff
-    padding-left:30px
-    background-size:20px 20px !important
-    border-bottom:1px solid #6775a6
-  li:nth-child(1)
-    background:url('~common/images/user.png') no-repeat center left
-  li:nth-child(2)
-    background:url('~common/images/rq.png') no-repeat center left
-  li:nth-child(3)
-    background:url('~common/images/zsdw.png') no-repeat center left
-  li:nth-child(4)
-    background:url('~common/images/lxr.png') no-repeat center left
-  li:nth-child(5)
-    background:url('~common/images/lxrqz.png') no-repeat center left
-  li:nth-child(6)
-    background:url('~common/images/tel.png') no-repeat center left
-.detail_right
-  width:400px
-  padding-top:10px
-  background-color:#fff
-  font-size:14px
-  overflow-y:scroll !important
+.stars
+  padding-left:30px
+  >div
+    margin-bottom:4px
+    height:30px
+    line-height:30px
+    span:nth-child(1)
+      display:inline-block
+      width:100px
+      background-color:#d9d9d9
+      border-radius:6px
+      color:#646464
+      text-align:center
+      margin-right:30px
+    span:nth-child(2),span:nth-child(3)
+      color:#426df7
 </style>

@@ -2,66 +2,66 @@
   <div class="edit_food">
     <dl>
       <dt>周一</dt>
-      <dd><input v-model="allFoods.food0" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food1" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food2" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food3" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food4" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food5" type="text" placeholder="请输入菜品/价格/数量"></dd>
+      <dd><input v-model="allFoods.food6" type="text" placeholder="请输入菜品/价格/数量"></dd>
     </dl>
     <dl>
       <dt>周二</dt>
-      <dd><input v-model="allFoods.food6" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food7" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food8" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food9" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food10" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food11" type="text" placeholder="请输入菜品/价格/数量"></dd>
+      <dd><input v-model="allFoods.food12" type="text" placeholder="请输入菜品/价格/数量"></dd>
     </dl>
     <dl>
       <dt>周三</dt>
-      <dd><input v-model="allFoods.food12" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food13" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food14" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food15" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food16" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food17" type="text" placeholder="请输入菜品/价格/数量"></dd>
+      <dd><input v-model="allFoods.food18" type="text" placeholder="请输入菜品/价格/数量"></dd>
     </dl>
     <dl>
       <dt>周四</dt>
-      <dd><input v-model="allFoods.food18" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food19" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food20" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food21" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food22" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food23" type="text" placeholder="请输入菜品/价格/数量"></dd>
+      <dd><input v-model="allFoods.food24" type="text" placeholder="请输入菜品/价格/数量"></dd>
     </dl>
     <dl>
       <dt>周五</dt>
-      <dd><input v-model="allFoods.food24" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food25" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food26" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food27" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food28" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food29" type="text" placeholder="请输入菜品/价格/数量"></dd>
+      <dd><input v-model="allFoods.food30" type="text" placeholder="请输入菜品/价格/数量"></dd>
     </dl>
     <dl>
       <dt>周六</dt>
-      <dd><input v-model="allFoods.food30" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food31" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food32" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food33" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food34" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food35" type="text" placeholder="请输入菜品/价格/数量"></dd>
+      <dd><input v-model="allFoods.food36" type="text" placeholder="请输入菜品/价格/数量"></dd>
     </dl>
     <dl>
       <dt>周日</dt>
-      <dd><input v-model="allFoods.food36" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food37" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food38" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food39" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food40" type="text" placeholder="请输入菜品/价格/数量"></dd>
       <dd><input v-model="allFoods.food41" type="text" placeholder="请输入菜品/价格/数量"></dd>
+      <dd><input v-model="allFoods.food42" type="text" placeholder="请输入菜品/价格/数量"></dd>
     </dl>
     <el-button class="menu_btn" type="primary" @click="this.submitMenu">确认提交</el-button>
   </div>
@@ -70,7 +70,6 @@
   export default {
     data: () => ({
       allFoods: {
-        food0: '',
         food1: '',
         food2: '',
         food3: '',
@@ -111,9 +110,10 @@
         food38: '',
         food39: '',
         food40: '',
-        food41: ''
+        food41: '',
+        food42: ''
       },
-      allFoodsId: []
+      allFoodsId: {}
     }),
     created () {
       this.getMenu()
@@ -145,7 +145,7 @@
 <style lang="stylus" rel="stylesheet/stylus" scoped>
   .edit_food
     position:relative
-    height:280px
+    height:300px
     background-color:rgba(188,194,218,0.8)
     .menu_btn
       position:absolute
@@ -163,9 +163,9 @@
         height:30px
         line-height:30px
       input
-        height:25px
+        height:30px
         width:85%
-        font-size:14px
+        font-size:16px
         border:1px solid #6b6bf9
         margin-bottom:8px
         box-sizing:border-box

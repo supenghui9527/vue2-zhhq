@@ -65,7 +65,7 @@
           <span class="float-left"><span class="must_write"></span>备注说明</span>
           <textarea class="float-left" v-model="remark"></textarea>
         </div>
-        <div class="btn" @click="submitQuestions">提交申请</div>
+        <div class="repair_btn" @click="submitQuestions">提交申请</div>
       </div>
     </div>
   </div>
@@ -120,7 +120,6 @@
             return flag
           }
         }
-        console.log(this.activeNameArr)
         if (flag) {
           this.activeNameArr.push(questionName)
           this.questionIDs.push(questionID)
@@ -154,25 +153,30 @@
           var bespeakStartTime = dateFormat(this.bespeakStartTime, 'yyyy-MM-dd-hh-mm').split('-')
           var bespeakEndTime = dateFormat(this.bespeakEndTime, 'yyyy-MM-dd-hh-mm').split('-')
         }
-        this.param.userID = window.localStorage.getItem('userID')
-        this.param.questionIDs = this.questionIDs.toString()
-        this.param.bespeakStartTime = this.bespeakStartTime !== '' ? `${bespeakStartTime[0]}-${bespeakStartTime[1]}-${bespeakStartTime[2]} ${bespeakStartTime[3]}:${bespeakStartTime[4]}` : ''
-        this.param.bespeakEndTime = this.bespeakEndTime !== '' ? `${bespeakEndTime[0]}-${bespeakEndTime[1]}-${bespeakEndTime[2]} ${bespeakEndTime[3]}:${bespeakEndTime[4]}` : ''
-        this.param.faultPlace = this.faultPlace
-        this.param.faultDetail = this.faultDetail
-        this.param.remark = this.remark
-        this.$refs.upload.submit()
-        // this.$store.dispatch('submit/questions', {
-        //   Vue: this,
-        //   picList: this.fileList,
-        //   userID: window.localStorage.getItem('userID'),
-        //   questionIDs: this.questionIDs.toString(),
-        //   bespeakStartTime: this.bespeakStartTime ? `${bespeakStartTime[0]}-${bespeakStartTime[1]}-${bespeakStartTime[2]} ${bespeakStartTime[3]}:${bespeakStartTime[4]}` : '',
-        //   bespeakEndTime: this.bespeakEndTime ? `${bespeakEndTime[0]}-${bespeakEndTime[1]}-${bespeakEndTime[2]} ${bespeakEndTime[3]}:${bespeakEndTime[4]}` : '',
-        //   faultPlace: this.faultPlace,
-        //   faultDetail: this.faultDetail,
-        //   remark: this.remark
-        // })
+        console.log(this.fileList)
+        if (this.fileList.length !== 0) {
+          this.param.userID = window.localStorage.getItem('userID')
+          this.param.questionIDs = this.questionIDs.toString()
+          this.param.bespeakStartTime = this.bespeakStartTime !== '' ? `${bespeakStartTime[0]}-${bespeakStartTime[1]}-${bespeakStartTime[2]} ${bespeakStartTime[3]}:${bespeakStartTime[4]}` : ''
+          this.param.bespeakEndTime = this.bespeakEndTime !== '' ? `${bespeakEndTime[0]}-${bespeakEndTime[1]}-${bespeakEndTime[2]} ${bespeakEndTime[3]}:${bespeakEndTime[4]}` : ''
+          this.param.faultPlace = this.faultPlace
+          this.param.faultDetail = this.faultDetail
+          this.param.remark = this.remark
+          this.$refs.upload.submit()
+          this.$message('已提交')
+        } else {
+          this.$store.dispatch('submit/questions', {
+            Vue: this,
+            picList: this.fileList,
+            userID: window.localStorage.getItem('userID'),
+            questionIDs: this.questionIDs.toString(),
+            bespeakStartTime: this.bespeakStartTime !== '' ? `${bespeakStartTime[0]}-${bespeakStartTime[1]}-${bespeakStartTime[2]} ${bespeakStartTime[3]}:${bespeakStartTime[4]}` : '',
+            bespeakEndTime: this.bespeakEndTime !== '' ? `${bespeakEndTime[0]}-${bespeakEndTime[1]}-${bespeakEndTime[2]} ${bespeakEndTime[3]}:${bespeakEndTime[4]}` : '',
+            faultPlace: this.faultPlace,
+            faultDetail: this.faultDetail,
+            remark: this.remark
+          })
+        }
       }
     }
   }
@@ -184,6 +188,17 @@
   height:100%
   left:0
   top:0
+  .repair_btn
+    position:absolute
+    right:15px
+    bottom:15px
+    width:67px
+    height:30px
+    line-height:30px
+    color:#d4d7ea
+    background-color:#1c3da6
+    border-radius:3px
+    text-align:center
 .must_write
   display:inline-block
   width:10px
@@ -191,12 +206,13 @@
   padding-right:0 !important
 .repair_container
   position:absolute
-  width:700px
+  width:70%
   left:50%
-  margin-left:-350px
-  top:265px
+  margin-left:-35%
+  top:205px
   background-color:rgba(188,194,218,0.8)
   height:220px
+  min-width:700px
   font-size:14px
   // 重写element类
   .el-upload
@@ -248,7 +264,7 @@
     padding-left:25px
     padding-top:9px
   .repair_left
-    width:280px
+    width:40%
     border-right:1px solid #969696
     .repair_choose
       width:165px
@@ -298,7 +314,7 @@
         margin-bottom:5px
   .repair_right
     position:relative
-    width:420px
+    width:60%
     .fault_place,.fault_detail,.remark
       padding-bottom:2px
       span
@@ -312,15 +328,4 @@
       height:120px
       resize:none
       border:1px solid #9ba7d3
-    .btn
-      position:absolute
-      right:15px
-      bottom:15px
-      width:67px
-      height:30px
-      line-height:30px
-      color:#d4d7ea
-      background-color:#1c3da6
-      border-radius:3px
-      text-align:center
 </style>

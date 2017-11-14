@@ -9,6 +9,7 @@
       ref="upload"
       :on-change="getfile"
       :data="parm"
+      :auto-upload="false"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
       :file-list="fileList">
@@ -164,7 +165,9 @@
         console.log(file)
       },
       getfile (file, fileList) {
-        seal(`${file.url}.pdf`)
+        let inputValue = document.getElementsByTagName('input')[0].value
+        seal(this, inputValue)
+        // this.$refs.upload.submit()
       }
     }
   }

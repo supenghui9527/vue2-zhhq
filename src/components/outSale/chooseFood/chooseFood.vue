@@ -29,7 +29,7 @@
       </dl>
     </div>
     <div class="order">
-      <span class="time">预定时间:上午8：00-9：00和下午12：00-14：00</span>
+      <span class="time">预定时间:下午12：00-14：00</span>
       <span class="go_order">>></span>
       <span @click="commitOrder" class="btn">提交订单</span>
     </div>
@@ -151,7 +151,7 @@
       },
       // 提交订单
       commitOrder () {
-        if (time(this, '8:00', '9:00') || time(this, '12:00', '14:00')) {
+        if (time(this, '8:00', '14:00')) {
           if (JSON.stringify(this.order) === '{}') {
             this.$message({message: '请选择外卖', type: 'warning'})
             return false

@@ -9,6 +9,7 @@
       ref="upload"
       :on-change="getfile"
       :data="parm"
+      :auto-upload="false"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
       :file-list="fileList">
@@ -35,9 +36,7 @@
             </td>
           </tr>
           <tr>
-            <td valign="top" rowspan="9" colspan="1" style="border-width: 1px; border-style: solid;">
-            申请内容
-            </td>
+            <td valign="top" rowspan="9" width="60px" colspan="1" style="border-width: 1px; border-style: solid;">申请内容</td>
             <td width="83" valign="top" style="border-width: 1px; border-style: solid;">会议时间</td>
             <td valign="top" rowspan="1" colspan="2" style="border-width: 1px; border-style: solid;width: 100px">
               <p>日期：{{meetingDeatail.meetingDate}}</p>
@@ -160,7 +159,9 @@
         console.log(file)
       },
       getfile (file, fileList) {
-        seal(`${file.url}.pdf`)
+        let inputValue = document.getElementsByTagName('input')[0].value
+        this.$refs.upload.submit()
+        seal(this, inputValue)
       }
     }
   }

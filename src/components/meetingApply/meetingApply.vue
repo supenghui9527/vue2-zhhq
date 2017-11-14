@@ -6,19 +6,20 @@
         <img class="user" src="../login/already_login.png" @click="$router.push('/login')">
         <router-link to="" class="go_sale">会务服务</router-link>
         <span class="rule_tit" @click="showRule=!showRule">申请规则</span>
-        <span @click="$router.push('/login')">返回主页</span>
+        <span class="back_home" @click="$router.push('/login')">返回主页</span>
       </div>
     </div>
     <transition name="fade">
       <div v-show="showRule" class="rule_detail">
+        <i class="el-icon-close close_rule" @click="showRule?showRule=false:showRule"></i>
         <h5>
           <span>代办须知：</span>
         </h5>
         <ul>
-          <li>1、申请使用前请先联系（188）确认会议室可以使用后，同时填写此申请单，并及时将填写好的表格（签字盖章）提交管理中心办公室（0311）</li>
-          <li>2、“会议室使用申请表”报送后，若需协调会议室内部相关事宜，如开门，摆放席卡、悬挂横幅、调试设备等，申请单申请审核通过之后，联系管理中心行政科（办公司电话：87778366；手机：13912958737）。若需协调外部事宜，如控制电梯、车辆停放等，可以联系管理中心办公室。</li>
-          <li>3、如因特殊原因临时决定不使用会议室，应及时与管理中心办公室联系告知情况。</li>
-          <li>4、横幅制作联系电话：68698518，QQ：95393981。（可另选其他单位制作）</li>
+          <li>1.申请会议室前请先联系区委办（电话：87778188），确定会议时间与大日程是否冲突。</li>
+          <li>2.提交申请后，若需要协调会议室内部相关事宜，如开门、摆放席卡、悬挂横幅、调试设备等，请联系管理中心行政科（电话：87778366；手机：13912958737）</li>
+          <li>3.如因特殊原因临时决定不使用会议室，应及时与管理中心办公室联系。</li>
+          <li>4.横幅制作电话：68698518，QQ：95393981。（可另选其他单位制作）</li>
         </ul>
       </div>
     </transition>
@@ -29,12 +30,18 @@
       </div>
       <router-view class="meeting_container"></router-view>
     </div>
+    <div v-show="showInstruction" class="fixed_" @click="showInstruction=false"></div>
+    <div class="explain" @click="showInstruction=!showInstruction">操作说明</div>
+    <div v-show="showInstruction" class="instruction">
+      <img src="~common/images/5_huiwufuwu.png">
+    </div>
   </div>
 </template>
 <script>
   export default {
     data: () => ({
-      showRule: false // 显示外卖规则
+      showRule: false, // 显示外卖规则
+      showInstruction: false
     })
   }
 </script>
@@ -42,10 +49,11 @@
 @import '~common/css/common.styl'
 .all_agency
   position:absolute
-  width:700px
+  width:70%
+  min-width:700px
   left:50%
-  margin-left:-350px
-  top:240px
+  margin-left:-35%
+  top:180px
   .meeting_container
     background-color:rgba(197,203,227,0.8)
   div

@@ -85,7 +85,20 @@ export default new Router({
     {
       path: '/allOutSale',
       name: 'allOutSale',
-      component: resolve => require(['@/components/allOutSale/allOutSale'], resolve)
+      redirect: '/allOutSale/hotFood',
+      component: resolve => require(['@/components/allOutSale/allOutSale'], resolve),
+      children: [
+        {
+          path: '/allOutSale/hotFood',
+          name: 'hotFood',
+          component: resolve => require(['@/components/allOutSale/hotFood/hotFood'], resolve)
+        },
+        {
+          path: '/allOutSale/food',
+          name: 'food',
+          component: resolve => require(['@/components/allOutSale/food/food'], resolve)
+        }
+      ]
     },
     // 申请用车
     {

@@ -10,8 +10,9 @@
         <label><span class="must_write">*</span>用餐类型</label>
         <el-radio class="radio" v-model="diningType" :label="0">桌餐</el-radio>
         <el-radio class="radio" v-model="diningType" :label="1">自助餐</el-radio>
+        <el-radio class="radio" v-model="diningType" :label="2">餐券</el-radio>
       </li>
-      <li>
+      <li v-show="diningType!=2">
         <label><span class="must_write">*</span>用餐标准</label>
         <el-select v-model="diningBenchmark" placeholder="请选择">
           <el-option
@@ -42,7 +43,7 @@
           </el-date-picker>
         </li>
       </ul>
-      <div class="btn" @click="submitApplyCar">提交申请</div>
+      <div class="meal_btn" @click="submitApplyCar">提交申请</div>
     </div>
   </div>
 </template>
@@ -70,7 +71,13 @@
       peopleCount: '',
       diningTime: ''
     }),
-    created () {
+    watch: {
+      diningType () {
+        if (this.diningType === 2) {
+          this.diningBenchmark = '4'
+          console.log(this.diningBenchmark)
+        }
+      }
     },
     computed: {
     },
@@ -119,17 +126,17 @@
     li
       padding-bottom:6px
   .repair_left
-    width:300px
+    width:40%
     border-right:1px solid #969696
   .repair_right
-    width:400px
+    width:60%
     li
       line-height:42px
       label
         width:80px
         span
           color:#ff0000
-    .btn
+    .meal_btn
       position:absolute
       right:15px
       bottom:15px

@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-  import common from '@/base/common/common'
+  import myApply from '@/base/myApply/myApply'
   export default {
     data: () => ({
       typeValue: 3,
@@ -29,7 +29,7 @@
       }
     }),
     components: {
-      myApply: common
+      myApply
     },
     computed: {
       myApply () {

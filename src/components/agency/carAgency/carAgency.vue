@@ -9,10 +9,11 @@
       ref="upload"
       :on-change="getfile"
       :data="parm"
+      :auto-upload="false"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
       :file-list="fileList">
-      <el-button class="up_load" type="primary" @click="submitPdf">盖章</el-button>
+      <el-button class="up_load" type="primary">盖章</el-button>
     </el-upload>
     <div id="home" class="box">
       <div class="head">
@@ -111,12 +112,14 @@
       carDetail: {},
       nowDate: dateFormat(new Date(), 'yyyy-MM-dd'),
       fileList: [],
+      $file: null,
       parm: {
         tag: '2',
         applyID: ''
       }
     }),
     created () {
+      // this.$file = this.$el.querySelector('input[type="file"]')
       this.$store.dispatch('go/UseCar/detail', {
         Vue: this,
         carApplyID: this.$route.query.carApplyID * 1
@@ -163,12 +166,10 @@
       handlePreview (file) {
         console.log(file)
       },
-      submitPdf () {
-        // this.$refs.upload.submit()
-      },
       getfile (file, fileList) {
-        console.log(`${file.url}.pdf`)
-        seal(`${file.url}.pdf`)
+        let fileValue = document.getElementsByTagName('input')[0].value
+        seal(this, fileValue)
+        // this.$refs.upload.submit()
       }
     }
   }

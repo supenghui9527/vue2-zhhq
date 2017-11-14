@@ -20,7 +20,7 @@ const actions = {
     }).then(({data}) => {
       for (var i = 0; i < data.length; i++) {
         Vue.allFoods[`food${i + 1}`] = `${data[i].name}/${data[i].price}/${data[i].count}`
-        Vue.allFoodsId.push(data[i].id)
+        Vue.allFoodsId[i + 1] = data[i].id
       }
     })
   },
@@ -49,8 +49,8 @@ const actions = {
       }
     }).then(({data}) => {
       for (var i = 0; i < data.length; i++) {
-        Vue.allFoods[`food${i}`] = `${data[i].name}/${data[i].price}/${data[i].count}`
-        Vue.allFoodsId.push(data[i].id)
+        Vue.allFoods[`food${i + 1}`] = `${data[i].name}/${data[i].price}/${data[i].count}`
+        Vue.allFoodsId[i + 1] = data[i].id
       }
     })
   },

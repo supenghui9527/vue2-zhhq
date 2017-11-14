@@ -52,7 +52,7 @@ const actions = {
       }
     }).then(({data}) => {
       Vue.repairDetail = data
-      filterAuth({Vue: Vue, roleArr: localStorage.getItem('roleId').split(','), storeArr: [rootState.auth.ORDER_REPAIR, rootState.auth.PORITION], authArr: ['orderAuth', 'authAllot']})
+      filterAuth({Vue: Vue, roleArr: localStorage.getItem('roleId').split(','), storeArr: [rootState.auth.ORDER_REPAIR, rootState.auth.PORITION_REPAIR], authArr: ['orderAuth', 'authAllot']})
       console.log(Vue.orderAuth, Vue.authAllot)
     })
   },
@@ -65,7 +65,7 @@ const actions = {
         userID,
         repairApplyID
       }
-    }).then(({data}) => {
+    }).then((data) => {
       Vue.$message(data.message)
       Vue.getDetail()
     })
@@ -96,7 +96,7 @@ const actions = {
         state
       }
     }).then((data) => {
-      Vue.allot = null
+      Vue.fixWorkerList = null
       Vue.$message(data.message)
       Vue.getDetail()
     })

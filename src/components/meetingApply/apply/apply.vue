@@ -4,9 +4,9 @@
       <ul>
         <li class="clearfix" style="padding-top:10px">
           <div class="time">
-            <label><span>*</span>是否电梯控制</label>
-            <span class="btn" @click="getLift(item)" :class="{active:isLift==item.id}" v-for="item in time">{{item.text}}</span>
+            <label>是否电梯控制</label>
           </div>
+          <span :class="{active:isLift.toString().indexOf(item)!==-1}" @click="getLift(item)" class="lift" v-for="item in lift">{{item}}</span>
         </li>
         <li class="clearfix">
           <div class="time">
@@ -55,12 +55,12 @@
           </el-time-picker>
         </li>
         <li>
-          <label><span>*</span>预计参会人数：</label>
+          <label><span>*</span>预计参会人数</label>
           <input class="join_number" v-model="peopleCount" name="peopleCount">
         </li>
         <li class="meeting_content">
           <div>
-            <label><span>*</span>会议内容：</label>
+            <label><span>*</span>会议内容</label>
           </div>
           <textarea v-model="meetingContent"></textarea>
         </li>
@@ -122,11 +122,13 @@
         text: '否',
         id: 0
       }],
+      lift: ['低区', '高区'],
+      activeNameArr: [],
       meetingDate: '',
       startTime: '',
       endTime: '',
       isSchedule: 0,
-      isLift: 0,
+      isLift: [],
       music: 0,
       meetingRoomID: '',
       banner: '',
@@ -157,7 +159,20 @@
     methods: {
       // 是否电梯控制
       getLift (item) {
-        this.isLift = item.id
+        let flag = true
+        for (let i = 0; i < this.activeNameArr.length; i++) {
+          if (this.activeNameArr[i] === item) {
+            this.activeNameArr.splice(i, 1)
+            this.isLift.splice(i, 1)
+            flag = false
+            return flag
+          }
+        }
+        if (flag) {
+          this.activeNameArr.push(item)
+          this.isLift.push(item)
+        }
+        this.isLift.toString()
       },
       // 是否大日程
       getTime (item) {
@@ -173,16 +188,18 @@
         this.meetingPeople = item.meetingContent
       },
       submit () {
+        let date = new Date()
+        let nowDate = new Date(dateFormat(date, 'yyyy-MM-dd')).getTime() - 3600000 * 8
         if (this.meetingDate !== '' && this.startTime !== '' && this.endTime !== '' && this.peopleCount !== '' && this.meetingContent !== '' && this.meetingRoomID !== '' && this.rostrumCount !== '' && this.mikeCount !== '' && this.standMike !== '') {
-          if (this.meetingDate.getDate() - new Date().getDate() >= 2) {
-            if (this.meetingContent <= this.meetingPeople) {
+          if (this.meetingDate.getTime() - nowDate >= 3600000 * 48) {
+            if (this.peopleCount * 1 <= this.meetingPeople) {
               this.$store.dispatch('submit/meeting', {
                 Vue: this,
                 userID: window.localStorage.getItem('userID'),
                 linkman: window.localStorage.getItem('linkman'),
                 officeTel: window.localStorage.getItem('officetel'),
                 linkmanTel: window.localStorage.getItem('linkmantel'),
-                isLift: this.isLift,
+                isLift: this.isLift.toString(),
                 meetingDate: dateFormat(this.meetingDate, 'yyyy-MM-dd'),
                 openTime: dateFormat(this.openTime, 'hh-mm').replace('-', ':'),
                 startTime: dateFormat(this.startTime, 'hh-mm').replace('-', ':'),
@@ -235,12 +252,23 @@
 .meeting_left,.meeting_right
   float:left
 .meeting_left
-  width:275px
+  width:40%
   font-size:12px
   padding-left:20px
   height:100%
+  box-sizing:border-box
   input[type="number"]
     appearance: textfield
+  .lift
+    display:inline-block
+    width: 30px
+    height: 20px
+    line-height: 20px
+    text-align: center
+    background-color: #fff
+    margin-left: 10px
+    margin-bottom: 4px
+    border: 1px solid #476cde
   .meeting_date
     height:22px
     width:77%
@@ -285,7 +313,7 @@
       border:1px solid #476cde
       resize:none
 .meeting_right
-  width:400px
+  width:60%
   font-size:12px
   .meeting_address
     span

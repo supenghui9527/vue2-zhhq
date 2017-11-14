@@ -113,12 +113,13 @@ const actions = {
     })
   },
   // 获取全部外卖订单打印订单
-  [types.FIND_FOOD_ORDER] ({rootState}, {Vue, userID}) {
+  [types.FIND_FOOD_ORDER] ({rootState}, {Vue, userID, foodType}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.findFoodOrder,
       body: {
-        userID
+        userID,
+        foodType
       }
     }).then((data) => {
       Vue.allOrder = data.data

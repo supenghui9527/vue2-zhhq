@@ -16,11 +16,11 @@
         </el-radio-group>
       </li>
       <li>
-        <label><span class="must_write">*</span>目的地</label>
+        <label style="display: block"><span class="must_write">*</span>目的地</label>
         <el-input v-model="goalPlace" placeholder="请输入目的地"></el-input>
       </li>
       <li>
-        <label><span class="must_write">*</span>详细事由</label>
+        <label style="display: block"><span class="must_write">*</span>详细事由</label>
         <el-input v-model="detailReason" placeholder="请输入内容"></el-input>
       </li>
     </ul>
@@ -47,7 +47,7 @@
           <el-input class="float-left" v-model="linkmanTel" placeholder="请输入联系人电话"></el-input>
         </li>
       </ul>
-      <div class="btn" @click="submitApplyCar">提交申请</div>
+      <div class="repair_btn" @click="submitApplyCar">提交申请</div>
     </div>
   </div>
 </template>
@@ -145,15 +145,15 @@
     li
       padding-bottom:6px
   .repair_left
-    width:280px
+    width:40%
     border-right:1px solid #969696
   .repair_right
-    width:420px
+    width:60%
     li
       line-height:42px
       label
         width:80px
-    .btn
+    .repair_btn
       position:absolute
       right:15px
       bottom:15px

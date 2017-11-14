@@ -50,15 +50,32 @@ const actions = {
       Vue.$message(data.message)
     })
   },
-  // 会议批示
-  [types.MEETING_INSTRUCTIONS] ({rootState, commit}, {Vue, userID, meetingApplyID, comment}) {
+  // 主任会议审核
+  [types.MEETING_INSTRUCTIONS] ({rootState, commit}, {Vue, userID, meetingApplyID, comment, state}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.instructionsUrl,
       body: {
         userID,
         meetingApplyID,
-        comment
+        comment,
+        state
+      }
+    }).then((data) => {
+      Vue.$message(data.message)
+      Vue.getDetail()
+    })
+  },
+  // 科长会议审核
+  [types.MEETING_INSTRUCTIONS1] ({rootState, commit}, {Vue, userID, meetingApplyID, comment, state}) {
+    Vue.$store.dispatch('axios/act/HTTP', {
+      Vue,
+      url: rootState.instructionsUrl1,
+      body: {
+        userID,
+        meetingApplyID,
+        comment,
+        state
       }
     }).then((data) => {
       Vue.$message(data.message)
