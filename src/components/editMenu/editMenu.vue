@@ -5,7 +5,7 @@
       <div>
         <img class="user" src="../login/already_login.png" @click="$router.push('/login')">
         <router-link to="#" class="go_sale">菜单编辑</router-link>
-        <span class="back_home" @click="$router.push('/login')">返回主页</span>
+        <span class="back_home" @click="$router.go(-1)">返回上一页</span>
       </div>
     </div>
     <transition name="fade">
@@ -13,8 +13,8 @@
     </transition>
     <div class="all_agency">
       <div>
-        <router-link to="/editMenu/editHotFood">熟食编辑</router-link>
         <router-link to="/editMenu/editFood">面食编辑</router-link>
+        <router-link v-if="showHotFood" to="/editMenu/editHotFood">熟食编辑</router-link>
       </div>
       <router-view class="food_container"></router-view>
     </div>
@@ -30,10 +30,18 @@
   export default {
     data: () => ({
       showRule: false,
-      showInstruction: false
+      showInstruction: false,
+      roleId: null,
+      showHotFood: true
     }),
     components: {
       rule: rule
+    },
+    created () {
+      this.roleId = localStorage.getItem('roleId')
+      if (this.roleId === '402848d05f8edf68015f900ff8da0000') {
+        this.showHotFood = false
+      }
     }
   }
 </script>

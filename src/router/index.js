@@ -200,7 +200,7 @@ export default new Router({
       path: '/editMenu',
       name: 'editMenu',
       component: resolve => require(['@/components/editMenu/editMenu'], resolve),
-      redirect: '/editMenu/editHotFood',
+      redirect: '/editMenu/editFood',
       children: [
         {
           path: '/editMenu/editFood',

@@ -28,7 +28,12 @@
       <ul>
         <li class="clearfix">
           <label class="float-left"><span class="must_write">*</span>用车人数</label>
-          <el-input class="float-left" v-model="peopleCount" placeholder="请输入用车人数"></el-input>
+          <el-input 
+            @change="testNub"
+            class="float-left"
+            v-model="peopleCount"
+            placeholder="请输入用车人数">
+          </el-input>
         </li>
         <li class="clearfix">
           <label class="float-left"><span class="must_write">*</span>用车时间</label>
@@ -57,7 +62,7 @@
   export default {
     data: () => ({
       isShow: null,
-      isAfterApply: 0,
+      isAfterApply: 1,
       applyReason: 1,
       peopleCount: '',
       linkman: '',
@@ -70,6 +75,7 @@
       showRule
     },
     created () {
+      // 判断是否当天第一次进入
       let storge = window.localStorage
       if (storge.getItem('isExpire')) {
         if (storge.getItem('isExpire') === new Date().toDateString()) {
@@ -94,9 +100,20 @@
       }
     },
     methods: {
+      // 验证人数
+      testNub () {
+        let reg = new RegExp('^[0-9]*$')
+        if (!reg.test(this.peopleCount)) {
+          this.$nextTick(() => {
+            this.peopleCount = ''
+          })
+        }
+      },
+      // 提交用车申请
       submitApplyCar () {
-        let nowDate = dateFormat(this.usingTime, 'yyyy-MM-dd-hh-mm').split('-')
-        if (this.goalPlace !== '' && this.detailReason !== '' && this.usingTime !== '' && this.peopleCount !== '' && this.linkman !== '' && this.linkmanTel !== '') {
+        let reg = new RegExp('^[0-9]*$')
+        if (this.goalPlace !== '' && this.detailReason !== '' && this.usingTime !== '' && reg.test(this.peopleCount) && this.linkman !== '' && this.linkmanTel !== '') {
+          let nowDate = dateFormat(this.usingTime, 'yyyy-MM-dd-hh-mm').split('-')
           this.$store.dispatch('submit/apply/car', {
             Vue: this,
             userID: window.localStorage.getItem('userID'),

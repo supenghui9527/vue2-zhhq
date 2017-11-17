@@ -35,6 +35,7 @@ const state = {
     STAMP_SIGN: 'f63ec75d5e8464ab015e84766c00000c',  // 盖章
     ORDER_REPAIR: 'f63ec75d5e9deb7f015e9ea763850001' // 维修
   },
+  daibanCount: null,
   linkman: localStorage.getItem('linkman'),
   linkmantel: localStorage.getItem('linkmantel'),
   officetel: localStorage.getItem('officetel'),
@@ -47,6 +48,7 @@ const state = {
   accessToken: '',
   loginUrl: `${HOST}checkLogin.do`,
   loginACtiveUrl: `${HOST}login.do`,
+  getApplyNub: `${HOST}home.do`,
   outSaleUrl: `${HOST}findOutFoodList.do`,
   commitOrderUrl: `${HOST}submitFoodApply.do`,
   goOrderUrl: `${HOST}findFoodApplyDetail.do`,

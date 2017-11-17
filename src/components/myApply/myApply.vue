@@ -5,7 +5,7 @@
       <div>
         <img class="user" src="../login/already_login.png" @click="$router.push('/login')">
         <router-link to="#" class="go_sale">我的申请</router-link>
-        <span class="back_home" @click="$router.push('/login')">返回主页</span>
+        <span class="back_home" @click="$router.go(-1)">返回上一页</span>
       </div>
     </div>
     <transition name="fade">

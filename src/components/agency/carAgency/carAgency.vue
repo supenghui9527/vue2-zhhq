@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button type="primary" class="down_load" @click="getPdf">生成pdf</el-button >
+    <div class="goback" @click="$router.go(-1)">返回上一页</div>
     <el-upload
       class="upload-demo"
       style="position: absolute;top:30px;"
@@ -15,85 +15,88 @@
       :file-list="fileList">
       <el-button class="up_load" type="primary">盖章</el-button>
     </el-upload>
-    <div id="home" class="box">
-      <div class="head">
-        <div class="head_title">建邺区公务车辆使用申请表</div>
-        <div class="head_msg">
-          <div class="head_office">申请部门：（盖章）</div>
-          <ul class="head_time">
-            <li class="li_1">填表时间:{{nowDate}}</li>
-          </ul>
+    <form method="POST" action="http://xz.hopethink.com/pdf.php">
+      <input type="hidden" name="html" v-model="pdfUrl">
+      <input type="hidden" name="title" value="用车申请申请">
+      <input type="submit" class="down_load" value="生成pdf">
+    </form>
+    <div ref="home" id="home" style="width: 650px;margin:0 auto;background-color:#fff">
+      <div style="width:500px;margin:0 auto">
+        <div style="width: 100%;height: 50px;line-height: 50px;text-align: center;font-size: 34px;font-weight: 500">建邺区公务车辆使用申请表</div>
+        <div style="width: 100%;height: 50px;line-height: 50px">
+          <div style="width: 50%;float: left">申请部门：（盖章）</div>
+          <div style="width: 50%;float: left">填表时间:{{nowDate}}</div>
         </div>
       </div>
       <div class="body">
-        <table cellspacing="0" cellpadding="1" border="1">
+        <table style="width:600px;margin:0 auto" cellspacing="0" cellpadding="1" border="1">
           <tr>
-            <td>申报类别</td>
-            <td colspan="3">
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">申报类别</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000" colspan="3">
               <span v-if="carDetail.applyReason==0">应急</span>
               <span v-else-if="carDetail.applyReason==1">调研</span>
               <span v-else>接待</span>
             </td>
           </tr>
           <tr >
-            <td>申报单位</td>
-            <td>{{carDetail.applyDept}}</td>
-            <td>目的地</td>
-            <td>{{carDetail.goalPlace}}</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">申报单位</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">{{carDetail.applyDept}}</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">目的地</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">{{carDetail.goalPlace}}</td>
           </tr>
           <tr>
-            <td>申报事由</td>
-            <td colspan="3">{{carDetail.detailReason}}</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">申报事由</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000" colspan="3">{{carDetail.detailReason}}</td>
           </tr>
           <tr >
-            <td>用车人数</td>
-            <td>{{carDetail.peopleCount}}</td>
-            <td>用车时间</td>
-            <td>{{carDetail.applyDate}}</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">用车人数</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">{{carDetail.peopleCount}}</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">用车时间</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">{{carDetail.applyDate}}</td>
           </tr>
           <tr >
-            <td>联系人</td>
-            <td>{{carDetail.linkman}}</td>
-            <td>联系电话</td>
-            <td>{{carDetail.linkmanTel}}</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">联系人</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">{{carDetail.linkman}}</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">联系电话</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">{{carDetail.linkmanTel}}</td>
           </tr>
           <tr>
-            <td>附件</td>
-            <td colspan="3"></td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">附件</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000" colspan="3"></td>
           </tr>
           <tr >
-            <td>车辆型号</td>
-            <td></td>
-            <td>车牌号</td>
-            <td></td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">车辆型号</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000"></td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">车牌号</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000"></td>
+          </tr>
+          <tr>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">司机</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000"></td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">联系电话</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000"></td>
           </tr>
           <tr >
-            <td>司机</td>
-            <td></td>
-            <td>联系电话</td>
-            <td></td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">申请单位领导签字</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000"><img width="80" height="80" :src="carDetail.check1Sign"></td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">管理中心分管领导意见</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000"></td>
           </tr>
           <tr >
-            <td>申请单位领导签字</td>
-            <td><img width="80" height="80" :src="carDetail.check1Sign"></td>
-            <td>管理中心分管领导意见</td>
-            <td></td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">用车前里程</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000"></td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">用车后里程</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000"></td>
           </tr>
-          <tr >
-            <td>用车前里程</td>
-            <td></td>
-            <td>用车后里程</td>
-            <td></td>
-          </tr>
-          <tr >
-            <td>车队意见</td>
-            <td></td>
-            <td>备注</td>
-            <td></td>
+          <tr>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">车队意见</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000"></td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">备注</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000"></td>
           </tr>
         </table>
       </div>
-      <div class="foot">
+      <div style="width:500px;margin:0 auto">
         <p>说明：</p>
         <p>1、请务必据实填写，并加盖单位公章</p>
         <p>2、参加会议、重大活动需附会议通知等文件</p>
@@ -111,6 +114,7 @@
     data: () => ({
       carDetail: {},
       nowDate: dateFormat(new Date(), 'yyyy-MM-dd'),
+      pdfUrl: '',
       fileList: [],
       $file: null,
       parm: {
@@ -126,7 +130,17 @@
       })
       this.parm.applyID = this.$route.query.carApplyID * 1
     },
+    watch: {
+      carDetail () {
+        this.$nextTick(function () {
+          this.pdfUrl = this.$refs.home.innerHTML
+        })
+      }
+    },
     methods: {
+      test () {
+        this.pdfUrl = `http://xz.hopethink.com/pdf.php?title=用车申请&html=${this.$refs.home.innerHTML}`
+      },
       getPdf: () => {
         let canvas = document.querySelector('#home')
         html2canvas(canvas, {
@@ -155,7 +169,7 @@
                 }
               }
             }
-            PDF.save('用车申请表.pdf')
+            PDF.save(`用车申请表${dateFormat(new Date(), 'yyyy-MM-dd-h-m')}.pdf`)
           }
         })
         html2canvas()
@@ -176,42 +190,36 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
   .router
-    overflow-y: scroll !important
-  ul
-    li
-      float: left
-  td
-    width: 100px
-    height: 40px
-    text-align: center
-    border: 1px solid #000
-  .box
-    width: 650px
-    margin: 0 auto
-    background-color:#fff
-  .head_title 
-    width: 100%
-    height: 50px
-    line-height: 50px
-    text-align: center
-    font-size: 34px
-    font-weight: 500
-  .head_msg
-    width: 100%
-    height: 50px
-    line-height: 50px
-  .head_office,.head_time 
-    width: 50%
-    float: left
-  .head,table,.foot
-    width:500px
-    margin:0 auto
+    overflow-y: scroll !important  
+  .goback
+    width:100px
+    height:40px
+    line-height:40px
+    position:absolute
+    text-align:center
+    font-size:14px
+    background-color:#20a0ff
+    color:#fff
+    right:50px
+    top:40px
+    border-radius:6px
   .down_load,.up_load
     position:absolute
     font-size:14px
     left:50px
   .down_load
     top:200px
+    width:100px
+    height:40px
+    line-height:40px
+    position:absolute
+    text-align:center
+    font-size:14px
+    background-color:#20a0ff
+    color:#fff
+    right:50px
+    border-radius:6px
+    border:none
   .up_load
     top:220px
 </style>

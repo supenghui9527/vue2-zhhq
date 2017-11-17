@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button type="primary" class="down_load" @click="getPdf">生成pdf</el-button >
+    <div class="goback" @click="$router.go(-1)">返回上一页</div>
     <el-upload
       class="upload-demo"
       style="position: absolute;top:30px;"
@@ -15,10 +15,15 @@
       :file-list="fileList">
       <el-button class="up_load" type="primary">盖章</el-button>
     </el-upload>
-    <div id="home" style="width: 600px;margin: 0 auto;background-color: #fff;height: 100%">
+    <form method="POST" action="http://xz.hopethink.com/pdf.php">
+      <input type="hidden" name="html" v-model="pdfUrl">
+      <input type="hidden" name="title" value="会议申请">
+      <input type="submit" class="down_load" value="生成pdf">
+    </form>
+    <div ref="home" id="home" style="width: 800px;margin: 0 auto;background-color: #fff;height: 100%">
       <h1 style="text-align:center;width:100%">会议室使用申请表</h1>
       <p style="width:100%;padding-left: 50px">申请日期：{{meetingDeatail.applyDate}}</p>
-      <table border="1" style="border-collapse: collapse;width: 500px;margin: 0 auto;height: 90%">
+      <table border="1" style="border-collapse: collapse;width: 700px;margin: 0 auto;height: 90%;font-size:20px">
         <tbody>
           <tr class="firstRow">
             <td valign="top" rowspan="2" colspan="2" style="word-break: break-all; border-width: 1px; border-style: solid;">
@@ -36,14 +41,14 @@
             </td>
           </tr>
           <tr>
-            <td valign="top" rowspan="9" width="60px" colspan="1" style="border-width: 1px; border-style: solid;">申请内容</td>
+            <td class="ss" rowspan="9" width="60px" colspan="1" style="border-width: 1px; border-style: solid">申请内容</td>
             <td width="83" valign="top" style="border-width: 1px; border-style: solid;">会议时间</td>
             <td valign="top" rowspan="1" colspan="2" style="border-width: 1px; border-style: solid;width: 100px">
               <p>日期：{{meetingDeatail.meetingDate}}</p>
               <p>时间：{{meetingDeatail.startTime}}</p>
             </td>
             <td valign="top" rowspan="1" colspan="3" style="border-width: 1px; border-style: solid;width:100px">
-              <p>开门时间：</p>
+              <p>开门时间：{{meetingDeatail.openTime}}</p>
               <p>预计结束时间：{{meetingDeatail.endTime}}</p>
             </td>
           </tr>
@@ -101,6 +106,7 @@
   </div>
 </template>
 <script>
+  import dateFormat from '@/common/js/dateFormat'
   import html2canvas from 'html2canvas'
   import JSPDF from 'jspdf'
   import seal from '@/common/js/seal'
@@ -108,6 +114,7 @@
     name: 'home',
     data: () => ({
       fileList: [],
+      pdfUrl: '',
       parm: {
         tag: '3',
         applyID: ''
@@ -121,7 +128,15 @@
       })
       this.parm.applyID = this.$route.query.meetingApplyID * 1
     },
+    watch: {
+      meetingDeatail () {
+        this.$nextTick(function () {
+          this.pdfUrl = this.$refs.home.innerHTML
+        })
+      }
+    },
     methods: {
+      // 生成pdf
       getPdf: () => {
         let pdfDom = document.querySelector('#home')
         html2canvas(pdfDom, {
@@ -147,7 +162,7 @@
                 }
               }
             }
-            PDF.save('会议室使用申请表.pdf')
+            PDF.save(`会议室使用申请表${dateFormat(new Date(), 'yyyy-MM-dd-h-m')}.pdf`)
           }
         })
         html2canvas()
@@ -160,8 +175,8 @@
       },
       getfile (file, fileList) {
         let inputValue = document.getElementsByTagName('input')[0].value
-        this.$refs.upload.submit()
         seal(this, inputValue)
+        // this.$refs.upload.submit()
       }
     }
   }
@@ -173,6 +188,29 @@
   left:50px
 .down_load
   top:200px
+  width:100px
+  height:40px
+  line-height:40px
+  position:absolute
+  text-align:center
+  font-size:14px
+  background-color:#20a0ff
+  color:#fff
+  right:50px
+  border-radius:6px
+  border:none
 .up_load
   top:220px
+.goback
+  width:100px
+  height:40px
+  line-height:40px
+  position:absolute
+  text-align:center
+  font-size:14px
+  background-color:#20a0ff
+  color:#fff
+  right:50px
+  top:40px
+  border-radius:6px
 </style>

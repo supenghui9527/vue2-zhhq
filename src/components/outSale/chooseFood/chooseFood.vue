@@ -24,12 +24,12 @@
         </dd>
       </dl>
       <dl class="cold_dishes float-left">
-        <dt class="active_tit">凉菜</dt>
+        <dt v-if="foodList.shushi" class="active_tit">凉菜</dt>
         <dd v-for="item in foodList.shushi" @click="chooseCold(item)" class="item" :class="{active_item:item.active==true}">{{item.foodName}}</dd>
       </dl>
     </div>
     <div class="order">
-      <span class="time">预定时间:下午12：00-14：00</span>
+      <span class="time">预定时间:当日下午12：00-14：00</span>
       <span class="go_order">>></span>
       <span @click="commitOrder" class="btn">提交订单</span>
     </div>

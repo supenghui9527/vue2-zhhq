@@ -6,14 +6,14 @@
         <img class="user" src="../login/already_login.png" @click="$router.push('/login')">
         <router-link to="" class="go_sale">会务服务</router-link>
         <span class="rule_tit" @click="showRule=!showRule">申请规则</span>
-        <span class="back_home" @click="$router.push('/login')">返回主页</span>
+        <span class="back_home" @click="$router.go(-1)">返回上一页</span>
       </div>
     </div>
     <transition name="fade">
       <div v-show="showRule" class="rule_detail">
         <i class="el-icon-close close_rule" @click="showRule?showRule=false:showRule"></i>
         <h5>
-          <span>代办须知：</span>
+          <span>申请规则：</span>
         </h5>
         <ul>
           <li>1.申请会议室前请先联系区委办（电话：87778188），确定会议时间与大日程是否冲突。</li>
@@ -42,7 +42,10 @@
     data: () => ({
       showRule: false, // 显示外卖规则
       showInstruction: false
-    })
+    }),
+    created () {
+      this.showRule = true
+    }
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>

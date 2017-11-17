@@ -35,6 +35,10 @@ const actions = {
       rootState.loginModule = false // 隐藏登录框
       Vue.$emit('fromLogin', {show: true, userName: data.data.name})
       rootState.type = data.data.type
+      Vue.$store.dispatch('get/apply/nub', {
+        Vue: Vue,
+        userID: data.data.id
+      })
     })
   },
   // token
@@ -51,6 +55,10 @@ const actions = {
       rootState.loginModule = false
       rootState.type = data.data.type
       Vue.userName = data.data.name
+      Vue.$store.dispatch('get/apply/nub', {
+        Vue: Vue,
+        userID: data.data.id
+      })
     })
   },
   [types.LOGIN_ACTIVE] ({state, rootState}, {Vue, uid}) {
@@ -77,6 +85,21 @@ const actions = {
       rootState.loginModule = false
       rootState.type = data.data.type
       Vue.userName = data.data.name
+      Vue.$store.dispatch('get/apply/nub', {
+        Vue: Vue,
+        userID: data.data.id
+      })
+    })
+  },
+  [types.GET_APPLY_NUB] ({state, rootState}, {Vue, userID}) {
+    Vue.$store.dispatch('axios/act/HTTP', {
+      Vue,
+      url: rootState.getApplyNub,
+      body: {
+        userID
+      }
+    }).then((data) => {
+      rootState.daibanCount = data.data.daibanCount
     })
   }
 }

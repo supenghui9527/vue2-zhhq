@@ -155,7 +155,7 @@
             tag: this.$route.query.tag * 1
           })
         } else {
-          this.$message({message: '请先前往移动端完成签字操作', type: 'warning'})
+          this.$message({message: '请前往移动端保存签名', type: 'warning'})
         }
       },
       // 盖章

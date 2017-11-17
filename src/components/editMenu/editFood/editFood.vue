@@ -128,6 +128,10 @@
       submitMenu () {
         let foodJson = ''
         for (let i in this.allFoods) {
+          if (this.allFoods[i] === '') {
+            this.$message({message: '请确认编辑内容格式是否如下“请输入菜品/价格/数量”', type: 'warning'})
+            return false
+          }
           if (i.substring(4) * 1 % 6 === 0) {
             foodJson += `${this.allFoodsId[i.substring(4)]},${this.allFoods[i].replace(/\//g, ',')}-`
           } else {

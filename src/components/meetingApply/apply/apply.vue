@@ -147,6 +147,32 @@
         }
       }
     }),
+    watch: {
+      rostrumCount () {
+        let reg = new RegExp('^[0-9]*$')
+        if (!reg.test(this.rostrumCount)) {
+          this.rostrumCount = ''
+        }
+      },
+      peopleCount () {
+        let reg = new RegExp('^[0-9]*$')
+        if (!reg.test(this.peopleCount)) {
+          this.peopleCount = ''
+        }
+      },
+      mikeCount () {
+        let reg = new RegExp('^[0-9]*$')
+        if (!reg.test(this.mikeCount)) {
+          this.mikeCount = ''
+        }
+      },
+      standMike () {
+        let reg = new RegExp('^[0-9]*$')
+        if (!reg.test(this.standMike)) {
+          this.standMike = ''
+        }
+      }
+    },
     created () {
       this.userID = window.localStorage.getItem('userID')
       this.linkman = window.localStorage.getItem('linkman')

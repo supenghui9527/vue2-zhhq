@@ -3,7 +3,8 @@
     <transition name="fade">
       <div v-show="show" class="user" :class="{show:$store.state.isLogin==true}">
         <img @click="showLogin" v-if="$store.state.isLogin==false" src="./no_login.png">
-        <img @click="signOut" v-if="$store.state.isLogin==true" src="./already_login.png">
+        <img @click="signOut" v-if="$store.state.isLogin==true&&!$route.query.username" src="./already_login.png">
+        <img v-if="$store.state.isLogin==true&&$route.query.username" src="./already_login.png">
         <p class="role" v-if="$store.state.isLogin==true">{{userName}}</p>
       </div>
     </transition>
@@ -14,7 +15,10 @@
       <v-auth v-if="$store.state.isLogin==true"></v-auth>
     </transition>
     <div v-show="showInstruction" class="fixed_" @click="showInstruction=false"></div>
-    <div class="explain" @click="showInstruction=!showInstruction">操作说明</div>
+    <div class="explain" >
+      <span @click="showInstruction=!showInstruction">操作说明</span>
+      <span>用户手册下载</span>
+    </div>
     <div v-show="showInstruction" class="instruction">
       <img v-if="$store.state.isLogin==false" src="~common/images/1_dengluqian.png">
       <img v-if="$store.state.isLogin==true&&$store.state.type==0" src="~common/images/4_shaoaj_zhuye.png">
@@ -59,11 +63,19 @@
           loginModule: true
         })
       },
+      // 帐号密码登录
       login () {
         this.$store.dispatch('common/set/USERTOKEN', {
           Vue: this,
           uid: window.localStorage.getItem('uname'),
           password: window.localStorage.getItem('password')
+        })
+      },
+      // 获取代办个数
+      getApplyNub () {
+        this.$store.dispatch('get/apply/nub', {
+          Vue: this,
+          userID: window.localStorage.getItem('userID')
         })
       },
       // 改变已登录状态
@@ -114,14 +126,16 @@
   color:#fff
   font-size:20px
 .explain
-  width:120px
+  width:200px
   height:50px
   text-align:center
   position:fixed
   bottom:20px
   left:50%
-  margin-left:-60px
+  margin-left:-100px
   color:#fff
   font-size:12px
-  text-decoration:underline
+  cursor:pointer
+  span
+    text-decoration:underline
 </style>

@@ -32,7 +32,7 @@
       <ul>
         <li class="clearfix">
           <label class="float-left"><span class="must_write">*</span>用餐人数</label>
-          <el-input v-model="peopleCount" placeholder="请输入用餐人数"></el-input>
+          <el-input @change="testNub" v-model="peopleCount" placeholder="请输入用餐人数"></el-input>
         </li>
         <li class="clearfix">
           <label class="float-left"><span class="must_write">*</span>用餐时间</label>
@@ -75,13 +75,20 @@
       diningType () {
         if (this.diningType === 2) {
           this.diningBenchmark = '4'
-          console.log(this.diningBenchmark)
         }
       }
     },
-    computed: {
-    },
     methods: {
+      // 检测输入是否为数字
+      testNub () {
+        let reg = new RegExp('^[0-9]*$')
+        if (!reg.test(this.peopleCount)) {
+          this.$nextTick(() => {
+            this.peopleCount = ''
+          })
+        }
+      },
+      // 提交用餐申请
       submitApplyCar () {
         let nowDate = dateFormat(this.diningTime, 'yyyy-MM-dd-hh-mm').split('-')
         if (this.diningReason !== '' && this.peopleCount !== '' && this.diningTime !== '') {
