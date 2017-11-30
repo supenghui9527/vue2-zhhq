@@ -73,7 +73,7 @@
   width:70%
   left:50%
   margin-left:-35%
-  top:260px
+  top:213px
   height:240px
   overflow-y:scroll
   background-color:#fff

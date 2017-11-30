@@ -8,6 +8,7 @@
         <img src="~common/images/mine.png" />
         <div v-if="$store.state.daibanCount" class="agency-nub">{{$store.state.daibanCount}}</div>
       </router-link>
+      <router-link v-if="$store.state.auth.showBuilding == userID||$store.state.auth.showBuilding1 == userID" to="myApply"><img src="~common/images/building.png" /></router-link>
     </div>
     <div v-if="$store.state.type==1" class="auth">
       <router-link to="meetingApply"><img src="~common/images/meeting.png" /></router-link>
@@ -38,8 +39,11 @@
 <script>
   export default {
     data: () => ({
-
-    })
+      userID: null
+    }),
+    created () {
+      this.userID = window.localStorage.getItem('userID')
+    }
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>

@@ -1,7 +1,22 @@
 <template>
   <div class="detail">
+    <div v-if="showRooms" class="fixed">
+      <div class="allot">
+        <h5>
+          <span>分配包间</span>
+          <i @click="closeAssess"></i>
+        </h5>
+        <div>
+          <span>包间选择：</span>
+          <el-radio class="radio" v-model="room" :label="201">201</el-radio>
+          <el-radio class="radio" v-model="room" :label="202">202</el-radio>
+          <el-radio class="radio" v-model="room" :label="203">203</el-radio>
+        </div>
+        <el-button class="submit_allot" type="primary" @click="mealSure">确认分配</el-button>
+      </div>
+    </div>
     <ul class="detail_top clearfix">
-      <li>申请表单：基础名片（请确认）</li>
+      <li>申请类型：用餐申请</li>
       <li>申请时间：{{mealDetail.createTime}}</li>
       <li>申办单位：{{mealDetail.applyDept}}</li>
       <li>申办单位联系人：{{mealDetail.linkman}}</li>
@@ -17,6 +32,10 @@
         <li>
           <span>用餐类型</span>
           <span>{{mealDetail.diningType==0?'桌餐':'自助餐'}}</span>
+        </li>
+        <li v-if="mealDetail.room">
+          <span>用餐包间</span>
+          <span>{{mealDetail.room}}</span>
         </li>
         <li>
           <span>用餐标准</span>
@@ -38,45 +57,51 @@
           <span>{{mealDetail.diningTime}}</span>
         </li>
         <li v-if="mealDetail.check1==1" class="sign">
-          <span>申请单位领导</span>
-          <img width="40" height="40" :src="mealDetail.check1Sign">
+          <span>申请部门领导</span>
+          <img width="30" height="30" :src="mealDetail.check1Sign">
         </li>
         <li v-if="mealDetail.check1==2">
-          <span>签字驳回</span>
+          <span>申请部门领导</span>
+          <span>驳回（签字）</span>
           <span>{{mealDetail.check1Comments}}</span>
         </li>
         <li v-if="mealDetail.check2==1" class="sign">
           <span>申请部门盖章</span>
-          <img width="40" height="48" src="~common/images/pdf@2x.png" @click="downLoadPdf(mealDetail)">
+          <img width="30" src="~common/images/pdf@2x.png" @click="downLoadPdf(mealDetail)">
         </li>
         <li v-if="mealDetail.check3==1" class="sign">
-          <span>区分管领导</span>
-          <img width="40" height="40" :src="mealDetail.check3Sign">
+          <span>区领导</span>
+          <img width="30" height="30" :src="mealDetail.check3Sign">
         </li>
         <li v-if="mealDetail.check3==2">
-          <span>签字驳回</span>
+          <span>区领导</span>
+          <span>签字（驳回）</span>
           <span>{{mealDetail.check3Comments}}</span>
         </li>
         <li v-if="mealDetail.check4==1">
-          <span>管理中心领导</span>
-          <span>已审核</span>
+          <span>用餐分管主任</span>
+          <span>{{mealDetail.reviewName}}</span>
+          <span>管理中心分管主任</span>
         </li>
         <li v-if="mealDetail.check4==2">
-          <span>审核驳回</span>
+          <span>用餐分管主任</span>
+          <span>审核（驳回）</span>
           <span>{{mealDetail.check4Comments}}</span>
         </li>
         <li class="active" v-if="mealDetail.check5==1">
-          <span>分管领导</span>
+          <span>餐科长</span>
           <span>{{mealDetail.leaderName}}</span>
-          <span>{{mealDetail.leaderTel}}</span>
+          <span>管理中心餐饮科长</span>
         </li>
         <li v-if="mealDetail.check5==2">
-          <span>分配驳回</span>
+          <span>餐科长</span>
+          <span>分配（驳回）</span>
           <span>{{mealDetail.check5Comments}}</span>
         </li>
       </ul>
       <div class="btn_" v-if="mealDetail.state==0&&$route.query.agency==1" type="primary" @click="getSign">签字</div>
       <div class="btn_" v-if="mealDetail.state==1&&$route.query.agency==1&&authStamp" type="primary" @click="goStamp">盖章</div>
+      <div class="btn_" v-if="mealDetail.state==2&&$route.query.agency==1&&userInfo.isSign==1" type="primary" @click="getSign">签字</div>
       <div class="btn_" v-if="mealDetail.state==3&&$route.query.agency==1&&authInstructions" type="primary" @click="instructions">审核</div>
       <div class="btn_no" v-if="mealDetail.state==3&&$route.query.agency==1&&authInstructions" type="primary" @click="reject">驳回</div>
       <div class="btn_" v-if="mealDetail.state==4&&$route.query.agency==1&&authAllot" type="primary" @click="mealSure">确认</div>
@@ -91,11 +116,14 @@
       authStamp: false,
       authInstructions: false,
       authAllot: false,
-      userInfo: null
+      room: '',
+      userInfo: {},
+      showRooms: false
     }),
     created () {
       setTimeout(() => {
         this.userInfo = JSON.parse(localStorage.getItem('userinfo'))
+        console.log(this.userInfo.isSign)
         this.getDetail()
       }, 20)
     },
@@ -164,13 +192,25 @@
       },
       // 确认用餐
       mealSure () {
+        if (this.mealDetail.diningType === 0) {
+          if (!this.showRooms) {
+            this.showRooms = true
+            return false
+          }
+        }
         this.$store.dispatch('meal/sure', {
           Vue: this,
           userID: localStorage.getItem('userID'),
           diningApplyID: this.$route.query.diningApplyID * 1,
           comment: '',
+          room: this.room,
           state: 5
         })
+      },
+      // 关闭评价模块
+      closeAssess () {
+        this.showRooms = false
+        this.room = ''
       },
       // 确认驳回
       mealReject () {
@@ -197,6 +237,47 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
   .detail
+    .fixed
+      position:fixed
+      height:100%
+      width:100%
+      left:0
+      top:0
+      z-index:999
+      background-color:rgba(0,0,0,0.5)
+      .allot
+        position:absolute
+        width:500px
+        top:230px
+        left:50%
+        margin-left:-250px
+        padding-bottom:40px
+        z-index:9999
+        background-color:#fff
+        div
+          height:50px
+          line-height:50px
+          padding-left:20px
+        .submit_allot
+           position:absolute
+           bottom:10px
+           left:50%
+           margin-left:-44px
+        h5
+          height:30px
+          line-height:30px
+          background-color:#20a0ff
+          color:#fff
+          text-align:center
+          font-size:12px
+          i
+            position:absolute
+            right:0
+            width:14px
+            height:14px
+            padding:6px
+            background:url('~common/images/close.png') no-repeat center center
+            background-size:14px 14px
     .detail_top
       background-color:#488fd7
       color:#fff

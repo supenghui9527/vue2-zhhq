@@ -3,7 +3,7 @@
     <div class="goback" @click="$router.go(-1)">返回上一页</div>
     <el-upload
       class="upload-demo"
-      style="position: absolute;top:30px;"
+      style="position: absolute;top:30px;display:none"
       :action="$store.state.updataPdf"
       name="file"
       ref="upload"
@@ -13,13 +13,14 @@
       :on-preview="handlePreview"
       :on-remove="handleRemove"
       :file-list="fileList">
-      <el-button class="up_load" type="primary">盖章</el-button>
+      <el-button class="up_load" @click="getfile()" type="primary">盖章</el-button>
     </el-upload>
-    <form method="POST" action="http://xz.hopethink.com/pdf.php">
+    <el-button class="up_load" @click="getfile()" type="primary">盖章</el-button>
+<!--     <form method="POST" action="http://xz.hopethink.com/pdf.php">
       <input type="hidden" name="html" v-model="pdfUrl">
-      <input type="hidden" name="title" value="会议申请">
+      <input type="hidden" name="title" value="1">
       <input type="submit" class="down_load" value="生成pdf">
-    </form>
+    </form> -->
     <div ref="home" id="home" style="width: 800px;margin: 0 auto;background-color: #fff;height: 100%">
       <h1 style="text-align:center;width:100%">会议室使用申请表</h1>
       <p style="width:100%;padding-left: 50px">申请日期：{{meetingDeatail.applyDate}}</p>
@@ -106,9 +107,9 @@
   </div>
 </template>
 <script>
-  import dateFormat from '@/common/js/dateFormat'
-  import html2canvas from 'html2canvas'
-  import JSPDF from 'jspdf'
+  // import dateFormat from '@/common/js/dateFormat'
+  // import html2canvas from 'html2canvas'
+  // import JSPDF from 'jspdf'
   import seal from '@/common/js/seal'
   export default {
     name: 'home',
@@ -131,42 +132,53 @@
     watch: {
       meetingDeatail () {
         this.$nextTick(function () {
-          this.pdfUrl = this.$refs.home.innerHTML
+          let ado_stream = new ActiveXObject('ADODB.Stream')
+          let xmlhttp = new ActiveXObject('Microsoft.XMLHTTP')
+          let url = `http://xz.hopethink.com/pdf.php`
+          let savepath = 'C:\\1.pdf'
+          xmlhttp.open('post', url, false)
+          xmlhttp.send(`title=1&html=${encodeURI(this.$refs.home.innerHTML)}`)
+          ado_stream.Type = 1
+          ado_stream.open()
+          ado_stream.Write(xmlhttp.responseBody)
+          ado_stream.SaveToFile(savepath, 2)
+          ado_stream.close()
+          // this.pdfUrl = this.$refs.home.innerHTML
         })
       }
     },
     methods: {
       // 生成pdf
-      getPdf: () => {
-        let pdfDom = document.querySelector('#home')
-        html2canvas(pdfDom, {
-          onrendered: function (canvas) {
-            let contentWidth = canvas.width
-            let contentHeight = canvas.height
-            let pageHeight = contentWidth / 592.28 * 841.89
-            let leftHeight = contentHeight
-            let position = 0
-            let imgWidth = 595.28
-            let imgHeight = 592.28 / contentWidth * contentHeight
-            let pageData = canvas.toDataURL('image/jpeg', 1.0)
-            let PDF = new JSPDF('', 'pt', 'a4')
-            if (leftHeight < pageHeight) {
-              PDF.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight)
-            } else {
-              while (leftHeight > 0) {
-                PDF.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
-                leftHeight -= pageHeight
-                position -= 841.89
-                if (leftHeight > 0) {
-                  PDF.addPage()
-                }
-              }
-            }
-            PDF.save(`会议室使用申请表${dateFormat(new Date(), 'yyyy-MM-dd-h-m')}.pdf`)
-          }
-        })
-        html2canvas()
-      },
+      // getPdf: () => {
+      //   let pdfDom = document.querySelector('#home')
+      //   html2canvas(pdfDom, {
+      //     onrendered: function (canvas) {
+      //       let contentWidth = canvas.width
+      //       let contentHeight = canvas.height
+      //       let pageHeight = contentWidth / 592.28 * 841.89
+      //       let leftHeight = contentHeight
+      //       let position = 0
+      //       let imgWidth = 595.28
+      //       let imgHeight = 592.28 / contentWidth * contentHeight
+      //       let pageData = canvas.toDataURL('image/jpeg', 1.0)
+      //       let PDF = new JSPDF('', 'pt', 'a4')
+      //       if (leftHeight < pageHeight) {
+      //         PDF.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight)
+      //       } else {
+      //         while (leftHeight > 0) {
+      //           PDF.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
+      //           leftHeight -= pageHeight
+      //           position -= 841.89
+      //           if (leftHeight > 0) {
+      //             PDF.addPage()
+      //           }
+      //         }
+      //       }
+      //       PDF.save(`会议室使用申请表${dateFormat(new Date(), 'yyyy-MM-dd-h-m')}.pdf`)
+      //     }
+      //   })
+      //   html2canvas()
+      // },
       handleRemove (file, fileList) {
         console.log(file, fileList)
       },
@@ -174,8 +186,8 @@
         console.log(file)
       },
       getfile (file, fileList) {
-        let inputValue = document.getElementsByTagName('input')[0].value
-        seal(this, inputValue)
+        // let inputValue = document.getElementsByTagName('input')[0].value
+        seal(this, 'C:\\1.pdf')
         // this.$refs.upload.submit()
       }
     }

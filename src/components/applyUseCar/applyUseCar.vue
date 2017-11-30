@@ -24,7 +24,7 @@
     <div class="all_agency">
       <div>
         <router-link to="/applyUseCar/applyCar">申请用车</router-link>
-        <router-link to="/applyUseCar/myCarApply">我的申请</router-link>
+        <!-- <router-link to="/applyUseCar/myCarApply">我的申请</router-link> -->
       </div>
       <router-view class="food_container"></router-view>
     </div>

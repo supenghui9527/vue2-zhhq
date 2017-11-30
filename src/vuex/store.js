@@ -12,19 +12,19 @@ import applyMeal from './modules/applyMeal'
 import editMenu from './modules/editMenu'
 // 告诉 vue “使用” vuex
 Vue.use(Vuex)
-// const HOST = 'http://58.213.150.99:8010/logistics/'// 用于正式服务器内网 172.16.5.181:8010 测试118.190.71.221:8010 外网192.168.200.80:8010
-const HOST = '/domain' + 'logistics/'// 用于本地调试
+const HOST = 'http://58.213.150.99:8010/logistics/'// 用于正式服务器内网 172.16.5.181:8010 测试118.190.71.221:8010 外网192.168.200.80:8010
+// const HOST = '/domain' + 'logistics/'// 用于本地调试
 // 创建一个对象来保存应用启动时的初始状态
 const state = {
   allState: {
     outSaleState: ['未完成', '已完成', '已撤销'],
-    carState: ['待签字', '待盖章', '待审核', '待分配', '待完成', '待评价', '已评价', '驳回(签字)', '驳回(审核)', '驳回(分配)'],
-    meetingState: ['待签字', '待盖章', '待审核', '待审核', '待分配', '待完成', '待评价', '已评价', '驳回(主任)', '驳回(科长)', '驳回(待分配)'],
+    carState: ['待签字', '待盖章', '待审核', '待分配', '待完成', '待评价', '已评价', '', '驳回(签字)', '驳回(审核)', '驳回(分配)'],
+    meetingState: ['', '待盖章', '待审核(办公室)', '待审核(科长)', '待分配', '已完成', '待评价', '已评价', '', '驳回(办公室)', '驳回(科长)', '驳回(待分配)'],
     repairState: ['待接单', '待完成', '待评价', '已评价', '待分配'],
-    mealState: ['待一级领导签字', '待盖章', '待二级领导签字', '待审核', '待分配', '待就餐', '已就餐', '一级领导驳回', '二级领导驳回', '审核驳回', '分配驳回']
+    mealState: ['待部门领导签字', '待盖章', '待区领导签字', '待审核', '待完成', '已完成', '已就餐', '一级领导驳回', '二级领导驳回', '审核驳回', '分配驳回']
   },
   auth: {
-    CHECK_HW: 'f63ec75d5e84800b015e8482b8390001', // 主任会议审核
+    CHECK_HW: '402848d05fc8820b015fd6f8f19d0014', // 办公室审核
     CHECK_HW1: '402848d05f562a0d015f5b44b1330002', // 科长会议审核
     CHECK_CAR: 'f63ec75d5e849386015e886ff47c0012', // 用车审核
     CHECK_MEAL: 'f63ec75d5e849386015e887106fe0013',  // 用餐审核
@@ -33,7 +33,9 @@ const state = {
     PORITION_MEAL: '402848d05f562a0d015f5b46973d0004', // 用餐分配
     PORITION_REPAIR: '402848d05f562a0d015f5b46ed2c0005', // 维修分配
     STAMP_SIGN: 'f63ec75d5e8464ab015e84766c00000c',  // 盖章
-    ORDER_REPAIR: 'f63ec75d5e9deb7f015e9ea763850001' // 维修
+    ORDER_REPAIR: 'f63ec75d5e9deb7f015e9ea763850001', // 维修
+    showBuilding: 4352,
+    showBuilding1: 6683
   },
   daibanCount: null,
   linkman: localStorage.getItem('linkman'),
@@ -86,7 +88,9 @@ const state = {
   assessRepairUrl: `${HOST}assessRepair.do`,
   assessUseCarUrl: `${HOST}carApplyAssess.do`,
   orderRepairUrl: `${HOST}orderRepair.do`,
-  getSignUrl: `${HOST}PCsign.do`
+  getSignUrl: `${HOST}PCsign.do`,
+  getCheckLeaderUrl: `${HOST}checkLeader.do`,
+  carUseingUrl: `${HOST}carTimeAxis.do`
 }
 // 创建一个对象存储一系列我们接下来要写的 mutation 函数
 const mutations = {

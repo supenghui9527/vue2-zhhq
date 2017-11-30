@@ -30,6 +30,7 @@ const actions = {
       commit('get/all/myapply', data)
     })
   },
+  // 签字
   [types.GETSIGN] ({rootState, commit}, {Vue, userID, signPath, applyID, tag}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
@@ -41,7 +42,6 @@ const actions = {
         tag
       }
     }).then((data) => {
-      console.log(data)
       if (data.state === 1) {
         Vue.$message(data.message)
         Vue.getDetail()

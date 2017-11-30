@@ -127,6 +127,18 @@ const actions = {
       Vue.assessShow = false
       Vue.getDetail()
     })
+  },
+  // 查看车辆是否被占用
+  [types.CAR_USEING] ({rootState, commit}, {Vue, carID}) {
+    Vue.$store.dispatch('axios/act/HTTP', {
+      Vue,
+      url: rootState.carUseingUrl,
+      body: {
+        carID
+      }
+    }).then(({data}) => {
+      Vue.carUseing = data
+    })
   }
 }
 

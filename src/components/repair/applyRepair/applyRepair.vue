@@ -153,7 +153,6 @@
           var bespeakStartTime = dateFormat(this.bespeakStartTime, 'yyyy-MM-dd-hh-mm').split('-')
           var bespeakEndTime = dateFormat(this.bespeakEndTime, 'yyyy-MM-dd-hh-mm').split('-')
         }
-        console.log(this.fileList)
         if (this.fileList.length !== 0) {
           this.param.userID = window.localStorage.getItem('userID')
           this.param.questionIDs = this.questionIDs.toString()

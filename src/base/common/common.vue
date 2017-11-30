@@ -2,7 +2,18 @@
   <div class="apply_list">
     <div>
       <div class="clearfix apply_nav">
-        <div class="float-right">
+        <div class="float-left">
+          <span>申请日期</span>
+          <el-select class="apply_date" v-model="timeValue" @change="filter" placeholder="请选择">
+            <el-option
+              v-for="item in filter_.timeFilter"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
+        <div class="float-left">
           <span>申请内容</span>
           <el-select class="apply_content" v-model="typeValue" @change="filter" placeholder="请选择">
             <el-option
@@ -13,11 +24,47 @@
             </el-option>
           </el-select>
         </div>
-        <div class="float-right">
-          <span>申请日期</span>
-          <el-select class="apply_date" v-model="timeValue" @change="filter" placeholder="请选择">
+        <div class="float-left">
+          <span>申请状态</span>
+          <el-select class="apply_content" v-if="typeValue==1" v-model="stateValue" @change="filter" placeholder="请选择">
             <el-option
-              v-for="item in filter_.timeFilter"
+              v-for="item in stateFilter.outSale"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <!-- 用车 -->
+          <el-select class="apply_content" v-else-if="typeValue==2" v-model="stateValue" @change="filter" placeholder="请选择">
+            <el-option
+              v-for="item in stateFilter.useCar"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <!-- 会议 -->
+          <el-select class="apply_content" v-else-if="typeValue==3" v-model="stateValue" @change="filter" placeholder="请选择">
+            <el-option
+              v-for="item in stateFilter.meeting"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <!-- 维修 -->
+          <el-select class="apply_content" v-else-if="typeValue==4" v-model="stateValue" @change="filter" placeholder="请选择">
+            <el-option
+              v-for="item in stateFilter.repair"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <!-- 用餐 -->
+          <el-select class="apply_content" v-else-if="typeValue==5" v-model="stateValue" @change="filter" placeholder="请选择">
+            <el-option
+              v-for="item in stateFilter.applyMeal"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -29,57 +76,14 @@
         <tr class="header_">
           <th width="25%">申请时间</th>
           <th width="25%">申请内容</th>
-          <th width="22%">
-            <el-select class="active_el-select" v-if="typeValue==1" v-model="stateValue" @change="filter" placeholder="请选择">
-              <el-option
-                v-for="item in stateFilter.outSale"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <!-- 用车 -->
-            <el-select class="active_el-select" v-else-if="typeValue==2" v-model="stateValue" @change="filter" placeholder="请选择">
-              <el-option
-                v-for="item in stateFilter.useCar"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <!-- 会议 -->
-            <el-select class="active_el-select" v-else-if="typeValue==3" v-model="stateValue" @change="filter" placeholder="请选择">
-              <el-option
-                v-for="item in stateFilter.meeting"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <!-- 维修 -->
-            <el-select class="active_el-select" v-else-if="typeValue==4" v-model="stateValue" @change="filter" placeholder="请选择">
-              <el-option
-                v-for="item in stateFilter.repair"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <!-- 用餐 -->
-            <el-select class="active_el-select" v-else-if="typeValue==5" v-model="stateValue" @change="filter" placeholder="请选择">
-              <el-option
-                v-for="item in stateFilter.applyMeal"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </th>
+          <th width="22%">申请状态</th>
           <th width="28%">操作</th>
         </tr>
         <tr v-for="(item,index) in myApply.list" class="list_item">
           <td>{{item.param1}}</td>
-          <td>{{item.title}}</td>
+          <td v-if="item.tag!=1">{{item.title}}</td>
+          <td v-if="item.tag==1&&item.orderType==1">外卖申请单（熟食）</td>
+          <td v-if="item.tag==1&&item.orderType==0">外卖申请单（面食）</td>
           <td>
             <!-- 外卖 -->
             <span v-if="item.tag==1" :title="$store.state.allState.outSaleState[item.state]">{{$store.state.allState.outSaleState[item.state]}}</span>
@@ -238,6 +242,10 @@
   .apply_list
     width:94%
     margin:0 auto
+    .apply_nav
+      padding:20px 0
+      >div
+        width:33.33%
     .no_data
       width:100%
       height:36px

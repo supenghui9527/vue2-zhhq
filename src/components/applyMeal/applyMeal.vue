@@ -25,7 +25,7 @@
     <div class="all_agency">
       <div>
         <router-link to="/applyMeal/submitMealApply">申请用餐</router-link>
-        <router-link to="/applyMeal/myMealApply">我的申请</router-link>
+        <!-- <router-link to="/applyMeal/myMealApply">我的申请</router-link> -->
       </div>
       <router-view class="food_container"></router-view>
     </div>

@@ -11,9 +11,14 @@
         type="selection">
       </el-table-column>
       <el-table-column
-        width="70"
-        label="序号">
+        width="100"
+        label="取货码">
         <template scope="scope">{{scope.row.id}}</template>
+      </el-table-column>
+      <el-table-column
+        prop="param1"
+        label="订单生成时间"
+        show-overflow-tooltip>
       </el-table-column>
       <el-table-column
         prop="param2"

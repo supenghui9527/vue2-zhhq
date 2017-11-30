@@ -6,7 +6,6 @@
       :class="{active_item:item.address==activeAddress}">
         {{item.address}}
       </span>
-      <router-link to="/outSale/orderDetail" v-show="showDetailBtn">订单详情</router-link>
     </h5>
     <div class="food_list clearfix">
       <dl class="noodles float-left">
@@ -24,7 +23,7 @@
         </dd>
       </dl>
       <dl class="cold_dishes float-left">
-        <dt v-if="foodList.shushi" class="active_tit">凉菜</dt>
+        <dt v-if="foodList.shushi" class="active_tit">熟食</dt>
         <dd v-for="item in foodList.shushi" @click="chooseCold(item)" class="item" :class="{active_item:item.active==true}">{{item.foodName}}</dd>
       </dl>
     </div>
@@ -80,7 +79,7 @@
       // 选择外卖凉菜种类
       chooseCold (item) {
         item.active = !item.active
-        item.active ? this.saveOrder(item) : this.order[item.foodID] = {}
+        item.active ? this.saveOrder(item) : delete this.order[item.foodID]
       },
       // 选择外卖面食种类
       choose (item) {
@@ -89,17 +88,15 @@
           item.active = !item.active
           if (item.active === false) {
             this.shopCar.delete(item.foodID) // 如果选中状态取消清掉当前面食ID
-          }
-          item.value = 0 // 清空当前面食数量
-          if (item.value !== 0) { // 修改订单时置空当前选中订单的值
-            this.order[item.foodID] = {}
+            item.value = 0 // 清空当前面食数量
+            delete this.order[item.foodID]
           }
         } else {
           if (this.shopCar.has(item.foodID)) {
             this.shopCar.delete(item.foodID)
             item.active = false
             item.value = 0
-            this.order[item.foodID] = {}
+            delete this.order[item.foodID]
           } else {
             this.$message({
               message: '只能选择两种面食',
@@ -108,7 +105,7 @@
           }
         }
       },
-      // 面食减少增加数量
+      // 面食增加数量
       plus (item) {
         if (item.active === true) {
           this.id = item.foodID
@@ -117,7 +114,7 @@
             this.saveOrder(item)
           } else {
             this.$message({
-              message: `${item.foodName}达到上限`,
+              message: `${item.foodName}仅剩${item.foodCount}份`,
               type: 'warning'
             })
           }
@@ -126,8 +123,12 @@
       // 面食减少数量
       minus (item) {
         if (item.active === true) {
-          if (item.value > 0) {
+          if (item.value >= 1) {
             item.value--
+            if (item.value === 0) {
+              delete this.order[item.foodID]
+              return false
+            }
             this.saveOrder(item)
           }
         }
@@ -153,7 +154,7 @@
       commitOrder () {
         if (time(this, '8:00', '14:00')) {
           if (JSON.stringify(this.order) === '{}') {
-            this.$message({message: '请选择外卖', type: 'warning'})
+            this.$message({message: '请确认订单个数或是否选择外卖', type: 'warning'})
             return false
           }
           for (let item in this.order) {
@@ -247,7 +248,7 @@
       font-size:0
       .address
         width:110px !important
-        border-radius:0 !important
+        border-radius:0 10px 0 0 !important
       .address,a
         background-color:#476ade
         font-size:14px

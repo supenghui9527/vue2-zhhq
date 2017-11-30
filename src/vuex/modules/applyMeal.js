@@ -10,7 +10,7 @@ const getters = {
 // action
 const actions = {
   // 提交我的用餐申请
-  [types.APPLY_MEAL] ({rootState, commit}, {Vue, userID, applyDeptID, linkman, linkmanTel, officeTel, diningType, diningBenchmark, diningReason, peopleCount, diningTime}) {
+  [types.APPLY_MEAL] ({rootState, commit}, {Vue, userID, applyDeptID, linkman, linkmanTel, officeTel, diningType, diningBenchmark, diningReason, peopleCount, diningTime, leaderID}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.applyMealUrl,
@@ -24,7 +24,8 @@ const actions = {
         diningBenchmark,
         diningReason,
         peopleCount,
-        diningTime
+        diningTime,
+        leaderID
       }
     }).then((data) => {
       Vue.$message(data.message)
@@ -61,7 +62,7 @@ const actions = {
     })
   },
   // 确认
-  [types.MEAL_SURE] ({rootState, commit}, {Vue, userID, diningApplyID, comment, state}) {
+  [types.MEAL_SURE] ({rootState, commit}, {Vue, userID, diningApplyID, comment, state, room}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.mealSureUrl,
@@ -69,11 +70,21 @@ const actions = {
         userID,
         diningApplyID,
         comment,
-        state
+        state,
+        room
       }
     }).then((data) => {
       Vue.$message(data.message)
+      Vue.showRooms = false
       Vue.getDetail()
+    })
+  },
+  [types.GET_CHECK_LEADER] ({rootState, commit}, {Vue}) {
+    Vue.$store.dispatch('axios/act/HTTP', {
+      Vue,
+      url: rootState.getCheckLeaderUrl
+    }).then(({data}) => {
+      Vue.checkLeaders = data
     })
   }
 }

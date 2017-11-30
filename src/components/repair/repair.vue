@@ -4,7 +4,7 @@
       <h1>建邺智慧后勤管理中心</h1>
       <div>
         <img class="user" src="../login/already_login.png" @click="$router.push('/login')">
-        <router-link to="#" class="go_sale">维护保修</router-link>
+        <router-link to="#" class="go_sale">维护报修</router-link>
         <span class="back_home" @click="$router.go(-1)">返回上一页</span>
       </div>
     </div>
@@ -26,7 +26,7 @@
     <div class="all_agency">
       <div class="nav">
         <router-link to="/repair/applyRepair">维护报修</router-link>
-        <router-link to="/repair/myApply">我的申请</router-link>
+        <!-- <router-link to="/repair/myApply">我的申请</router-link> -->
       </div>
       <router-view class="food_container"></router-view>
     </div>

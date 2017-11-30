@@ -134,10 +134,6 @@
   .apply_date,.apply_content
     width:150px !important
     text-align:center
-  .apply_nav
-    padding:20px 0
-    >div:nth-child(2)
-      padding-right:30px
   .go_detail
     display:inline-block
     padding:0 10px

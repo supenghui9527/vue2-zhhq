@@ -17,7 +17,7 @@
     </el-upload>
     <form method="POST" action="http://xz.hopethink.com/pdf.php">
       <input type="hidden" name="html" v-model="pdfUrl">
-      <input type="hidden" name="title" value="用车申请申请">
+      <input type="hidden" name="title" value="2">
       <input type="submit" class="down_load" value="生成pdf">
     </form>
     <div ref="home" id="home" style="width: 650px;margin:0 auto;background-color:#fff">
@@ -139,7 +139,7 @@
     },
     methods: {
       test () {
-        this.pdfUrl = `http://xz.hopethink.com/pdf.php?title=用车申请&html=${this.$refs.home.innerHTML}`
+        this.pdfUrl = `http://xz.hopethink.com/pdf.php?title=2&html=${this.$refs.home.innerHTML}`
       },
       getPdf: () => {
         let canvas = document.querySelector('#home')

@@ -17,7 +17,7 @@
     </el-upload>
     <form method="POST" action="http://xz.hopethink.com/pdf.php">
       <input type="hidden" name="html" v-model="pdfUrl">
-      <input type="hidden" name="title" value="用餐申请">
+      <input type="hidden" name="title" value="3">
       <input type="submit" class="down_load" value="生成pdf">
     </form>
     <div ref="home" id="home" style="width: 650px;margin: 0 auto;background-color:#fff">
@@ -83,7 +83,7 @@
           </tr>
           <tr>
             <td style="width:100px;height: 60px;text-align: center;border: 1px solid #000" colspan="2">区分管领导签字</td>
-            <td style="width:100px;height: 60px;text-align: center;border: 1px solid #000" colspan="4"></td>
+            <td style="width:100px;height: 60px;text-align: center;border: 1px solid #000" colspan="4"><img width="80" height="80" :src="mealDetail.check3Sign"></td>
           </tr>
           <tr>
             <td style="width:100px;height: 60px;text-align: center;border: 1px solid #000" colspan="2">管理中心分管领导意见</td>
@@ -181,7 +181,7 @@
       getfile (file, fileList) {
         let inputValue = document.getElementsByTagName('input')[0].value
         seal(this, inputValue)
-        // this.$refs.upload.submit()
+        this.$refs.upload.submit()
       }
     }
   }

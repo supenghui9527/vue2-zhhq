@@ -42,7 +42,7 @@
       </div>
     </div>
     <ul class="detail_top clearfix">
-      <li>申请表单：基础名片（请确认）</li>
+      <li>申请类型：维修申请</li>
       <li>申请时间：{{repairDetail.repairApplyReturn.createTime}}</li>
       <li>申办单位：{{userInfo.deptName}}</li>
       <li>申办单位联系人：{{userInfo.name}}</li>

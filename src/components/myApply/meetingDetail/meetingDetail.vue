@@ -19,7 +19,7 @@
       </div>
     </div>
     <ul class="detail_top clearfix">
-      <li>申请表单：基础名片（请确认）</li>
+      <li>申请类型：会议申请</li>
       <li>申请时间：{{meetingDeatail.createTime}}</li>
       <li>申办单位：{{meetingDeatail.applyDept}}</li>
       <li>申办单位联系人：{{meetingDeatail.linkman}}</li>
@@ -32,10 +32,14 @@
           <span>会议日期</span>
           <span>{{meetingDeatail.meetingDate}}</span>
         </li>
-          <li>
-            <span>会议时间</span>
-            <span>{{meetingDeatail.startTime}}-{{meetingDeatail.endTime}}</span>
-          </li>
+        <li>
+          <span>开门时间</span>
+          <span>{{meetingDeatail.openTime}}</span>
+        </li>
+        <li>
+          <span>会议时间</span>
+          <span>{{meetingDeatail.startTime}}-{{meetingDeatail.endTime}}</span>
+        </li>
         <li>
           <span>是否大日程</span>
           <span>{{meetingDeatail.isSchedule==0?'否':'是'}}</span>
@@ -72,34 +76,32 @@
           <span>其他内容</span>
           <span>{{meetingDeatail.otherService}}</span>
         </li>
-        <li v-if="meetingDeatail.check1==1" class="sign">
-          <span>申请单位领导</span>
-          <img width="40" height="40" :src="meetingDeatail.check1Sign">
-        </li>
-        <li v-if="meetingDeatail.check1==2">
-          <span>签字驳回</span>
-          <span>{{meetingDeatail.check1Comments}}</span>
-        </li>
         <li v-if="meetingDeatail.check2==1" class="sign">
           <span>申请部门盖章</span>
-          <img width="40" height="48" src="~common/images/pdf@2x.png" @click="downLoadPdf(meetingDeatail)">
+          <img width="30" src="~common/images/pdf@2x.png" @click="downLoadPdf(meetingDeatail)">
         </li>
-        <li v-if="meetingDeatail.check3==1">
-          <span>审核通过</span>
+        <li v-if="meetingDeatail.check3==1" class="sign">
+          <span>办公室审核</span>
+          <span>{{meetingDeatail.reviewName}}</span>
+          <span>管理中心综合科</span>
+        </li>
+        <li v-if="meetingDeatail.check3==2">
+          <span>办公室驳回</span>
           <span>{{meetingDeatail.check3Comments}}</span>
         </li>
-        <li v-if="meetingDeatail.check4==2">
-          <span>分配驳回</span>
-          <span>{{meetingDeatail.check4Comments}}</span>
+        <li v-if="meetingDeatail.check4==1">
+          <span>会务分管科长</span>
+          <span>{{meetingDeatail.leaderName}}</span>
+          <span>管理中心会务组</span>
+        </li>
+        <li v-if="meetingDeatail.check5==1">
+          <span>会务班长</span>
+          <span>{{meetingDeatail.allotName}}</span>
+          <span>管理中心会务班长</span>
         </li>
       </ul>
-      <div class="active_" v-if="meetingDeatail.check4==1">
-        <div>
-          <span>分管中心领导</span>
-          <span>{{meetingDeatail.leaderName}}</span>
-          <span>{{meetingDeatail.leaderTel}}</span>
-        </div>
-        <div class="meeting_plan clearfix">
+      <div class="active_" v-if="meetingDeatail.check5==1">
+        <div v-if="meetingDeatail.check5==1" class="meeting_plan clearfix">
           <span class="float-left">会议室安排：</span>
           <span class="float-left" v-for="item in meetingDeatail.serverList">{{item.duty}}&nbsp{{item.serverName}}&nbsp{{item.tel}}</span>
         </div>
@@ -108,8 +110,8 @@
       <div class="btn_" v-show="meetingDeatail.state==1&&$route.query.agency==1&&authStamp" type="primary" @click="goStamp">盖章</div>
       <div class="btn_" v-show="meetingDeatail.state==2&&$route.query.agency==1&&authInstructions" type="primary" @click="instructions">审核</div>
       <div class="btn_no" v-show="meetingDeatail.state==2&&$route.query.agency==1&&authInstructions" type="primary" @click="zreject">驳回</div>
-      <div class="btn_" v-show="meetingDeatail.state==3&&$route.query.agency==1&&authInstructions1" type="primary" @click="kreject">审核</div>
-      <div class="btn_no" v-show="meetingDeatail.state==3&&$route.query.agency==1&&authInstructions1" type="primary" @click="instructions1">驳回</div>
+      <div class="btn_" v-show="meetingDeatail.state==3&&$route.query.agency==1&&authInstructions1" type="primary" @click="instructions1">审核</div>
+      <div class="btn_no" v-show="meetingDeatail.state==3&&$route.query.agency==1&&authInstructions1" type="primary" @click="kreject">驳回</div>
       <div class="btn_" v-show="meetingDeatail.state==4&&$route.query.agency==1&&authAllot" type="primary" @click="getAllot">分配</div>
       <!-- <el-button v-show="meetingDeatail.state==4&&$route.query.agency==1&&authAllot" type="primary" @click="reject">驳回</el-button> -->
     </div>
@@ -338,6 +340,7 @@
 .meeting_plan
   width:80% !important
 .active_
+  font-size:14px
   div
     padding-left:30px
     margin-bottom:4px

@@ -43,10 +43,10 @@
       },
       // 撤销订单
       cancelOrder () {
-        if (time(this, '8:00', '14:00')) {
+        if (time(this, '1:00', '16:00')) {
           this.$store.dispatch('cancel/order', {
             Vue: this,
-            outFoodID: window.localStorage.getItem('orderID')
+            outFoodID: this.$route.query.outFoodID
           })
         }
       }

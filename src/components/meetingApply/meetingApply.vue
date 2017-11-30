@@ -26,7 +26,7 @@
     <div class="all_agency">
       <div>
         <router-link to="/meetingApply/apply">会议申请</router-link>
-        <router-link to="/meetingApply/myApply">我的申请</router-link>
+        <!-- <router-link to="/meetingApply/myApply">我的申请</router-link> -->
       </div>
       <router-view class="meeting_container"></router-view>
     </div>
