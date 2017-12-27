@@ -80,6 +80,18 @@ const actions = {
       }
     })
   },
+  // 获取熟食菜单
+  [types.GET_MENU] ({state, rootState}, {Vue}) {
+    Vue.$store.dispatch('axios/act/HTTP', {
+      Vue,
+      url: rootState.getMenuUrl,
+      body: {
+      }
+    }).then((data) => {
+      let datas = data.data
+      Vue.menu = datas
+    })
+  },
   // 撤销订单
   [types.CANCEL_ORDER] ({state, rootState}, {Vue, outFoodID}) {
     Vue.$store.dispatch('axios/act/HTTP', {

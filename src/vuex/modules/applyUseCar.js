@@ -99,16 +99,19 @@ const actions = {
     })
   },
   // 完成用车
-  [types.CAR_COMPLETE] ({rootState, commit}, {Vue, userID, carApplyID}) {
+  [types.CAR_COMPLETE] ({rootState, commit}, {Vue, userID, carApplyID, beforeMile, afterMile}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.carCompleteUrl,
       body: {
         userID,
-        carApplyID
+        carApplyID,
+        beforeMile,
+        afterMile
       }
     }).then((data) => {
       Vue.$message(data.message)
+      Vue.showMile = false
       Vue.getDetail()
     })
   },

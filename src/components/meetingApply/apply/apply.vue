@@ -6,27 +6,27 @@
           <div class="time">
             <label>是否电梯控制</label>
           </div>
-          <span :class="{active:isLift.toString().indexOf(item)!==-1}" @click="getLift(item)" class="lift" v-for="item in lift">{{item}}</span>
+          <span :class="{active:isLift.toString().indexOf(item)!==-1, cur_:item=='高区'}" @click="getLift(item)" class="lift"  v-for="item in lift">{{item}}</span>
         </li>
         <li class="clearfix">
-          <div class="time">
-            <label><span>*</span>是否大日程</label>
-            <span class="btn" @click="getTime(item)" :class="{active:isSchedule==item.id}" v-for="item in time">{{item.text}}</span>
-          </div>
+          <label class="label"><span>*</span>是否大日程</label>
+          <span class="btn" @click="getTime(item)" :class="{active:isSchedule==item.id, cur_:item.text=='否'}" v-for="item in time">{{item.text}}</span>
         </li>
         <li>
-          <label><span>*</span>开门时间</label>
-          <el-time-picker
+          <label class="label"><span>*</span>开门时间</label>
+          <el-time-select
             v-model="openTime"
             class="meeting_date"
             :picker-options="{
-              selectableRange: '01:00:00 - 24:00:00'
+              start: '05:30',
+              step: '00:05',
+              end: '21:00'
             }"
             placeholder="起始时间">
-          </el-time-picker>
+          </el-time-select>
         </li>
         <li>
-          <label><span>*</span>会议日期</label>
+          <label class="label"><span>*</span>会议日期</label>
           <el-date-picker
             v-model="meetingDate"
             class="meeting_date"
@@ -36,16 +36,18 @@
           </el-date-picker>
         </li>
         <li>
-          <label><span>*</span>会议时间</label>
-          <el-time-picker
+          <label class="label"><span>*</span>会议时间</label>
+          <el-time-select
             v-model="startTime"
-            class="meeting_time"
+            class="meeting_date"
             :picker-options="{
-              selectableRange: '01:00:00 - 24:00:00'
+              start: '05:30',
+              step: '00:05',
+              end: '21:00'
             }"
             placeholder="起始时间">
-          </el-time-picker>
-          <el-time-picker
+          </el-time-select>
+<!--           <el-time-picker
             v-model="endTime"
             class="meeting_time"
             :picker-options="{
@@ -53,9 +55,9 @@
             }"
             placeholder="结束时间">
           </el-time-picker>
-        </li>
+ -->        </li>
         <li>
-          <label><span>*</span>预计参会人数</label>
+          <label class="label"><span>*</span>预计参会人数</label>
           <input class="join_number" v-model="peopleCount" name="peopleCount">
         </li>
         <li class="meeting_content">
@@ -83,14 +85,14 @@
             </li>
             <li>
               <label><span>*</span>音乐播放:</label>
-              <span class="btn" @click="onMusic(item)" :class="{active:music==item.id}" v-for="item in time">{{item.text}}</span>
+              <span class="btn" @click="onMusic(item)" :class="{active:music==item.id,cur_:item.text=='否'}" v-for="item in time">{{item.text}}</span>
             </li>
             <li>
               <label><span>*</span>话筒只数:</label>
               <input class="host" v-model="mikeCount" name="mikeCount">
             </li>
             <li>
-              <label style="margin-right: 4px"><span>*</span>立式话筒:</label>
+              <label><span>*</span>立式话筒:</label>
               <input class="host" v-model="standMike" name="standMike">
             </li>
           </ul>
@@ -216,7 +218,7 @@
       submit () {
         let date = new Date()
         let nowDate = new Date(dateFormat(date, 'yyyy-MM-dd')).getTime() - 3600000 * 8
-        if (this.meetingDate !== '' && this.startTime !== '' && this.endTime !== '' && this.peopleCount !== '' && this.meetingContent !== '' && this.meetingRoomID !== '' && this.rostrumCount !== '' && this.mikeCount !== '' && this.standMike !== '') {
+        if (this.meetingDate !== '' && this.startTime !== '' && this.peopleCount !== '' && this.meetingContent !== '' && this.meetingRoomID !== '' && this.rostrumCount !== '' && this.mikeCount !== '' && this.standMike !== '' && this.openTime !== '') {
           if (this.meetingDate.getTime() - nowDate >= 3600000 * 48) {
             if (this.peopleCount * 1 <= this.meetingPeople) {
               this.$store.dispatch('submit/meeting', {
@@ -227,9 +229,9 @@
                 linkmanTel: window.localStorage.getItem('linkmantel'),
                 isLift: this.isLift.toString(),
                 meetingDate: dateFormat(this.meetingDate, 'yyyy-MM-dd'),
-                openTime: dateFormat(this.openTime, 'hh-mm').replace('-', ':'),
-                startTime: dateFormat(this.startTime, 'hh-mm').replace('-', ':'),
-                endTime: dateFormat(this.endTime, 'hh-mm').replace('-', ':'),
+                openTime: this.openTime,
+                startTime: this.startTime,
+                endTime: '',
                 meetingContent: this.meetingContent,
                 meetingRoomID: this.meetingRoomID,
                 isSchedule: this.isSchedule,
@@ -272,7 +274,8 @@
   border:1px dashed #476cde
   text-align:center
   background-color:#fff
-  margin-left:4px
+.cur_
+  margin-left:10px
 .active
   background-color:#8aa0ec !important
 .meeting_left,.meeting_right
@@ -292,12 +295,11 @@
     line-height: 20px
     text-align: center
     background-color: #fff
-    margin-left: 10px
     margin-bottom: 4px
     border: 1px solid #476cde
   .meeting_date
     height:22px
-    width:77%
+    width:60%
     .el-input__inner
       width:100%
       height:22px !important
@@ -311,11 +313,15 @@
     padding-top:10px
     font-size:14px
   .time
-    float:left
+    width:80px
+    display:inline-block
+  .label
+    width:80px
+    display:inline-block
   li
     padding-bottom:6px
   .join_number
-    width:173px
+    width:60%
     height:20px
     border:1px solid #476cde
   .meeting_content
@@ -334,7 +340,7 @@
       background-color:#fff
       color:#476cde
     textarea
-      width:266px
+      width:270px
       height:40px
       border:1px solid #476cde
       resize:none

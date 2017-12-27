@@ -7,6 +7,8 @@
         <router-link to="/outSale/chooseFood" class="go_sale">预定外卖</router-link>
         <span class="rule_tit" @click="showRule=!showRule">订单规则</span>
         <span class="back_home" @click="$router.go(-1)">返回上一页</span>
+        <span class="menu" @click="showMenu=!showMenu">面食菜单</span>
+        <span class="menu" @click="hotMenu=!hotMenu">熟食菜单</span>
       </div>
     </div>
     <transition name="fade">
@@ -16,14 +18,30 @@
           <span>预定外卖规则：</span>
         </h5>
         <ul>
-          <li>1、每周五更新预定菜单；</li>
-          <li>2、预定时间：12：00-14：00；</li>
-          <li>3、预定时间内可以，可以取消预定内容，16：00之后，无法取消预定状态；</li>
-          <li>4、面点：每天最多可选择两个品类，每个最多十个预订量；</li>
-          <li>5、凉菜：每个品类只能一份预订量；</li>
+          <li>1、预定时间：12：00-14：00。</li>
+          <li>2、16：00之前可以撤销预定的外卖并可以再次下单，每个用户每天只能有一单。</li>
+          <li>3、16：00之后可以进行取码取货，取码之后不可撤销，取货时间18：00-18：20。</li>
+          <li>4、面点：每天最多可选择两个品类，每个最多十个预订量。</li>
+          <li>5、熟食：每个品类只能预订一份。</li>
         </ul>
       </div>
     </transition>
+    <div v-if="showMenu" class="show_menu">
+      <i class="el-icon-close close_menu" @click="showMenu?showMenu=false:showMenu"></i>
+      <img width="100%" height="100%" src="~common/images/mianshi.png">
+    </div>
+    <div v-show="hotMenu" class="hot_menu">
+      <i class="el-icon-close close_menu" @click="hotMenu?hotMenu=false:hotMenu"></i>
+      <h6><span>一周熟食外卖菜单</span></h6>
+      <table border="1" width="500" height="344" align="center">
+        <tr v-for="(item,index) in menu" style="text-align: center">
+          <td style="background-color:#f0f0f0">{{week[index]}}</td>
+          <td>{{item.foodName1}}</td>
+          <td>{{item.foodName2}}</td>
+          <td>{{item.foodName3}}</td>
+        </tr>
+      </table>
+    </div>
     <router-view class="food_container"></router-view>
     <div v-show="showInstruction" class="fixed_" @click="showInstruction=false"></div>
     <div class="explain" @click="showInstruction=!showInstruction">操作说明</div>
@@ -36,13 +54,50 @@
   export default {
     data: () => ({
       showRule: false, // 显示外卖规则
-      showInstruction: false
-    })
+      showInstruction: false,
+      showMenu: false,
+      hotMenu: false,
+      week: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
+      menu: []
+    }),
+    created () {
+      this.$store.dispatch('get/menu', {
+        Vue: this
+      })
+    }
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
 @import '~common/css/common.styl'
   .outsale
+    .menu
+      padding:0 20px
+      border-radius: 4px
+      margin-right: 10px
+      background-color:rgba(239,239,239,0.4)
+      color: #868686
+    .show_menu,.hot_menu
+      width:600px
+      position:fixed
+      top:180px
+      left:50%
+      margin-left:-250px
+      z-index:999999
+      border-radius:6px
+      img
+        border-radius:6px
+    .hot_menu
+      background-color:#fff
+      padding-bottom:30px
+      h6
+        text-align:center
+        line-height:50px
+        span
+          border-bottom:4px solid #4086be
+    .close_menu
+      position:absolute
+      right:10px
+      top:10px
     .address_active
       background-color:#7f9af5 !important
     .address1

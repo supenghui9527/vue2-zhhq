@@ -19,7 +19,7 @@ export default {
           resolve(data)
           // rootState.fullscreenLoading = false
         } else {
-          Vue.$message(data.message)
+          Vue.$message({message: data.message, type: 'warning'})
         }
       }).catch((erro) => {
         Vue.$message('抱歉,服务器开小差了~')

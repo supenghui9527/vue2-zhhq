@@ -82,21 +82,23 @@
         <tr v-for="(item,index) in myApply.list" class="list_item">
           <td>{{item.param1}}</td>
           <td v-if="item.tag!=1">{{item.title}}</td>
-          <td v-if="item.tag==1&&item.orderType==1">外卖申请单（熟食）</td>
-          <td v-if="item.tag==1&&item.orderType==0">外卖申请单（面食）</td>
+          <td v-if="item.tag==1&&item.orderType==1">外卖申请单（面食）</td>
+          <td v-if="item.tag==1&&item.orderType==0">外卖申请单（熟食）</td>
           <td>
             <!-- 外卖 -->
             <span v-if="item.tag==1" :title="$store.state.allState.outSaleState[item.state]">{{$store.state.allState.outSaleState[item.state]}}</span>
             <!-- 公务用车 -->
             <span v-if="item.tag==2" :title="$store.state.allState.carState[item.state]">{{$store.state.allState.carState[item.state]}}</span>
             <!-- 会务申请 -->
-            <span v-else-if="item.tag==3" :title="$store.state.allState.meetingState[item.state]">{{$store.state.allState.meetingState[item.state]}}</span>
+            <span v-else-if="item.cancel==0&&item.tag==3" :title="$store.state.allState.meetingState[item.state]">{{$store.state.allState.meetingState[item.state]}}</span>
+            <span v-else-if="item.cancel==1&&item.tag==3" :title="$store.state.allState.meetingState[item.state]">申请者已取消</span>
             <!-- 报修申请 -->
             <span v-else-if="item.tag==4" :title="$store.state.allState.repairState[item.state]">{{$store.state.allState.repairState[item.state]}}</span>
             <!-- 用餐申请 -->
             <span v-else-if="item.tag==5" :title="$store.state.allState.mealState[item.state]">{{$store.state.allState.mealState[item.state]}}</span>
           </td>
           <td>
+            <span v-if="item.tag==3&&item.cancel==0" class="go_detail" @click="cancelMeetingApply(item)">取消</span>
             <span class="go_detail" @click="goDetail(item)">查看详情</span>
             <!-- <span v-if="item.tag==3" :title="$store.state.allState.meetingState[item.state]" class="play">打印</span> -->
           </td>
@@ -221,7 +223,6 @@
         this.$emit('changePage', this.typeValue, this.timeValue, this.stateValue, val)
       },
       goDetail (item) {
-        console.log(1)
         if (item.tag * 1 === 1) { // 外卖
           this.$router.push({path: '/outSale/orderDetail', query: {outFoodID: item.id}})
         } else if (item.tag * 1 === 2) { // 用车
@@ -233,6 +234,12 @@
         } else if (item.tag * 1 === 5) { // 用餐
           this.$router.push({path: '/myApply/mealDetail', query: {diningApplyID: item.id}})
         }
+      },
+      cancelMeetingApply (item) {
+        this.$store.dispatch('cancel/meeting/apply', {
+          Vue: this,
+          meetingApplyID: item.id
+        })
       }
     }
   }

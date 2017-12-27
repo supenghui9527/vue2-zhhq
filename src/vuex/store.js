@@ -12,15 +12,15 @@ import applyMeal from './modules/applyMeal'
 import editMenu from './modules/editMenu'
 // 告诉 vue “使用” vuex
 Vue.use(Vuex)
-const HOST = 'http://58.213.150.99:8010/logistics/'// 用于正式服务器内网 172.16.5.181:8010 测试118.190.71.221:8010 外网192.168.200.80:8010
-// const HOST = '/domain' + 'logistics/'// 用于本地调试
+// const HOST = 'http://172.16.5.181:8010/logistics/'// 用于正式服务器内网 172.16.5.181:8010 测试58.213.150.99:8010 外网192.168.200.80:8010//58.213.150.99:8010
+const HOST = '/domain' + 'logistics/'// 用于本地调试
 // 创建一个对象来保存应用启动时的初始状态
 const state = {
   allState: {
     outSaleState: ['未完成', '已完成', '已撤销'],
     carState: ['待签字', '待盖章', '待审核', '待分配', '待完成', '待评价', '已评价', '', '驳回(签字)', '驳回(审核)', '驳回(分配)'],
     meetingState: ['', '待盖章', '待审核(办公室)', '待审核(科长)', '待分配', '已完成', '待评价', '已评价', '', '驳回(办公室)', '驳回(科长)', '驳回(待分配)'],
-    repairState: ['待接单', '待完成', '待评价', '已评价', '待分配'],
+    repairState: ['待接单', '待完成', '待评价', '已评价'],
     mealState: ['待部门领导签字', '待盖章', '待区领导签字', '待审核', '待完成', '已完成', '已就餐', '一级领导驳回', '二级领导驳回', '审核驳回', '分配驳回']
   },
   auth: {
@@ -42,6 +42,9 @@ const state = {
   linkmantel: localStorage.getItem('linkmantel'),
   officetel: localStorage.getItem('officetel'),
   deptName: localStorage.getItem('deptName'),
+  isManage: localStorage.getItem('isManage'),
+  loginName: localStorage.getItem('loginName'),
+  password: localStorage.getItem('password'),
   ok: 1,
   type: 0,
   isLogin: false,
@@ -63,6 +66,7 @@ const state = {
   meetingApplyDetail: `${HOST}findMeetingApplyDetail.do`,
   updataPdf: `${HOST}submitPDF.do`,
   getQuestions: `${HOST}findQuestions.do`,
+  getMenuUrl: `${HOST}findCookFoodList.do`,
   submitQuestionsUrl: `${HOST}submitWord.do`,
   RepairDetailUrl: `${HOST}findRepairDetail.do`,
   submitApplyCarUrl: `${HOST}submitCarApply.do`,
@@ -90,7 +94,8 @@ const state = {
   orderRepairUrl: `${HOST}orderRepair.do`,
   getSignUrl: `${HOST}PCsign.do`,
   getCheckLeaderUrl: `${HOST}checkLeader.do`,
-  carUseingUrl: `${HOST}carTimeAxis.do`
+  carUseingUrl: `${HOST}carTimeAxis.do`,
+  cancelMeetingApplyUrl: `${HOST}cancelMeetingApply.do`
 }
 // 创建一个对象存储一系列我们接下来要写的 mutation 函数
 const mutations = {
@@ -102,8 +107,8 @@ const mutations = {
     state.isLogin = data
   }
 }
-
 // 整合初始状态和变更函数，我们就得到了我们所需的 store
+
 // 至此，这个 store 就可以连接到我们的应用中
 export default new Vuex.Store({
   state,

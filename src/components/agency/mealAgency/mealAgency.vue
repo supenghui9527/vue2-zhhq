@@ -15,11 +15,6 @@
       :file-list="fileList">
       <el-button class="up_load" type="primary">盖章</el-button>
     </el-upload>
-    <form method="POST" action="http://xz.hopethink.com/pdf.php">
-      <input type="hidden" name="html" v-model="pdfUrl">
-      <input type="hidden" name="title" value="3">
-      <input type="submit" class="down_load" value="生成pdf">
-    </form>
     <div ref="home" id="home" style="width: 650px;margin: 0 auto;background-color:#fff">
       <div style="width:600px;margin:0 auto">
         <div style="width: 100%;height: 50px;line-height: 50px;text-align: center;font-size: 34px;font-weight: 500;">机关内部用餐申请表</div>
@@ -106,16 +101,12 @@
   </div>
 </template>
 <script>
-  import html2canvas from 'html2canvas'
-  import dateFormat from '@/common/js/dateFormat'
-  import JSPDF from 'jspdf'
   import seal from '@/common/js/seal'
   export default {
     data: () => ({
       mealDetail: {},
       pdfUrl: '',
       fileList: [],
-      nowDate: dateFormat(new Date(), 'yyyy-MM-dd'),
       parm: {
         tag: '5',
         applyID: ''
@@ -128,49 +119,26 @@
     watch: {
       mealDetail () {
         this.$nextTick(function () {
-          this.pdfUrl = this.$refs.home.innerHTML
+          let ado_stream = new ActiveXObject('ADODB.Stream')
+          let xmlhttp = new ActiveXObject('Microsoft.XMLHTTP')
+          let url = `http://xz.hopethink.com/pdf.php?title=3&html=${encodeURI(this.$refs.home.innerHTML)}`
+          let savepath = 'C:\\申请表.pdf'
+          xmlhttp.open('post', url, false)
+          xmlhttp.send()
+          ado_stream.Type = 1
+          ado_stream.open()
+          ado_stream.Write(xmlhttp.responseBody)
+          ado_stream.SaveToFile(savepath, 2)
+          ado_stream.close()
         })
       }
     },
     methods: {
-      test () {
-        this.pdfUrl = `http://xz.hopethink.com/pdf.php?title=用餐申请&html=${this.$refs.home.innerHTML}`
-      },
       getDetail () {
         this.$store.dispatch('go/meal/detail', {
           Vue: this,
           diningApplyID: this.$route.query.diningApplyID * 1
         })
-      },
-      getPdf: () => {
-        let pdfDom = document.querySelector('#home')
-        html2canvas(pdfDom, {
-          onrendered: function (canvas) {
-            let contentWidth = canvas.width
-            let contentHeight = canvas.height
-            let pageHeight = contentWidth / 592.28 * 841.89
-            let leftHeight = contentHeight
-            let position = 0
-            let imgWidth = 595.28
-            let imgHeight = 592.28 / contentWidth * contentHeight
-            let pageData = canvas.toDataURL('image/jpeg', 1.0)
-            let PDF = new JSPDF('', 'pt', 'a4')
-            if (leftHeight < pageHeight) {
-              PDF.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight)
-            } else {
-              while (leftHeight > 0) {
-                PDF.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
-                leftHeight -= pageHeight
-                position -= 841.89
-                if (leftHeight > 0) {
-                  PDF.addPage()
-                }
-              }
-            }
-            PDF.save(`用餐申请表${dateFormat(new Date(), 'yyyy-MM-dd-h-m')}.pdf`)
-          }
-        })
-        html2canvas()
       },
       handleRemove (file, fileList) {
         console.log(file, fileList)
@@ -179,9 +147,8 @@
         console.log(file)
       },
       getfile (file, fileList) {
-        let inputValue = document.getElementsByTagName('input')[0].value
-        seal(this, inputValue)
-        this.$refs.upload.submit()
+        seal(this, 'C:\\申请表.pdf')
+        // this.$refs.upload.submit()
       }
     }
   }

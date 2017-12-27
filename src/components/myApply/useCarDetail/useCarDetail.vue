@@ -1,5 +1,22 @@
 <template>
   <div class="detail">
+    <div v-if="showMile" class="fixed">
+      <div class="allot assess">
+        <h5>
+          <span>确认里程</span>
+          <i @click="showMile=false"></i>
+        </h5>
+        <div style="padding-left:30px">
+          <label>前里程：</label>
+          <input class="host" v-model="beforeMile" placeholder="请输入里程" />
+        </div>
+        <div style="padding-left:30px">
+          <label>后里程：</label>
+          <input class="host" v-model="afterMile" placeholder="请输入里程" />
+        </div>
+        <el-button class="btn_assess" type="primary" @click="complete">确认</el-button>
+      </div>
+    </div>
     <div v-if="aboutCar!=null" class="fixed">
       <div class="allot">
         <h5>
@@ -106,7 +123,7 @@
         </li>
         <li v-if="carDetail.check1==1" class="sign">
           <span>申请单位领导</span>
-          <img width="30" height="30" :src="carDetail.check1Sign">
+          <img height="30" :src="carDetail.check1Sign">
         </li>
         <li v-if="carDetail.check1==2">
           <span>申请单位领导</span>
@@ -129,33 +146,37 @@
         </li>
       </ul>
       <div class="apply_flow">
-        <div v-if="carDetail.check4==1">
-          <div>
+        <div class="clearfix" v-if="carDetail.check4==1">
+          <div class="list_item">
             <span>车辆分管科长</span>
             <span>{{carDetail.leaderName}}</span>
             <span>管理中心车队长</span>
           </div>
-          <div>
+          <div class="list_item">
             <span>车辆车牌</span>
             <span>{{carDetail.carModel}}</span>
             <span>{{carDetail.carNum}}</span>
           </div>
-          <div>
+          <div class="list_item">
             <span>司机信息</span>
             <span>{{carDetail.driver}}</span>
             <span>{{carDetail.driverTel}}</span>
           </div>
         </div>
-        <div v-if="carDetail.check4==2">
+        <div class="active_item" v-if="carDetail.state==5">
+          <span>里程数</span>
+          <span>{{carDetail.beforeMile}}~{{carDetail.afterMile}}</span>
+        </div>
+        <div class="active_item" v-if="carDetail.check4==2">
           <span>分配驳回</span>
           <span>{{carDetail.check4Comments}}</span>
         </div>
-        <div v-if="carDetail.state==6">
-          <div>
+        <div class="clearfix" v-if="carDetail.state==6">
+          <div class="list_item">
             <span>评价反馈</span>
             <span>{{carDetail.assess}}</span>
           </div>
-          <div class="clearfix">
+          <div class="clearfix list_item">
             <span class="float-left">星级指数</span>
             <el-rate
               v-model="carDetail.levels"
@@ -172,7 +193,7 @@
       <div class="btn_no" v-if="carDetail.state==2&&$route.query.agency==1&&authInstructions" type="primary" @click="reject">驳回</div>
       <div class="btn_" v-if="carDetail.state==3&&$route.query.agency==1&&authAllot" type="primary" @click="getAllot">分配</div>
       <div class="btn_no" v-if="carDetail.state==3&&$route.query.agency==1&&authAllot" type="primary" @click="allotReject">驳回</div>
-      <div class="btn_" v-if="carDetail.state==4&&$route.query.agency==1&&authAllot" type="primary" @click="complete">完成</div>
+      <div class="btn_" v-if="carDetail.state==4&&$route.query.agency==1&&authAllot" type="primary" @click="clickShowMile">完成</div>
       <div class="btn_" v-if="carDetail.state==5&&$route.query.agency!=1" type="primary" @click="showAssess">点击评价</div>
     </div>
   </div>
@@ -195,7 +216,10 @@
       assess: null,
       levels: null,
       assessShow: false,
-      userInfo: null
+      userInfo: null,
+      showMile: false,
+      beforeMile: null,
+      afterMile: null
     }),
     watch: {
       carID () {
@@ -355,13 +379,22 @@
           })
         })
       },
+      clickShowMile () {
+        this.showMile = true
+      },
       // 完成申请单子
       complete () {
-        this.$store.dispatch('car/complete', {
-          Vue: this,
-          userID: localStorage.getItem('userID'),
-          carApplyID: this.$route.query.carApplyID * 1
-        })
+        if (this.beforeMile !== null && this.afterMile !== null) {
+          this.$store.dispatch('car/complete', {
+            Vue: this,
+            userID: localStorage.getItem('userID'),
+            carApplyID: this.$route.query.carApplyID * 1,
+            beforeMile: this.beforeMile,
+            afterMile: this.afterMile
+          })
+        } else {
+          this.$message({message: '请确认是否填写里程数', type: 'warning'})
+        }
       },
       // 显示评价模块
       showAssess () {
@@ -508,8 +541,26 @@
     margin-bottom:6px
 .apply_flow
   font-size:14px
-  >div
+  .list_item
+    width:50%
+    float:left
     padding-left:30px
+    box-sizing:border-box
+  .active_item
+    padding-left:30px
+    span:nth-child(1)
+      display:inline-block
+      width:100px
+      height:30px
+      line-height:30px
+      background-color:#d9d9d9
+      border-radius:6px
+      color:#646464 !important
+      text-align:center
+      margin-right:30px
+    span
+      color:#426df7
+  >div
     >div
       margin-bottom:4px
       span:nth-child(1)

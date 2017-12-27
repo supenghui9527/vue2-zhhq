@@ -31,6 +31,9 @@ const actions = {
       localStorage.setItem('deptName', data.data.deptName)
       localStorage.setItem('roleId', data.data.roleId)
       localStorage.setItem('dept_id', data.data.dept_id)
+      localStorage.setItem('isManage', data.data.isManage)
+      localStorage.setItem('loginName', data.data.login_name)
+      localStorage.setItem('password', data.data.password)
       rootState.isLogin = true // 改变成已登录状态
       rootState.loginModule = false // 隐藏登录框
       Vue.$emit('fromLogin', {show: true, userName: data.data.name})
@@ -55,6 +58,9 @@ const actions = {
       rootState.loginModule = false
       rootState.type = data.data.type
       Vue.userName = data.data.name
+      localStorage.setItem('isManage', data.data.isManage)
+      localStorage.setItem('loginName', data.data.login_name)
+      localStorage.setItem('password', data.data.password)
       Vue.$store.dispatch('get/apply/nub', {
         Vue: Vue,
         userID: data.data.id
@@ -80,6 +86,9 @@ const actions = {
       localStorage.setItem('deptName', data.data.deptName)
       localStorage.setItem('roleId', data.data.roleId)
       localStorage.setItem('dept_id', data.data.dept_id)
+      localStorage.setItem('isManage', data.data.isManage)
+      localStorage.setItem('loginName', data.data.login_name)
+      localStorage.setItem('password', data.data.password)
       Vue.$emit('fromLogin', {show: true, userName: data.data.name})
       rootState.isLogin = true
       rootState.loginModule = false

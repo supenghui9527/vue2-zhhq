@@ -58,7 +58,7 @@
         </li>
         <li v-if="mealDetail.check1==1" class="sign">
           <span>申请部门领导</span>
-          <img width="30" height="30" :src="mealDetail.check1Sign">
+          <img height="30" :src="mealDetail.check1Sign">
         </li>
         <li v-if="mealDetail.check1==2">
           <span>申请部门领导</span>
@@ -71,7 +71,7 @@
         </li>
         <li v-if="mealDetail.check3==1" class="sign">
           <span>区领导</span>
-          <img width="30" height="30" :src="mealDetail.check3Sign">
+          <img height="30" :src="mealDetail.check3Sign">
         </li>
         <li v-if="mealDetail.check3==2">
           <span>区领导</span>

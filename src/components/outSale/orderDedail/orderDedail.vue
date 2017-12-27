@@ -9,7 +9,7 @@
           <span class="created_time">订单生成时间</span>
           <span>订单编号：{{orderDetail.orderID}}</span>
           <span class="price">共计：￥{{orderDetail.allPrice}}</span>
-          <span @click="cancelOrder" class="order_status">撤销</span>
+          <span v-if="orderDetail.state==0" @click="cancelOrder" class="order_status">撤销</span>
         </dt>
         <dd v-for="(item,index) in orderDetail.detailList" class="detail_item" :class="{active_item1:(index+1)%2==0}">
           <span class="created_time">{{orderDetail.createTime}}</span>

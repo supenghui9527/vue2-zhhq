@@ -110,6 +110,19 @@ const actions = {
       Vue.allot = null
       Vue.getDetail()
     })
+  },
+  // 取消会议申请
+  [types.CANCEL_MEETING_APPLY] ({rootState, commit}, {Vue, meetingApplyID}) {
+    Vue.$store.dispatch('axios/act/HTTP', {
+      Vue,
+      url: rootState.cancelMeetingApplyUrl,
+      body: {
+        meetingApplyID
+      }
+    }).then((data) => {
+      Vue.$message(data.message)
+      Vue.$emit('changePage', Vue.typeValue, Vue.timeValue, Vue.stateValue, Vue.val)
+    })
   }
 }
 

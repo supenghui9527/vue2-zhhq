@@ -109,12 +109,17 @@
       plus (item) {
         if (item.active === true) {
           this.id = item.foodID
-          if (item.value < 10 && item.value < item.foodCount) {
+          if (item.value < item.maxCount && item.value < item.foodCount) {
             item.value++
             this.saveOrder(item)
-          } else {
+          } else if (item.value >= item.maxCount && item.value < item.foodCount) {
             this.$message({
-              message: `${item.foodName}仅剩${item.foodCount}份`,
+              message: `${item.foodName}上限为${item.maxCount}份`,
+              type: 'warning'
+            })
+          } else if (item.value < item.maxCount && item.value >= item.foodCount) {
+            this.$message({
+              message: `${item.foodName}库存仅剩${item.foodCount}份`,
               type: 'warning'
             })
           }
@@ -146,7 +151,7 @@
       },
       // 限制输入食物数量
       maxNub (item) {
-        if (item.value > 10 || item.value > item.foodCount) {
+        if (item.value > item.maxCount || item.value > item.foodCount) {
           item.value = 0
         }
       },
@@ -159,7 +164,7 @@
           }
           for (let item in this.order) {
             if (this.order[item].foodType === 0) {
-              this.outFood += `${this.order[item].id},${this.order[item].name},${this.order[item].price},${this.order[item].number},${this.order[item].foodUnit};`
+              this.outFood += `${this.order[item].id},${this.order[item].name},${this.order[item].price * (this.order[item].number)},${this.order[item].number},${this.order[item].foodUnit};`
             } else {
               this.cookFood += `${this.order[item].id},${this.order[item].name},${this.order[item].price},${this.order[item].number},${this.order[item].foodUnit};`
             }
@@ -169,7 +174,7 @@
             outFood: this.outFood.substring(0, this.outFood.length - 1),
             cookFood: this.cookFood.substring(0, this.cookFood.length - 1),
             userID: window.localStorage.getItem('userID'),
-            place: 0
+            place: this.orderPlace
           })
         } else {
           this.$message({message: '订餐时间不在有效时间段内', type: 'warning'})
@@ -188,11 +193,6 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
   .food_container
-    position:absolute
-    width:700px
-    left:50%
-    margin-left:-350px
-    top:240px
     i
       cursor: pointer
     input

@@ -130,7 +130,8 @@
             peopleCount: this.peopleCount,
             diningTime: `${nowDate[0]}-${nowDate[1]}-${nowDate[2]} ${nowDate[3]}:${nowDate[4]}`,
             leaderID: this.active,
-            room: this.room
+            room: this.room,
+            remark: this.other
           })
         } else {
           this.$message({message: '请确认信息是否填写完整', type: 'warning'})

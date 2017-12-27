@@ -21,5 +21,8 @@ export default function seal (Vue, pdfFile) {
     Vue.$message({message: '盖章成功'})
     obj.DetachPdf(pdfFile, 1, 1)
     Vue.$refs.upload.submit()
+    setTimeout(() => {
+      Vue.$router.push('agency')
+    }, 1000)
   }
 }

@@ -8,7 +8,8 @@
         <img src="~common/images/mine.png" />
         <div v-if="$store.state.daibanCount" class="agency-nub">{{$store.state.daibanCount}}</div>
       </router-link>
-      <router-link v-if="$store.state.auth.showBuilding == userID||$store.state.auth.showBuilding1 == userID" to="myApply"><img src="~common/images/building.png" /></router-link>
+      <a href="http://172.16.5.181:8010/logistics/build/index.html" target="_blank" v-if="$store.state.auth.showBuilding == userID||$store.state.auth.showBuilding1 == userID" style="cursor: pointer"><img src="~common/images/building.png" /></a>
+      <a v-if="isManage==1" :href="`http://172.16.5.181:8010/AdminEAP-web/login?userName=${$store.state.loginName}&password=${$store.state.password}`" target="_blank" style="cursor: pointer"><img src="~common/images/management.png" /></a>
     </div>
     <div v-if="$store.state.type==1" class="auth">
       <router-link to="meetingApply"><img src="~common/images/meeting.png" /></router-link>
@@ -21,7 +22,7 @@
         <img src="~common/images/mine.png" />
         <div v-if="$store.state.daibanCount" class="agency-nub">{{$store.state.daibanCount}}</div>
       </router-link>
-      <!-- <router-link to="#"><img src="~common/images/combine.png" /></router-link> -->
+      <a v-if="isManage==1" :href="`http://172.16.5.181:8010/AdminEAP-web/login?userName=${$store.state.loginName}&password=${$store.state.password}`" target="_blank" style="cursor: pointer"><img src="~common/images/management.png" /></a>
     </div>
     <div v-if="$store.state.type==2" class="auth">
       <router-link to="editMenu"><img src="~common/images/menu.png" /></router-link>
@@ -33,16 +34,20 @@
       </router-link>
       <router-link to="outSale"><img src="~common/images/outsale.png" /></router-link>
       <router-link to="repair"><img src="~common/images/repair.png" /></router-link>
+      <a v-if="isManage==1" :href="`http://172.16.5.181:8010/AdminEAP-web/login?userName=${$store.state.loginName}&password=${$store.state.password}`" target="_blank" style="cursor: pointer"><img src="~common/images/management.png" /></a>
     </div>
   </div>
 </template>
 <script>
   export default {
     data: () => ({
-      userID: null
+      userID: null,
+      isManage: null
     }),
     created () {
-      this.userID = window.localStorage.getItem('userID')
+      let userinfo = JSON.parse(window.localStorage.getItem('userinfo'))
+      this.isManage = userinfo.isManage
+      this.userID = userinfo.id
     }
   }
 </script>

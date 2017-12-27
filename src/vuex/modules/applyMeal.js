@@ -10,7 +10,7 @@ const getters = {
 // action
 const actions = {
   // 提交我的用餐申请
-  [types.APPLY_MEAL] ({rootState, commit}, {Vue, userID, applyDeptID, linkman, linkmanTel, officeTel, diningType, diningBenchmark, diningReason, peopleCount, diningTime, leaderID}) {
+  [types.APPLY_MEAL] ({rootState, commit}, {Vue, userID, applyDeptID, linkman, linkmanTel, officeTel, diningType, diningBenchmark, diningReason, peopleCount, diningTime, leaderID, remark}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.applyMealUrl,
@@ -25,7 +25,8 @@ const actions = {
         diningReason,
         peopleCount,
         diningTime,
-        leaderID
+        leaderID,
+        remark
       }
     }).then((data) => {
       Vue.$message(data.message)
