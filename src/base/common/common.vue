@@ -88,17 +88,21 @@
             <!-- 外卖 -->
             <span v-if="item.tag==1" :title="$store.state.allState.outSaleState[item.state]">{{$store.state.allState.outSaleState[item.state]}}</span>
             <!-- 公务用车 -->
-            <span v-if="item.tag==2" :title="$store.state.allState.carState[item.state]">{{$store.state.allState.carState[item.state]}}</span>
+            <span v-if="item.tag==2&&item.cancel==0" :title="$store.state.allState.carState[item.state]">{{$store.state.allState.carState[item.state]}}</span>
+            <span v-else-if="item.cancel==1&&item.tag==2" :title="$store.state.allState.meetingState[item.state]">申请者已取消</span>
             <!-- 会务申请 -->
             <span v-else-if="item.cancel==0&&item.tag==3" :title="$store.state.allState.meetingState[item.state]">{{$store.state.allState.meetingState[item.state]}}</span>
             <span v-else-if="item.cancel==1&&item.tag==3" :title="$store.state.allState.meetingState[item.state]">申请者已取消</span>
             <!-- 报修申请 -->
             <span v-else-if="item.tag==4" :title="$store.state.allState.repairState[item.state]">{{$store.state.allState.repairState[item.state]}}</span>
             <!-- 用餐申请 -->
-            <span v-else-if="item.tag==5" :title="$store.state.allState.mealState[item.state]">{{$store.state.allState.mealState[item.state]}}</span>
+            <span v-else-if="item.tag==5&&item.cancel==0" :title="$store.state.allState.mealState[item.state]">{{$store.state.allState.mealState[item.state]}}</span>
+            <span v-else-if="item.cancel==1&&item.tag==5" :title="$store.state.allState.meetingState[item.state]">申请者已取消</span>
           </td>
           <td>
             <span v-if="item.tag==3&&item.cancel==0" class="go_detail" @click="cancelMeetingApply(item)">取消</span>
+            <span v-if="item.tag==2&&item.cancel==0" class="go_detail" @click="cancelCarApply(item)">取消</span>
+            <span v-if="item.tag==5&&item.cancel==0" class="go_detail" @click="cancelMealApply(item)">取消</span>
             <span class="go_detail" @click="goDetail(item)">查看详情</span>
             <!-- <span v-if="item.tag==3" :title="$store.state.allState.meetingState[item.state]" class="play">打印</span> -->
           </td>
@@ -239,6 +243,18 @@
         this.$store.dispatch('cancel/meeting/apply', {
           Vue: this,
           meetingApplyID: item.id
+        })
+      },
+      cancelCarApply (item) {
+        this.$store.dispatch('cancel/car/apply', {
+          Vue: this,
+          carApplyID: item.id
+        })
+      },
+      cancelMealApply (item) {
+        this.$store.dispatch('cancel/meal/apply', {
+          Vue: this,
+          diningApplyID: item.id
         })
       }
     }

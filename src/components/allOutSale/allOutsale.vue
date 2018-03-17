@@ -14,10 +14,10 @@
       </div>
     </div>
     <div class="order_nav">
-      <router-link to="/allOutSale/hotFood">熟食</router-link>
       <router-link to="/allOutSale/food">面食</router-link>
+      <router-link v-if="showHotFood" to="/allOutSale/hotFood">熟食</router-link>
     </div>
-      <router-view class=all_order></router-view>
+      <router-view class="all_order"></router-view>
     </div>
   </div>
 </template>
@@ -26,9 +26,14 @@
     data: () => ({
       allOrder: {},
       multipleSelection: [],
-      showInstruction: false
+      showInstruction: false,
+      showHotFood: true
     }),
     created () {
+      this.roleId = localStorage.getItem('roleId')
+      if (this.roleId === '402848d05f8edf68015f900ff8da0000') {
+        this.showHotFood = false
+      }
     },
     methods: {
       // 打印订单http://127.0.0.1/tsc/print.php

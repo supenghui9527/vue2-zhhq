@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <div v-if="fixWorkerList!=null" class="fixed">
-      <div class="allot">
+      <div class="repair_allot">
         <h5>
           <span>添加服务人员</span>
           <i @click="closeChoose"></i>
@@ -51,6 +51,12 @@
     </ul>
     <div class="detail_bottom">
       <ul class="clearfix">
+        <li>
+          <span>维修地点</span>
+          <span v-if="repairDetail.repairApplyReturn.place==0">暂无</span>
+          <span v-else-if="repairDetail.repairApplyReturn.place==1">建邺区政府大楼</span>
+          <span v-else>双和园</span>
+        </li>
         <li>
           <span>报修事项：</span>
           <span v-for="item in repairDetail.repairApplyReturn.questionList">{{item}}</span>
@@ -157,7 +163,7 @@
         this.$store.dispatch('submit/repair/allot', {
           Vue: this,
           userID: localStorage.getItem('userID'),
-          fixWorkerID: this.fixWorkerID,
+          fixWorkerID: this.fixWorkerId,
           fixWorkerName: this.fixWorkerName,
           fixWorkerTel: this.fixWorkerTel,
           repairApplyID: this.$route.query.repairApplyID * 1,
@@ -202,9 +208,18 @@
   top:0
   z-index:999
   background-color:rgba(0,0,0,0.5)
-  .allot
+  .repair_allot
     position:absolute
-    width:450px
+    width:60% !important
+    height:220px
+    top:230px
+    left:50%
+    margin-left:-30% !important
+    z-index:9999
+    background-color:#fff
+  .allot,.repair_allot
+    position:absolute
+    width:700px
     height:220px
     top:230px
     left:50%

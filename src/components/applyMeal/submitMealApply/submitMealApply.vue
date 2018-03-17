@@ -7,6 +7,11 @@
         <el-radio class="radio" v-model="diningType" :label="1">自助餐</el-radio>
         <el-radio class="radio" v-model="diningType" :label="2">餐券</el-radio>
       </li>
+      <li>
+        <label><span class="must_write">*</span>用餐地点</label>
+        <el-radio class="radio" v-model="place" :label="1">建邺区政府大楼</el-radio>
+        <el-radio class="radio" v-model="place" :label="2">双和园</el-radio>
+      </li>
       <li v-show="diningType!=2">
         <label><span class="must_write">*</span>用餐标准</label>
         <el-select v-model="diningBenchmark" placeholder="请选择">
@@ -31,13 +36,14 @@
         <el-date-picker
           v-model="diningTime"
           type="datetime"
+          :picker-options="pickerOptions0"
           placeholder="选择日期时间">
         </el-date-picker>
       </li>
     </ul>
     <div class="repair_right">
       <ul>
-        <li v-if="userinfo.isSpecial==0" class="clearfix">
+        <li v-if="userinfo.isSpecial==0 && diningType!=2" class="clearfix">
           <label class="float-left"><span class="must_write">*</span>选择区领导</label>
           <div class="float-left">
             <span class="check_leader" @click="choseLeader(item)" :class="{active:item.id==active}" v-for="item in checkLeaders">{{item.name}}</span>
@@ -60,6 +66,7 @@
     data: () => ({
       userinfo: {},
       diningPlace: 1,
+      place: 1,
       diningType: 0,
       other: null,
       diningBenchmark: '0',
@@ -80,7 +87,12 @@
       }],
       diningReason: '',
       peopleCount: '',
-      diningTime: ''
+      diningTime: '',
+      pickerOptions0: {
+        disabledDate (time) {
+          return time.getTime() < Date.now() - 8.64e7
+        }
+      }
     }),
     watch: {
       diningType () {
@@ -109,17 +121,18 @@
       },
       // 提交用餐申请
       submitApplyCar () {
-        if (this.userinfo.isSpecial === 0) {
+        if (this.userinfo.isSpecial === 0 && this.diningType * 1 !== 2) {
           if (this.active === null) {
             this.$message({message: '请确认信息是否填写完整', type: 'warning'})
             return false
           }
         }
-        if (this.diningReason !== '' && this.peopleCount !== '' && this.diningTime !== '') {
+        if (this.diningReason !== '' && this.diningTime !== '' && this.peopleCount * 1 > 0) {
           let nowDate = dateFormat(this.diningTime, 'yyyy-MM-dd-hh-mm').split('-')
           this.$store.dispatch('submit/apply/meal', {
             Vue: this,
             userID: localStorage.getItem('userID'),
+            place: this.place,
             applyDeptID: localStorage.getItem('dept_id'),
             linkman: localStorage.getItem('linkman'),
             linkmantel: localStorage.getItem('linkmantel'),
@@ -134,7 +147,7 @@
             remark: this.other
           })
         } else {
-          this.$message({message: '请确认信息是否填写完整', type: 'warning'})
+          this.$message({message: '请确认信息是否填写完整或用餐人数是否为0', type: 'warning'})
         }
       }
     }

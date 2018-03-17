@@ -1,20 +1,7 @@
 <template>
   <div>
     <div class="goback" @click="$router.go(-1)">返回上一页</div>
-    <el-upload
-      class="upload-demo"
-      style="position: absolute;top:30px;"
-      :action="$store.state.updataPdf"
-      name="file"
-      ref="upload"
-      :on-change="getfile"
-      :data="parm"
-      :auto-upload="false"
-      :on-preview="handlePreview"
-      :on-remove="handleRemove"
-      :file-list="fileList">
-      <el-button class="up_load" type="primary">盖章</el-button>
-    </el-upload>
+    <el-button class="up_load" @click="getfile" type="primary">盖章</el-button>
     <div ref="home" id="home" style="width: 650px;margin:0 auto;background-color:#fff">
       <div style="width:500px;margin:0 auto">
         <div style="width: 100%;height: 50px;line-height: 50px;text-align: center;font-size: 34px;font-weight: 500">建邺区公务车辆使用申请表</div>
@@ -47,7 +34,7 @@
             <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">用车人数</td>
             <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">{{carDetail.peopleCount}}</td>
             <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">用车时间</td>
-            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">{{carDetail.applyDate}}</td>
+            <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">{{carDetail.usingTime}}</td>
           </tr>
           <tr >
             <td style="width: 100px;height: 60px;text-align: center;border: 1px solid #000">联系人</td>
@@ -127,7 +114,7 @@
           let ado_stream = new ActiveXObject('ADODB.Stream')
           let xmlhttp = new ActiveXObject('Microsoft.XMLHTTP')
           let url = `http://xz.hopethink.com/pdf.php?title=2&html=${encodeURI(this.$refs.home.innerHTML)}`
-          let savepath = 'C:\\申请表.pdf'
+          let savepath = 'd:\\申请表.pdf'
           xmlhttp.open('post', url, false)
           xmlhttp.send()
           ado_stream.Type = 1
@@ -147,8 +134,8 @@
         console.log(file)
       },
       getfile (file, fileList) {
-        seal(this, 'C:\\申请表.pdf')
-        // this.$refs.upload.submit()
+        seal(this, 'd:\\申请表.pdf', `${this.$route.query.carApplyID * 1}`, '2')
+        // FileUP.PJ_UpFile('d:\\申请表.pdf', 'http://58.213.150.99:8010/logistics/submitPDF.do', `${this.$route.query.carApplyID * 1}`, '2')
       }
     }
   }

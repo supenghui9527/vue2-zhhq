@@ -55,11 +55,12 @@ const actions = {
     })
   },
   // 提交面食编辑
-  [types.EDIT_FOOD_MENU] ({rootState, commit}, {Vue, foodJson}) {
+  [types.EDIT_FOOD_MENU] ({rootState, commit}, {Vue, userID, foodJson}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.submitFoodUrl,
       body: {
+        userID,
         foodJson
       }
     }).then((data) => {

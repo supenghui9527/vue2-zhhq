@@ -140,6 +140,7 @@
         }
         this.$store.dispatch('edit/food/menu', {
           Vue: this,
+          userID: window.localStorage.getItem('userID'),
           foodJson: foodJson.substring(0, foodJson.length - 1)
         })
       }

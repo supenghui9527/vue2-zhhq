@@ -51,7 +51,7 @@
         this.$store.dispatch('find/food/order', {
           Vue: this,
           userID: window.localStorage.getItem('userID'),
-          foodType: 0
+          foodType: 1
         })
       },
       toggleSelection (rows) {

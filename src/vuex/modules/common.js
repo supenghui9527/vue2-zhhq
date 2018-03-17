@@ -31,15 +31,17 @@ const actions = {
     })
   },
   // 签字
-  [types.GETSIGN] ({rootState, commit}, {Vue, userID, signPath, applyID, tag}) {
+  [types.GETSIGN] ({rootState, commit}, {Vue, userID, signPath, applyID, tag, state, comment}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
-      url: rootState.getSignUrl,
+      url: rootState.activeUrl,
       body: {
         userID,
         signPath,
         applyID,
-        tag
+        tag,
+        state,
+        comment
       }
     }).then((data) => {
       if (data.state === 1) {

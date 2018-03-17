@@ -24,12 +24,13 @@ const actions = {
     })
   },
   // 提交报修申请
-  [types.SUBMIT_QUESTIONS] ({rootState, state, commit}, {Vue, picList, userID, questionIDs, bespeakStartTime, bespeakEndTime, faultPlace, faultDetail, remark}) {
+  [types.SUBMIT_QUESTIONS] ({rootState, state, commit}, {Vue, picList, userID, place, questionIDs, bespeakStartTime, bespeakEndTime, faultPlace, faultDetail, remark}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.submitQuestionsUrl,
       body: {
         userID,
+        place,
         picList,
         questionIDs,
         bespeakStartTime,

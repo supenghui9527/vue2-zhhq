@@ -15,6 +15,7 @@ export default {
       // rootState.fullscreenLoading = true
       axios.post(url, body).then((res) => {
         let data = Qs.parse(res.data)
+        Vue.isloading = false
         if (data.state === rootState.ok) {
           resolve(data)
           // rootState.fullscreenLoading = false

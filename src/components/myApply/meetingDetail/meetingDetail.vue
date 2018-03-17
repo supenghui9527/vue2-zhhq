@@ -29,6 +29,12 @@
     <div class="detail_bottom">
       <ul class="clearfix">
         <li>
+          <span>会议地点</span>
+          <span v-if="meetingDeatail.place==0">暂无</span>
+          <span v-else-if="meetingDeatail.place==1">建邺区政府大楼</span>
+          <span v-else>双和园</span>
+        </li>
+        <li>
           <span>会议日期</span>
           <span>{{meetingDeatail.meetingDate}}</span>
         </li>

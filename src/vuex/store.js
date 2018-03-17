@@ -12,7 +12,7 @@ import applyMeal from './modules/applyMeal'
 import editMenu from './modules/editMenu'
 // 告诉 vue “使用” vuex
 Vue.use(Vuex)
-// const HOST = 'http://172.16.5.181:8010/logistics/'// 用于正式服务器内网 172.16.5.181:8010 测试58.213.150.99:8010 外网192.168.200.80:8010//58.213.150.99:8010
+// const HOST = 'http://58.213.150.99:8010/logistics/'// 用于正式服务器内网 172.16.5.181:8010 测试58.213.150.99:8010 外网http://172.16.5.186:8010/logistics///58.213.150.99:8010
 const HOST = '/domain' + 'logistics/'// 用于本地调试
 // 创建一个对象来保存应用启动时的初始状态
 const state = {
@@ -32,7 +32,7 @@ const state = {
     PORITION_CAR: '402848d05f562a0d015f5b45a4a10003', // 用车分配
     PORITION_MEAL: '402848d05f562a0d015f5b46973d0004', // 用餐分配
     PORITION_REPAIR: '402848d05f562a0d015f5b46ed2c0005', // 维修分配
-    STAMP_SIGN: 'f63ec75d5e8464ab015e84766c00000c',  // 盖章
+    STAMP_SIGN: '402848d05ffb2343015ffb5820380000',  // 盖章
     ORDER_REPAIR: 'f63ec75d5e9deb7f015e9ea763850001', // 维修
     showBuilding: 4352,
     showBuilding1: 6683
@@ -51,6 +51,8 @@ const state = {
   fullscreenLoading: false,
   loginModule: false,
   accessToken: '',
+  activeUrl: 'http://58.213.150.99:8010/logistics/PCsign.do', // 签字
+  activeRepairUrl: 'http://58.213.150.99:8010/logistics/submitRepairApply.do', // 维护报修
   loginUrl: `${HOST}checkLogin.do`,
   loginACtiveUrl: `${HOST}login.do`,
   getApplyNub: `${HOST}home.do`,
@@ -95,7 +97,10 @@ const state = {
   getSignUrl: `${HOST}PCsign.do`,
   getCheckLeaderUrl: `${HOST}checkLeader.do`,
   carUseingUrl: `${HOST}carTimeAxis.do`,
-  cancelMeetingApplyUrl: `${HOST}cancelMeetingApply.do`
+  cancelMeetingApplyUrl: `${HOST}cancelMeetingApply.do`,
+  cancelMealApplyUrl: `${HOST}cancelDiningApply.do`,
+  cancelCarApplyUrl: `${HOST}cancelCar.do`,
+  getFoodMenuUrl: `${HOST}findNoodleFoodList.do`
 }
 // 创建一个对象存储一系列我们接下来要写的 mutation 函数
 const mutations = {

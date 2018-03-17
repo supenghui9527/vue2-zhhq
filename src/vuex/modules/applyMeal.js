@@ -10,12 +10,13 @@ const getters = {
 // action
 const actions = {
   // 提交我的用餐申请
-  [types.APPLY_MEAL] ({rootState, commit}, {Vue, userID, applyDeptID, linkman, linkmanTel, officeTel, diningType, diningBenchmark, diningReason, peopleCount, diningTime, leaderID, remark}) {
+  [types.APPLY_MEAL] ({rootState, commit}, {Vue, userID, place, applyDeptID, linkman, linkmanTel, officeTel, diningType, diningBenchmark, diningReason, peopleCount, diningTime, leaderID, remark}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.applyMealUrl,
       body: {
         userID,
+        place,
         applyDeptID,
         linkman,
         linkmanTel,
@@ -50,7 +51,7 @@ const actions = {
   [types.MEAL_AUDITING] ({rootState, commit}, {Vue, userID, diningApplyID, comment, state}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
-      url: rootState.mealAuditingUrl,
+      url: 'http://58.213.150.99:8010/logistics/diningApplyReview.do',
       body: {
         userID,
         diningApplyID,
@@ -86,6 +87,19 @@ const actions = {
       url: rootState.getCheckLeaderUrl
     }).then(({data}) => {
       Vue.checkLeaders = data
+    })
+  },
+  // 取消会议申请
+  [types.CANCEL_MEAL_APPLY] ({rootState, commit}, {Vue, diningApplyID}) {
+    Vue.$store.dispatch('axios/act/HTTP', {
+      Vue,
+      url: rootState.cancelMealApplyUrl,
+      body: {
+        diningApplyID
+      }
+    }).then((data) => {
+      Vue.$message(data.message)
+      Vue.$emit('changePage', Vue.typeValue, Vue.timeValue, Vue.stateValue, Vue.val)
     })
   }
 }

@@ -27,7 +27,9 @@
       <ul class="clearfix">
         <li>
           <span>用餐地点</span>
-          <span>{{mealDetail.diningPlace==1?'建邺政府大楼':'双和园'}}</span>
+          <span v-if="mealDetail.place==0">暂无</span>
+          <span v-else-if="mealDetail.place==1">建邺区政府大楼</span>
+          <span v-else>双和园</span>
         </li>
         <li>
           <span>用餐类型</span>
@@ -100,8 +102,10 @@
         </li>
       </ul>
       <div class="btn_" v-if="mealDetail.state==0&&$route.query.agency==1" type="primary" @click="getSign">签字</div>
+      <div class="btn_no" v-if="mealDetail.state==0&&$route.query.agency==1" type="primary" @click="oneNoSign">驳回</div>
       <div class="btn_" v-if="mealDetail.state==1&&$route.query.agency==1&&authStamp" type="primary" @click="goStamp">盖章</div>
-      <div class="btn_" v-if="mealDetail.state==2&&$route.query.agency==1&&userInfo.isSign==1" type="primary" @click="getSign">签字</div>
+      <div class="btn_" v-if="mealDetail.state==2&&$route.query.agency==1&&userInfo.isSign==1" type="primary" @click="twoGetSign">签字</div>
+      <div class="btn_no" v-if="mealDetail.state==2&&$route.query.agency==1&&userInfo.isSign==1" type="primary" @click="twoNoSign">驳回</div>
       <div class="btn_" v-if="mealDetail.state==3&&$route.query.agency==1&&authInstructions" type="primary" @click="instructions">审核</div>
       <div class="btn_no" v-if="mealDetail.state==3&&$route.query.agency==1&&authInstructions" type="primary" @click="reject">驳回</div>
       <div class="btn_" v-if="mealDetail.state==4&&$route.query.agency==1&&authAllot" type="primary" @click="mealSure">确认</div>
@@ -123,7 +127,6 @@
     created () {
       setTimeout(() => {
         this.userInfo = JSON.parse(localStorage.getItem('userinfo'))
-        console.log(this.userInfo.isSign)
         this.getDetail()
       }, 20)
     },
@@ -138,7 +141,7 @@
           diningApplyID: this.$route.query.diningApplyID * 1
         })
       },
-      // 签字
+      // 一级签字
       getSign () {
         if (this.userInfo.signPath !== null && this.userInfo.signPath !== '') {
           this.$store.dispatch('get/sign', {
@@ -146,11 +149,72 @@
             userID: localStorage.getItem('userID'),
             signPath: this.userInfo.signPath,
             applyID: this.$route.query.diningApplyID * 1,
-            tag: this.$route.query.tag * 1
+            tag: this.$route.query.tag * 1,
+            state: 1
           })
         } else {
           this.$message({message: '请前往移动端保存签名', type: 'warning'})
         }
+      },
+      // 一级驳回
+      oneNoSign () {
+        this.$prompt('请输入驳回原因', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(({ value }) => {
+          this.$store.dispatch('get/sign', {
+            Vue: this,
+            userID: localStorage.getItem('userID'),
+            signPath: this.userInfo.signPath,
+            applyID: this.$route.query.diningApplyID * 1,
+            tag: this.$route.query.tag * 1,
+            state: 7,
+            comment: value
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          })
+        })
+      },
+      // 二级领导签字
+      twoGetSign () {
+        if (this.userInfo.signPath !== null && this.userInfo.signPath !== '') {
+          this.$store.dispatch('get/sign', {
+            Vue: this,
+            userID: localStorage.getItem('userID'),
+            signPath: this.userInfo.signPath,
+            applyID: this.$route.query.diningApplyID * 1,
+            tag: this.$route.query.tag * 1,
+            state: 2,
+            comment: ''
+          })
+        } else {
+          this.$message({message: '请前往移动端保存签名', type: 'warning'})
+        }
+      },
+      // 二级领导驳回
+      twoNoSign () {
+        this.$prompt('请输入驳回原因', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(({ value }) => {
+          this.$store.dispatch('get/sign', {
+            Vue: this,
+            userID: localStorage.getItem('userID'),
+            signPath: this.userInfo.signPath,
+            applyID: this.$route.query.diningApplyID * 1,
+            tag: this.$route.query.tag * 1,
+            state: 8,
+            comment: value
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          })
+        })
       },
       // 盖章
       goStamp () {

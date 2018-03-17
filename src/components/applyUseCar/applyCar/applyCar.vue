@@ -8,10 +8,15 @@
         <el-radio class="radio" v-model="isAfterApply" :label="1">否</el-radio>
       </li>
       <li>
+        <label><span class="must_write">*</span>用车地点</label>
+        <el-radio class="radio" v-model="place" :label="1">建邺区政府大楼</el-radio>
+        <el-radio class="radio" v-model="place" :label="2">双和园</el-radio>
+      </li>
+      <li>
         <label><span class="must_write">*</span>申报事由</label>
         <el-radio-group v-model="applyReason">
-          <el-radio :label="0">应急</el-radio>
           <el-radio :label="1">调研</el-radio>
+          <el-radio :label="0">应急</el-radio>
           <el-radio :label="2">接待</el-radio>
         </el-radio-group>
       </li>
@@ -40,6 +45,7 @@
           <el-date-picker
             v-model="usingTime"
             type="datetime"
+            :picker-options="pickerOptions0"
             placeholder="选择日期时间">
           </el-date-picker>
         </li>
@@ -64,12 +70,18 @@
       isShow: null,
       isAfterApply: 1,
       applyReason: 1,
+      place: 1,
       peopleCount: '',
       linkman: '',
       linkmanTel: '',
       detailReason: '',
       goalPlace: '',
-      usingTime: ''
+      usingTime: '',
+      pickerOptions0: {
+        disabledDate (time) {
+          return time.getTime() < Date.now() - 8.64e7
+        }
+      }
     }),
     components: {
       showRule
@@ -102,7 +114,7 @@
     methods: {
       // 验证人数
       testNub () {
-        let reg = new RegExp('^[0-9]*$')
+        let reg = new RegExp('^[1-9]*$')
         if (!reg.test(this.peopleCount)) {
           this.$nextTick(() => {
             this.peopleCount = ''
@@ -111,12 +123,12 @@
       },
       // 提交用车申请
       submitApplyCar () {
-        let reg = new RegExp('^[0-9]*$')
-        if (this.goalPlace !== '' && this.detailReason !== '' && this.usingTime !== '' && reg.test(this.peopleCount) && this.linkman !== '' && this.linkmanTel !== '') {
+        if (this.goalPlace !== '' && this.detailReason !== '' && this.usingTime !== '' && this.peopleCount !== '' && this.linkman !== '' && this.linkmanTel !== '') {
           let nowDate = dateFormat(this.usingTime, 'yyyy-MM-dd-hh-mm').split('-')
           this.$store.dispatch('submit/apply/car', {
             Vue: this,
             userID: window.localStorage.getItem('userID'),
+            place: this.place,
             userName: window.localStorage.getItem('linkman'),
             userTel: window.localStorage.getItem('linkmantel'),
             applyDeptID: window.localStorage.getItem('dept_id'),
@@ -132,7 +144,7 @@
             isAfterApply: this.isAfterApply
           })
         } else {
-          this.$message({message: '请确认信息是否填写完整', type: 'warning'})
+          this.$message({message: '请确认信息是否填写完整或用车人数为0', type: 'warning'})
         }
       },
       hideRule () {
@@ -144,7 +156,7 @@
 <style lang="stylus" rel="stylesheet/stylus">
 .apply_car_container
   background-color:rgba(188,194,218,0.8)
-  height:220px
+  height:230px
   font-size:14px
   label
     .must_write

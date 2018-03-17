@@ -10,12 +10,13 @@ const getters = {
 // action
 const actions = {
   // 提交用车申请
-  [types.SUBMIT_APPLY_CAR] ({rootState, commit}, {Vue, userID, userName, userTel, applyDeptID, applyDept, officeTel, applyReason, goalPlace, detailReason, peopleCount, usingTime, linkman, linkmanTel, isAfterApply}) {
+  [types.SUBMIT_APPLY_CAR] ({rootState, commit}, {Vue, userID, place, userName, userTel, applyDeptID, applyDept, officeTel, applyReason, goalPlace, detailReason, peopleCount, usingTime, linkman, linkmanTel, isAfterApply}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.submitApplyCarUrl,
       body: {
         userID,
+        place,
         userName,
         userTel,
         applyDeptID,
@@ -49,14 +50,14 @@ const actions = {
     })
   },
   // 提交驳回
-  [types.SUBMIT_AUDITING] ({rootState, commit}, {Vue, userID, carApplyID, Comment, state}) {
+  [types.SUBMIT_AUDITING] ({rootState, commit}, {Vue, userID, carApplyID, comment, state}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
-      url: rootState.submitAuditingUrl,
+      url: 'http://58.213.150.99:8010/logistics/carApplyComment.do',
       body: {
         userID,
         carApplyID,
-        Comment,
+        comment,
         state
       }
     }).then((data) => {
@@ -76,10 +77,10 @@ const actions = {
     })
   },
   // 提交分配车辆
-  [types.SUBMIT_CAR] ({rootState, commit}, {Vue, userID, carApplyID, driverName, driverTel, carModel, carNum, driverID, carID, Comment, state}) {
+  [types.SUBMIT_CAR] ({rootState, commit}, {Vue, userID, carApplyID, driverName, driverTel, carModel, carNum, driverID, carID, comment, state}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
-      url: rootState.submitCarUrl,
+      url: 'http://58.213.150.99:8010/logistics/carApplyAllot.do',
       body: {
         userID,
         carApplyID,
@@ -89,7 +90,7 @@ const actions = {
         carNum,
         driverID,
         carID,
-        Comment,
+        comment,
         state
       }
     }).then((data) => {
@@ -141,6 +142,18 @@ const actions = {
       }
     }).then(({data}) => {
       Vue.carUseing = data
+    })
+  },
+  [types.CANCEL_CAR_APPLY] ({rootState, commit}, {Vue, carApplyID}) {
+    Vue.$store.dispatch('axios/act/HTTP', {
+      Vue,
+      url: rootState.cancelCarApplyUrl,
+      body: {
+        carApplyID
+      }
+    }).then((data) => {
+      Vue.$message(data.message)
+      Vue.$emit('changePage', Vue.typeValue, Vue.timeValue, Vue.stateValue, Vue.val)
     })
   }
 }

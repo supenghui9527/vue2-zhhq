@@ -9,11 +9,16 @@
           <span :class="{active:isLift.toString().indexOf(item)!==-1, cur_:item=='高区'}" @click="getLift(item)" class="lift"  v-for="item in lift">{{item}}</span>
         </li>
         <li class="clearfix">
-          <label class="label"><span>*</span>是否大日程</label>
+          <label class="label"><span class="must_write">*</span>是否大日程</label>
           <span class="btn" @click="getTime(item)" :class="{active:isSchedule==item.id, cur_:item.text=='否'}" v-for="item in time">{{item.text}}</span>
         </li>
         <li>
-          <label class="label"><span>*</span>开门时间</label>
+          <label class="label"><span class="must_write">*</span>会议地点</label>
+          <el-radio class="radio" v-model="place" :label="1">建邺区政府大楼</el-radio>
+          <el-radio class="radio" v-model="place" :label="2">双和园</el-radio>
+        </li>
+        <li>
+          <label class="label"><span class="must_write">*</span>开门时间</label>
           <el-time-select
             v-model="openTime"
             class="meeting_date"
@@ -26,7 +31,7 @@
           </el-time-select>
         </li>
         <li>
-          <label class="label"><span>*</span>会议日期</label>
+          <label class="label"><span class="must_write">*</span>会议日期</label>
           <el-date-picker
             v-model="meetingDate"
             class="meeting_date"
@@ -36,7 +41,7 @@
           </el-date-picker>
         </li>
         <li>
-          <label class="label"><span>*</span>会议时间</label>
+          <label class="label"><span class="must_write">*</span>会议时间</label>
           <el-time-select
             v-model="startTime"
             class="meeting_date"
@@ -47,22 +52,14 @@
             }"
             placeholder="起始时间">
           </el-time-select>
-<!--           <el-time-picker
-            v-model="endTime"
-            class="meeting_time"
-            :picker-options="{
-              selectableRange: '01:00:00 - 24:00:00'
-            }"
-            placeholder="结束时间">
-          </el-time-picker>
- -->        </li>
+        </li>
         <li>
-          <label class="label"><span>*</span>预计参会人数</label>
+          <label class="label"><span class="must_write">*</span>预计参会人数</label>
           <input class="join_number" v-model="peopleCount" name="peopleCount">
         </li>
         <li class="meeting_content">
           <div>
-            <label><span>*</span>会议内容</label>
+            <label><span class="must_write">*</span>会议内容</label>
           </div>
           <textarea v-model="meetingContent"></textarea>
         </li>
@@ -71,7 +68,7 @@
     <div class="meeting_right">
       <ul>
         <li class="clearfix" style="padding-top:10px">
-          <label class="float-left" style="width:18%"><span>*</span>申请会议室</label>
+          <label class="float-left" style="width:18%"><span class="must_write">*</span>申请会议室</label>
           <div class="float-left meeting_address" style="width:82%">
             <span v-for="item in meetingRooms" @click="getRoomId(item)" :class="{active:meetingRoomID==item.meetingRoomID}">{{item.meetingName}}</span>
           </div>
@@ -80,19 +77,19 @@
           <label class="float-left" style="width:18%;padding-top:4px">资源配备</label>
           <ul class="resources clearfix">
             <li>
-              <label><span>*</span>主席台人数:</label>
+              <label><span class="must_write">*</span>主席台人数:</label>
               <input class="host" v-model="rostrumCount" name="rostrumCount">
             </li>
             <li>
-              <label><span>*</span>音乐播放:</label>
+              <label><span class="must_write">*</span>音乐播放:</label>
               <span class="btn" @click="onMusic(item)" :class="{active:music==item.id,cur_:item.text=='否'}" v-for="item in time">{{item.text}}</span>
             </li>
             <li>
-              <label><span>*</span>话筒只数:</label>
+              <label><span class="must_write">*</span>话筒只数:</label>
               <input class="host" v-model="mikeCount" name="mikeCount">
             </li>
             <li>
-              <label><span>*</span>立式话筒:</label>
+              <label><span></span>立式话筒:</label>
               <input class="host" v-model="standMike" name="standMike">
             </li>
           </ul>
@@ -128,6 +125,7 @@
       activeNameArr: [],
       meetingDate: '',
       startTime: '',
+      place: 1,
       endTime: '',
       isSchedule: 0,
       isLift: [],
@@ -143,6 +141,8 @@
       otherService: '',
       meetingPeople: '',
       meetingRooms: {},
+      standMikeCount: '',
+      timeErr: true,
       pickerOptions0: {
         disabledDate (time) {
           return time.getTime() < Date.now() - 8.64e7
@@ -172,6 +172,11 @@
         let reg = new RegExp('^[0-9]*$')
         if (!reg.test(this.standMike)) {
           this.standMike = ''
+        } else {
+          if (this.standMike > this.standMikeCount) {
+            this.standMike = ''
+            this.$message({message: `该会议室立式话筒上限为${this.standMikeCount}`, type: 'warning'})
+          }
         }
       }
     },
@@ -214,37 +219,55 @@
       getRoomId (item) {
         this.meetingRoomID = item.meetingRoomID
         this.meetingPeople = item.meetingContent
+        this.standMikeCount = item.standMike
+        console.log(this.standMikeCount)
       },
       submit () {
         let date = new Date()
         let nowDate = new Date(dateFormat(date, 'yyyy-MM-dd')).getTime() - 3600000 * 8
-        if (this.meetingDate !== '' && this.startTime !== '' && this.peopleCount !== '' && this.meetingContent !== '' && this.meetingRoomID !== '' && this.rostrumCount !== '' && this.mikeCount !== '' && this.standMike !== '' && this.openTime !== '') {
+        if (this.startTime.substring(0, 2) * 1 > this.openTime.substring(0, 2) * 1) {
+          this.timeErr = true
+        } else if (this.startTime.substring(0, 2) * 1 === this.openTime.substring(0, 2) * 1) {
+          if (this.startTime.substring(3) * 1 > this.openTime.substring(3) * 1) {
+            this.timeErr = true
+          } else {
+            this.timeErr = false
+          }
+        } else {
+          this.timeErr = false
+        }
+        if (this.meetingDate !== '' && this.startTime !== '' && this.peopleCount !== '' && this.meetingContent !== '' && this.meetingRoomID !== '' && this.rostrumCount !== '' && this.mikeCount !== '' && this.openTime !== '') {
           if (this.meetingDate.getTime() - nowDate >= 3600000 * 48) {
-            if (this.peopleCount * 1 <= this.meetingPeople) {
-              this.$store.dispatch('submit/meeting', {
-                Vue: this,
-                userID: window.localStorage.getItem('userID'),
-                linkman: window.localStorage.getItem('linkman'),
-                officeTel: window.localStorage.getItem('officetel'),
-                linkmanTel: window.localStorage.getItem('linkmantel'),
-                isLift: this.isLift.toString(),
-                meetingDate: dateFormat(this.meetingDate, 'yyyy-MM-dd'),
-                openTime: this.openTime,
-                startTime: this.startTime,
-                endTime: '',
-                meetingContent: this.meetingContent,
-                meetingRoomID: this.meetingRoomID,
-                isSchedule: this.isSchedule,
-                peopleCount: this.peopleCount,
-                rostrumCount: this.rostrumCount,
-                mikeCount: this.mikeCount,
-                standMike: this.standMike,
-                music: this.music,
-                banner: this.banner,
-                otherService: this.otherService
-              })
+            if (this.timeErr) {
+              if (this.peopleCount * 1 <= this.meetingPeople) {
+                this.$store.dispatch('submit/meeting', {
+                  Vue: this,
+                  userID: window.localStorage.getItem('userID'),
+                  place: this.place,
+                  linkman: window.localStorage.getItem('linkman'),
+                  officeTel: window.localStorage.getItem('officetel'),
+                  linkmanTel: window.localStorage.getItem('linkmantel'),
+                  isLift: this.isLift.toString(),
+                  meetingDate: dateFormat(this.meetingDate, 'yyyy-MM-dd'),
+                  openTime: this.openTime,
+                  startTime: this.startTime,
+                  endTime: '',
+                  meetingContent: this.meetingContent,
+                  meetingRoomID: this.meetingRoomID,
+                  isSchedule: this.isSchedule,
+                  peopleCount: this.peopleCount,
+                  rostrumCount: this.rostrumCount,
+                  mikeCount: this.mikeCount,
+                  standMike: this.standMike || 0,
+                  music: this.music,
+                  banner: this.banner,
+                  otherService: this.otherService
+                })
+              } else {
+                this.$message({message: '请确认会议室人数是否达到上线', type: 'warning'})
+              }
             } else {
-              this.$message({message: '请确认会议室人数是否达到上线', type: 'warning'})
+              this.$message({message: `开门时间不能大于或等于会议开始时间，请重新选择`, type: 'warning'})
             }
           } else {
             this.$message({message: '请选择会议有效时间', type: 'warning'})
@@ -258,11 +281,11 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 .meeting_apply
-  height:280px
+  height:300px
   label
     height:20px
     line-height:20px
-    span
+    .must_write
       display:inline-block
       width:6px
       color:#ff0000

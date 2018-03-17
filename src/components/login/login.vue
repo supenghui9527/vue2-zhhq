@@ -43,13 +43,9 @@
     created () {
       this.userName = window.localStorage.getItem('linkman')
       if (this.$route.query.username) {
-        let str = ''
-        for (var i = 0; i < this.$route.query.username.length; i++) {
-          str += String.fromCharCode(this.$route.query.username.charCodeAt(i) + 11)
-        }
         this.$store.dispatch('login/active', {
           Vue: this,
-          uid: str
+          uid: this.$route.query.username
         })
       } else {
         this.login()

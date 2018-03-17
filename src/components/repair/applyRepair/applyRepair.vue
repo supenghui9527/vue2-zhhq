@@ -14,6 +14,11 @@
           </div>
         </div>
         <div class="common_margin">
+          <label class="label"><span class="must_write">*</span>会议地点</label>
+          <el-radio class="radio" v-model="place" :label="1">建邺区政府大楼</el-radio>
+          <el-radio class="radio" v-model="place" :label="2">双和园</el-radio>
+        </div>
+        <div class="common_margin">
           <span class="float-left" style="padding-right: 3px"><span class="must_write"></span>预约时间</span>
           <div class="time">
             <span v-for="item in timePicker" :class="{active_time:item==activeTime}" @click="chooseTime(item)">{{item}}</span>
@@ -34,7 +39,7 @@
         <div class="pictures">
           <span class="float-left" style="padding-right: 2px"><span class="must_write"></span>实地照片</span>
           <el-upload
-            :action="$store.state.submitQuestionsUrl"
+            :action="$store.state.activeRepairUrl"
             ref="upload"
             name="picList"
             :data="param"
@@ -43,6 +48,7 @@
             style="width: 180px"
             :multiple="true"
             :auto-upload="false"
+            methods="post"
             :on-change="handlePictureCardPreview"
             :on-remove="handleRemove">
             <i class="el-icon-plus"></i>
@@ -77,6 +83,7 @@
       showOption: false,
       activeNameArr: [],
       questionIDs: [],
+      place: 1,
       param: {
         userID: '',
         questionIDs: '',
@@ -145,7 +152,7 @@
       },
       // 提交报修申请
       submitQuestions () {
-        if (this.userID === '' || this.questionIDs === '' || this.faultPlace === '' || this.faultDetail === '') {
+        if (this.questionIDs.toString() === '' || this.questionIDs === '' || this.faultPlace === '' || this.faultDetail === '') {
           this.$message({message: '请确认信息是否填写完整', type: 'warning'})
           return false
         }
@@ -168,6 +175,7 @@
             Vue: this,
             picList: this.fileList,
             userID: window.localStorage.getItem('userID'),
+            place: this.place,
             questionIDs: this.questionIDs.toString(),
             bespeakStartTime: this.bespeakStartTime !== '' ? `${bespeakStartTime[0]}-${bespeakStartTime[1]}-${bespeakStartTime[2]} ${bespeakStartTime[3]}:${bespeakStartTime[4]}` : '',
             bespeakEndTime: this.bespeakEndTime !== '' ? `${bespeakEndTime[0]}-${bespeakEndTime[1]}-${bespeakEndTime[2]} ${bespeakEndTime[3]}:${bespeakEndTime[4]}` : '',

@@ -30,7 +30,8 @@
     <div class="order">
       <span class="time">预定时间:当日下午12：00-14：00</span>
       <span class="go_order">>></span>
-      <span @click="commitOrder" class="btn">提交订单</span>
+      <!-- <span  ></span> -->
+      <el-button type="info" class="btn" @click="commitOrder" :loading="isloading">提交订单</el-button>
     </div>
   </div>
 </template>
@@ -45,6 +46,7 @@
       outFood: '', // 提交给后台的面食字符串
       cookFood: '', // 熟食字符串
       activeAddress: '建邺区政府大楼',
+      isloading: false,
       chooseAddress: [{
         address: '建邺区政府大楼',
         place: 1
@@ -70,6 +72,10 @@
       changeAddress (item) {
         this.activeAddress = item.address
         this.orderPlace = item.place
+        this.$store.dispatch('get/foodmenu', {
+          Vue: this,
+          place: item.place
+        })
         this.shopCar.clear()
         this.$store.dispatch('food/list', {
           Vue: this,
@@ -157,11 +163,13 @@
       },
       // 提交订单
       commitOrder () {
-        if (time(this, '8:00', '14:00')) {
+        if (time(this, '09:00', '14:00')) {
           if (JSON.stringify(this.order) === '{}') {
-            this.$message({message: '请确认订单个数或是否选择外卖', type: 'warning'})
+            this.$message({message: '请确认是否选择外卖或订单个数为0', type: 'warning'})
             return false
           }
+          this.outFood = ''
+          this.cookFood = ''
           for (let item in this.order) {
             if (this.order[item].foodType === 0) {
               this.outFood += `${this.order[item].id},${this.order[item].name},${this.order[item].price * (this.order[item].number)},${this.order[item].number},${this.order[item].foodUnit};`
@@ -169,6 +177,7 @@
               this.cookFood += `${this.order[item].id},${this.order[item].name},${this.order[item].price},${this.order[item].number},${this.order[item].foodUnit};`
             }
           }
+          this.isloading = true
           this.$store.dispatch('commit/order', {
             Vue: this,
             outFood: this.outFood.substring(0, this.outFood.length - 1),
@@ -177,6 +186,7 @@
             place: this.orderPlace
           })
         } else {
+          this.order = {}
           this.$message({message: '订餐时间不在有效时间段内', type: 'warning'})
         }
       },
@@ -208,8 +218,8 @@
     .order
       position:relative
       width:100%
-      height:35px
-      line-height:35px
+      height:50px
+      line-height:50px
       color:#a1b4ff
       font-size:14px
       background-color:#14339d
@@ -223,9 +233,6 @@
         right:30%
       .btn
         position:absolute
-        width:70px
-        height:24px
-        line-height:24px
         right:60px
         top:50%
         margin-top:-12px
@@ -281,7 +288,7 @@
           box-sizing:border-box
           border-bottom:1px solid #a1b4ff
           span
-            width:75px
+            width:100px
             display:inline-block
             text-align:center
           div

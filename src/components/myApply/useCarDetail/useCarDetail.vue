@@ -26,7 +26,7 @@
         <div class="allot_content clearfix">
           <div class="cars float-left">
             <div class="allot_item" v-for="item in aboutCar.carList" @click="getCarInfo(item)">
-              <div :class="{on_useing:item.state==0}">
+              <div :class="{on_useing:item.state==1}">
                 <img v-if="carNum!==item.carNum" width="16" style="padding-right: 4px" height="16" src="~common/images/check_boxs.png">
                 <img v-else width="20" height="16" src="~common/images/selected.png">
                 <img width="25" height="20" src="~common/images/icon-car.png">
@@ -91,6 +91,12 @@
     </ul>
     <div class="detail_bottom">
       <ul class="clearfix">
+        <li>
+          <span>用车地点</span>
+          <span v-if="carDetail.place==0">暂无</span>
+          <span v-else-if="carDetail.place==1">建邺区政府大楼</span>
+          <span v-else>双和园</span>
+        </li>
         <li>
           <span>申报事由：</span>
           <span v-if="carDetail.applyReason==0">应急</span>
@@ -188,6 +194,7 @@
         </div>
       </div>
       <div class="btn_" v-if="carDetail.state==0&&$route.query.agency==1" type="primary" @click="getSign">签字</div>
+      <div class="btn_no" v-if="carDetail.state==0&&$route.query.agency==1" type="primary" @click="noSign">驳回</div>
       <div class="btn_" v-if="carDetail.state==1&&$route.query.agency==1&&authStamp" type="primary" @click="goStamp">盖章</div>
       <div class="btn_" v-if="carDetail.state==2&&$route.query.agency==1&&authInstructions" type="primary" @click="instructions">审核</div>
       <div class="btn_no" v-if="carDetail.state==2&&$route.query.agency==1&&authInstructions" type="primary" @click="reject">驳回</div>
@@ -251,11 +258,35 @@
             userID: localStorage.getItem('userID'),
             signPath: this.userInfo.signPath,
             applyID: this.$route.query.carApplyID * 1,
-            tag: this.$route.query.tag * 1
+            tag: this.$route.query.tag * 1,
+            state: 1,
+            comment: ''
           })
         } else {
           this.$message({message: '请前往移动端保存签名', type: 'warning'})
         }
+      },
+      // 签字驳回
+      noSign () {
+        this.$prompt('请输入驳回原因', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(({ value }) => {
+          this.$store.dispatch('get/sign', {
+            Vue: this,
+            userID: localStorage.getItem('userID'),
+            signPath: this.userInfo.signPath,
+            applyID: this.$route.query.carApplyID * 1,
+            tag: this.$route.query.tag * 1,
+            state: 7,
+            comment: value
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          })
+        })
       },
       // 盖章
       goStamp () {
@@ -271,7 +302,7 @@
           Vue: this,
           userID: localStorage.getItem('userID'),
           carApplyID: this.$route.query.carApplyID * 1,
-          Comment: '',
+          comment: '',
           state: 3
         })
       },
@@ -314,7 +345,7 @@
       // 获取车辆信息
       getCarInfo (item) {
         this.carID = item.carID
-        if (item.state === 0) {
+        if (item.state === 1) {
           this.$message({
             message: '车辆在使用中或者出现其他故障请选择其他车辆',
             type: 'warning'
@@ -385,12 +416,11 @@
       // 完成申请单子
       complete () {
         if (this.beforeMile !== null && this.afterMile !== null) {
-          this.$store.dispatch('car/complete', {
-            Vue: this,
-            userID: localStorage.getItem('userID'),
-            carApplyID: this.$route.query.carApplyID * 1,
-            beforeMile: this.beforeMile,
-            afterMile: this.afterMile
+          this.axios.post('http://58.213.150.99:8010/logistics/carApplyFinish.do?', {userID: localStorage.getItem('userID'), carApplyID: this.$route.query.carApplyID * 1, beforeMile: this.beforeMile, afterMile: this.afterMile}).then((res) => {
+            this.$message(res.data.message)
+            this.showMile = false
+            this.getDetail()
+          }).catch((erro) => {
           })
         } else {
           this.$message({message: '请确认是否填写里程数', type: 'warning'})

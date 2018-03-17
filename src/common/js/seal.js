@@ -1,4 +1,4 @@
-export default function seal (Vue, pdfFile) {
+export default function seal (Vue, pdfFile, applyID, tag) {
   // pdfFile 为pdf fileinput 的id
   if (pdfFile === '') {
     Vue.$message('请选择PDF文件')
@@ -18,11 +18,11 @@ export default function seal (Vue, pdfFile) {
     // Vue.$refs.upload.submit()
     Vue.$message({message: obj.GetErrorMsg(), type: 'warning'})
   } else {
-    Vue.$message({message: '盖章成功'})
     obj.DetachPdf(pdfFile, 1, 1)
-    Vue.$refs.upload.submit()
-    setTimeout(() => {
-      Vue.$router.push('agency')
-    }, 1000)
+    setTimeout(function () {
+      FileUP.PJ_UpFile('d:\\申请表.pdf', 'http://58.213.150.99:8010/logistics/submitPDF.do', applyID, tag)
+      Vue.$message({message: '盖章成功'})
+      Vue.$router.push('/agency')
+    }, 2000)
   }
 }

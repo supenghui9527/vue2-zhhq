@@ -7,8 +7,8 @@
         <router-link to="/outSale/chooseFood" class="go_sale">预定外卖</router-link>
         <span class="rule_tit" @click="showRule=!showRule">订单规则</span>
         <span class="back_home" @click="$router.go(-1)">返回上一页</span>
-        <span class="menu" @click="showMenu=!showMenu">面食菜单</span>
-        <span class="menu" @click="hotMenu=!hotMenu">熟食菜单</span>
+        <span class="menu" @click="showMenu=!showMenu;hotMenu=false">面食菜单</span>
+        <span class="menu" @click="hotMenu=!hotMenu;showMenu=false">熟食菜单</span>
       </div>
     </div>
     <transition name="fade">
@@ -26,12 +26,23 @@
         </ul>
       </div>
     </transition>
-    <div v-if="showMenu" class="show_menu">
-      <i class="el-icon-close close_menu" @click="showMenu?showMenu=false:showMenu"></i>
-      <img width="100%" height="100%" src="~common/images/mianshi.png">
+    <div v-show="showMenu" class="hot_menu">
+      <i class="el-icon-close close_menu" @click="showMenu?showMenu=false:showMenu;hotMenu=false"></i>
+      <h6><span>一周面食外卖菜单</span></h6>
+      <table border="1" width="500" height="344" align="center">
+        <tr v-for="(item,index) in foodMenu" style="text-align: center">
+          <td style="background-color:#f0f0f0">{{week[index]}}</td>
+          <td>{{item.foodName1}}</td>
+          <td>{{item.foodName2}}</td>
+          <td>{{item.foodName3}}</td>
+          <td>{{item.foodName4}}</td>
+          <td>{{item.foodName5}}</td>
+          <td>{{item.foodName6}}</td>
+        </tr>
+      </table>
     </div>
     <div v-show="hotMenu" class="hot_menu">
-      <i class="el-icon-close close_menu" @click="hotMenu?hotMenu=false:hotMenu"></i>
+      <i class="el-icon-close close_menu" @click="hotMenu?hotMenu=false:hotMenu;showMenu=false"></i>
       <h6><span>一周熟食外卖菜单</span></h6>
       <table border="1" width="500" height="344" align="center">
         <tr v-for="(item,index) in menu" style="text-align: center">
@@ -58,11 +69,16 @@
       showMenu: false,
       hotMenu: false,
       week: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
-      menu: []
+      menu: [],
+      foodMenu: []
     }),
     created () {
       this.$store.dispatch('get/menu', {
         Vue: this
+      })
+      this.$store.dispatch('get/foodmenu', {
+        Vue: this,
+        place: 1
       })
     }
   }

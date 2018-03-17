@@ -21,12 +21,13 @@ const actions = {
     })
   },
   // 提交会议申请
-  [types.SUBMIT_MEETING] ({rootState}, {Vue, userID, linkman, officeTel, linkmanTel, isLift, meetingDate, openTime, startTime, endTime, meetingContent, meetingRoomID, isSchedule, peopleCount, rostrumCount, mikeCount, standMike, music, banner, otherService}) {
+  [types.SUBMIT_MEETING] ({rootState}, {Vue, userID, place, linkman, officeTel, linkmanTel, isLift, meetingDate, openTime, startTime, endTime, meetingContent, meetingRoomID, isSchedule, peopleCount, rostrumCount, mikeCount, standMike, music, banner, otherService}) {
     Vue.$store.dispatch('axios/act/HTTP', {
       Vue,
       url: rootState.submitMeetingUrl,
       body: {
         userID,
+        place,
         linkman,
         officeTel,
         linkmanTel,
@@ -48,6 +49,7 @@ const actions = {
       }
     }).then((data) => {
       Vue.$message(data.message)
+      Vue.$router.go(-1)
     })
   },
   // 主任会议审核

@@ -73,11 +73,6 @@ export default new Router({
           path: '/meetingApply/apply',
           name: 'apply',
           component: resolve => require(['@/components/meetingApply/apply/apply'], resolve)
-        },
-        {
-          path: '/meetingApply/myApply',
-          name: 'myMeetingApply',
-          component: resolve => require(['@/components/meetingApply/myApply/myApply'], resolve)
         }
       ]
     },
@@ -85,7 +80,7 @@ export default new Router({
     {
       path: '/allOutSale',
       name: 'allOutSale',
-      redirect: '/allOutSale/hotFood',
+      redirect: '/allOutSale/food',
       component: resolve => require(['@/components/allOutSale/allOutSale'], resolve),
       children: [
         {

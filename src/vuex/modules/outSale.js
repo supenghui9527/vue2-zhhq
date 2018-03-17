@@ -92,6 +92,19 @@ const actions = {
       Vue.menu = datas
     })
   },
+  // 获取面食菜单
+  [types.GET_FOOD_MENU] ({state, rootState}, {Vue, place}) {
+    Vue.$store.dispatch('axios/act/HTTP', {
+      Vue,
+      url: rootState.getFoodMenuUrl,
+      body: {
+        place
+      }
+    }).then((data) => {
+      let datas = data.data
+      Vue.foodMenu = datas
+    })
+  },
   // 撤销订单
   [types.CANCEL_ORDER] ({state, rootState}, {Vue, outFoodID}) {
     Vue.$store.dispatch('axios/act/HTTP', {

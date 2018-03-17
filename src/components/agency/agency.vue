@@ -34,7 +34,7 @@
                 </el-option>
               </el-select>
             </div>
-            <div class="float-left">
+            <div v-if="userID!=4352" class="float-left">
               <span>申请状态</span>
               <el-select class="apply_content" v-model="stateValue" @change="filter" placeholder="请选择">
                 <el-option
@@ -100,6 +100,7 @@
       applyType: 1,
       timeValue: 0,
       stateValue: 1,
+      userID: null,
       showInstruction: false,
       val: 1,
       allAgency: {},
@@ -141,6 +142,9 @@
     }),
     created () {
       let filter = window.localStorage.getItem('agencyFilter')
+      let userinfo = JSON.parse(window.localStorage.getItem('userinfo'))
+      this.userID = userinfo.id
+      console.log(this.userID)
       if (filter) {
         let newFilter = JSON.parse(filter)
         this.applyType = newFilter.applyType * 1
